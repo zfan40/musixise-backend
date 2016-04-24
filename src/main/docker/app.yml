@@ -1,0 +1,21 @@
+version: '2'
+services:
+    musixise-app:
+        image: musixise
+        external_links:
+            - musixise-mysql:mysql
+            - musixise-elasticsearch:elasticsearch
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod
+            - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/musixise?useUnicode=true&characterEncoding=utf8&useSSL=false
+            - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=elasticsearch:9300
+        ports:
+            - 8080:8080
+    musixise-mysql:
+        extends:
+            file: mysql.yml
+            service: musixise-mysql
+    musixise-elasticsearch:
+        extends:
+            file: elasticsearch.yml
+            service: musixise-elasticsearch
