@@ -76,3 +76,11 @@ To setup this project in Jenkins, use the following configuration:
 [Karma]: http://karma-runner.github.io/
 [Jasmine]: http://jasmine.github.io/2.0/introduction.html
 [Protractor]: https://angular.github.io/protractor/
+
+Y: yes (Default)
+n: no
+a: yes to this question and all others.
+x: abort (exit)
+d: show the differences between the old and the new file
+h: help, list all options
+
