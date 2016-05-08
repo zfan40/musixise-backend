@@ -10,6 +10,7 @@
                 "musixiser": "Musixiser",
                 "stages": "Stages",
                 "workList": "WorkList",
+                "workListFollow": "WorkListFollow",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

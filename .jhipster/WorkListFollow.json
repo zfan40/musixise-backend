@@ -1,0 +1,31 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "work",
+            "otherEntityName": "workList",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "createtime",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160508032832",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "work_list_follow",
+    "pagination": "no"
+}

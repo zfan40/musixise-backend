@@ -1,0 +1,28 @@
+
+<div>
+    <h2><span translate="musixiseApp.workListFollow.detail.title">WorkListFollow</span> {{vm.workListFollow.id}}</h2>
+    <hr>
+    <dl class="dl-horizontal">
+        <dt><span translate="musixiseApp.workListFollow.createtime">Createtime</dt></dt>
+        <dd>
+            <span>{{vm.workListFollow.createtime | date:'mediumDate'}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="musixiseApp.workListFollow.work">work</span></dt>
+        <dd>
+            <a ui-sref="work-list-detail({id:vm.workListFollow.work.id})">{{vm.workListFollow.work.id}}</a>
+        </dd>
+        <hr>
+        <dt><span translate="musixiseApp.workListFollow.user">user</span></dt>
+        <dd>
+            {{vm.workListFollow.user.id}}
+        </dd>
+        <hr>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>
