@@ -2,8 +2,13 @@ package musixise.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import musixise.domain.Musixiser;
+import musixise.domain.User;
 import musixise.repository.MusixiserRepository;
+import musixise.repository.UserRepository;
 import musixise.repository.search.MusixiserSearchRepository;
+import musixise.service.UserService;
+import musixise.web.rest.dto.ManagedUserDTO;
+import musixise.web.rest.dto.MusixiseDTO;
 import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -31,13 +37,19 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class MusixiserResource {
 
     private final Logger log = LoggerFactory.getLogger(MusixiserResource.class);
-        
+
     @Inject
     private MusixiserRepository musixiserRepository;
-    
+
     @Inject
     private MusixiserSearchRepository musixiserSearchRepository;
-    
+
+    @Inject
+    private UserRepository userRepository;
+
+    @Inject
+    private UserService userService;
+
     /**
      * POST  /musixisers : Create a new musixiser.
      *
@@ -154,6 +166,72 @@ public class MusixiserResource {
         return StreamSupport
             .stream(musixiserSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/musixisers/register",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> registerMusixiser(@RequestBody MusixiseDTO musixiseDTO, HttpServletRequest request) throws URISyntaxException {
+        log.debug("REST request to register Musixiser : {}", musixiseDTO);
+        if (musixiseDTO.getId() != null || musixiseDTO.getUserId() != null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("musixiser", "idexists", "A new musixiser cannot already have an ID")).body(null);
+        }
+
+        //注册账号
+        ManagedUserDTO managedUserDTO = new ManagedUserDTO();
+        managedUserDTO.setLogin(musixiseDTO.getNickname());
+        managedUserDTO.setPassword(musixiseDTO.getPassword());
+        managedUserDTO.setEmail(musixiseDTO.getEmail());
+
+        if (userRepository.findOneByLogin(managedUserDTO.getLogin()).isPresent()) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert("userManagement", "userexists", "username already in use"))
+                .body(null);
+        } else if (userRepository.findOneByEmail(musixiseDTO.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert("userManagement", "emailexists", "Email already in use"))
+                .body(null);
+        } else {
+            User newUser = userService.createUser(managedUserDTO);
+            //保存个人信息
+            Musixiser musixiser = new Musixiser();
+
+            musixiser.setUser_id(newUser);
+            musixiser.setRealname(musixiseDTO.getRealname());
+            musixiser.setTel(musixiseDTO.getTel());
+            musixiser.setEmail(musixiseDTO.getEmail());
+            musixiser.setBirth(musixiseDTO.getBirth());
+            musixiser.setGender(musixiseDTO.getGender());
+            musixiser.setSmallAvatar(musixiseDTO.getSmallAvatar());
+            musixiser.setLargeAvatar(musixiseDTO.getLargeAvatar());
+            musixiser.setNation(musixiseDTO.getNation());
+
+            Musixiser result = musixiserRepository.save(musixiser);
+
+            //搜索索引
+            musixiserSearchRepository.save(result);
+
+            return ResponseEntity.created(new URI("/api/musixisers/" + newUser.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert("musixiser", result.getId().toString()))
+            .body(result);
+        }
+
+    }
+
+
+    @RequestMapping(value = "/musixisers/getInfo/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Musixiser> getMusixiserInfo(@PathVariable Long id) {
+        log.debug("REST request to get Musixiser : {}", id);
+        Musixiser musixiser = musixiserRepository.findOne(id);
+        return Optional.ofNullable(musixiser)
+            .map(result -> new ResponseEntity<>(
+                result,
+                HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 }
