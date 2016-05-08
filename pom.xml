@@ -619,7 +619,7 @@
                     <driver>org.h2.Driver</driver>
                     <url>jdbc:h2:file:./target/h2db/db/musixise</url>
                     <defaultSchemaName></defaultSchemaName>
-                    <username></username>
+                    <username>musixise</username>
                     <password></password>
                     <referenceUrl>hibernate:spring:musixise.domain?dialect=org.hibernate.dialect.H2Dialect&amp;hibernate.ejb.naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy</referenceUrl>
                     <verbose>true</verbose>
