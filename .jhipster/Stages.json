@@ -1,0 +1,32 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "user_id",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "status",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "createtime",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160508023025",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "stages",
+    "pagination": "no"
+}
