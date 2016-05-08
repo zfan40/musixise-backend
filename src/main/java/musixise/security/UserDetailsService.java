@@ -40,6 +40,8 @@ public class UserDetailsService implements org.springframework.security.core.use
             List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                     .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                 .collect(Collectors.toList());
+            //初始化密码
+            //user.setPassword("$2a$10$iLajzdp1vvA/Ujz44DoBAufg.SoZJvTQCLRMtmzZYOH6llc3UGsEG");
             return new org.springframework.security.core.userdetails.User(lowercaseLogin,
                 user.getPassword(),
                 grantedAuthorities);
