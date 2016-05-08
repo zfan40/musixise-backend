@@ -5,7 +5,8 @@
             "otherEntityName": "user",
             "relationshipType": "one-to-one",
             "otherEntityField": "login",
-            "ownerSide": true
+            "ownerSide": true,
+            "otherEntityRelationshipName": "musixiser"
         }
     ],
     "fields": [
@@ -39,10 +40,6 @@
         },
         {
             "fieldName": "nation",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "n",
             "fieldType": "String"
         }
     ],

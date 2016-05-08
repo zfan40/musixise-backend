@@ -47,9 +47,6 @@ public class Musixiser implements Serializable {
     @Column(name = "nation")
     private String nation;
 
-    @Column(name = "n")
-    private String n;
-
     @OneToOne
     @JoinColumn(unique = true)
     private User user_id;
@@ -126,14 +123,6 @@ public class Musixiser implements Serializable {
         this.nation = nation;
     }
 
-    public String getN() {
-        return n;
-    }
-
-    public void setN(String n) {
-        this.n = n;
-    }
-
     public User getUser_id() {
         return user_id;
     }
@@ -174,7 +163,6 @@ public class Musixiser implements Serializable {
             ", smallAvatar='" + smallAvatar + "'" +
             ", largeAvatar='" + largeAvatar + "'" +
             ", nation='" + nation + "'" +
-            ", n='" + n + "'" +
             '}';
     }
 }

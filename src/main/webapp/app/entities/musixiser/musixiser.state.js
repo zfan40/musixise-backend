@@ -79,7 +79,6 @@
                                 smallAvatar: null,
                                 largeAvatar: null,
                                 nation: null,
-                                n: null,
                                 id: null
                             };
                         }

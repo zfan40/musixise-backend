@@ -68,7 +68,7 @@ class MusixiserGatlingTest extends Simulation {
             .exec(http("Create new musixiser")
             .post("/api/musixisers")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "realname":"SAMPLE_TEXT", "tel":"SAMPLE_TEXT", "email":"SAMPLE_TEXT", "birth":"SAMPLE_TEXT", "gender":"SAMPLE_TEXT", "smallAvatar":"SAMPLE_TEXT", "largeAvatar":"SAMPLE_TEXT", "nation":"SAMPLE_TEXT", "n":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "realname":"SAMPLE_TEXT", "tel":"SAMPLE_TEXT", "email":"SAMPLE_TEXT", "birth":"SAMPLE_TEXT", "gender":"SAMPLE_TEXT", "smallAvatar":"SAMPLE_TEXT", "largeAvatar":"SAMPLE_TEXT", "nation":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_musixiser_url"))).exitHereIfFailed
             .pause(10)

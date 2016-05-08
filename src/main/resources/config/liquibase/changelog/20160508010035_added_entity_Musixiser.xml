@@ -53,10 +53,6 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="n" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            
             <column name="user_id_id" type="bigint">
                 <constraints unique="true"/>
             </column>
