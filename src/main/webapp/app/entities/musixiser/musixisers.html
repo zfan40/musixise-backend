@@ -1,0 +1,93 @@
+<div>
+    <h2 translate="musixiseApp.musixiser.home.title">Musixisers</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="musixiser.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="hidden-xs"  translate="musixiseApp.musixiser.home.createLabel">
+                        Create new Musixiser
+                    </span>
+                </button>
+            </div>
+            <div class="col-xs-8 no-padding-right">
+                <form name="searchForm" class="form-inline">
+                    <div class="input-group pull-right" >
+                        <input type="text" class="form-control" ng-model="vm.searchQuery" id="searchQuery" placeholder="{{ 'musixiseApp.musixiser.home.search' | translate }}">
+                        <span  class="input-group-btn width-min" >
+                            <button class="btn btn-info" ng-click="vm.search(vm.searchQuery)">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                        <span class="input-group-btn width-min" ng-if="vm.currentSearch">
+                            <button class="btn btn-info" ng-click="vm.clear()">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span translate="global.field.id">ID</span></th>
+                    <th><span translate="musixiseApp.musixiser.realname">Realname</span></th>
+                    <th><span translate="musixiseApp.musixiser.tel">Tel</span></th>
+                    <th><span translate="musixiseApp.musixiser.email">Email</span></th>
+                    <th><span translate="musixiseApp.musixiser.birth">Birth</span></th>
+                    <th><span translate="musixiseApp.musixiser.gender">Gender</span></th>
+                    <th><span translate="musixiseApp.musixiser.smallAvatar">SmallAvatar</span></th>
+                    <th><span translate="musixiseApp.musixiser.largeAvatar">LargeAvatar</span></th>
+                    <th><span translate="musixiseApp.musixiser.nation">Nation</span></th>
+                    <th><span translate="musixiseApp.musixiser.n">N</span></th>
+                    <th><span translate="musixiseApp.musixiser.user_id">user_id</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="musixiser in vm.musixisers track by musixiser.id">
+                    <td><a ui-sref="musixiser-detail({id:musixiser.id})">{{musixiser.id}}</a></td>
+                    <td>{{musixiser.realname}}</td>
+                    <td>{{musixiser.tel}}</td>
+                    <td>{{musixiser.email}}</td>
+                    <td>{{musixiser.birth}}</td>
+                    <td>{{musixiser.gender}}</td>
+                    <td>{{musixiser.smallAvatar}}</td>
+                    <td>{{musixiser.largeAvatar}}</td>
+                    <td>{{musixiser.nation}}</td>
+                    <td>{{musixiser.n}}</td>
+                    <td>
+                        {{musixiser.user_id.login}}
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="musixiser-detail({id:musixiser.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="musixiser.edit({id:musixiser.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="musixiser.delete({id:musixiser.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

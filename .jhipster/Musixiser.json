@@ -1,0 +1,54 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "user_id",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "login",
+            "ownerSide": true
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "realname",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "tel",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "email",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "birth",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "gender",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "smallAvatar",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "largeAvatar",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nation",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "n",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20160508010035",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "musixiser",
+    "pagination": "no"
+}
