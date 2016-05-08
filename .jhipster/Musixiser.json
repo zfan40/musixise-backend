@@ -41,6 +41,10 @@
         {
             "fieldName": "nation",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "isMaster",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20160508010035",

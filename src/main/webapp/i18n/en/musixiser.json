@@ -24,6 +24,7 @@
             "smallAvatar": "SmallAvatar",
             "largeAvatar": "LargeAvatar",
             "nation": "Nation",
+            "isMaster": "IsMaster",
             "user_id": "User_id"
         }
     }

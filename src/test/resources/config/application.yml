@@ -14,7 +14,7 @@ spring:
     datasource:
         url: jdbc:h2:mem:musixise;DB_CLOSE_DELAY=-1
         name:
-        username:
+        username: musixise
         password:
     jpa:
         database-platform: musixise.domain.util.FixedH2Dialect

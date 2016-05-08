@@ -59,6 +59,9 @@ public class MusixiserResourceIntTest {
     private static final String DEFAULT_NATION = "AAAAA";
     private static final String UPDATED_NATION = "BBBBB";
 
+    private static final Integer DEFAULT_IS_MASTER = 1;
+    private static final Integer UPDATED_IS_MASTER = 2;
+
     @Inject
     private MusixiserRepository musixiserRepository;
 
@@ -98,6 +101,7 @@ public class MusixiserResourceIntTest {
         musixiser.setSmallAvatar(DEFAULT_SMALL_AVATAR);
         musixiser.setLargeAvatar(DEFAULT_LARGE_AVATAR);
         musixiser.setNation(DEFAULT_NATION);
+        musixiser.setIsMaster(DEFAULT_IS_MASTER);
     }
 
     @Test
@@ -124,6 +128,7 @@ public class MusixiserResourceIntTest {
         assertThat(testMusixiser.getSmallAvatar()).isEqualTo(DEFAULT_SMALL_AVATAR);
         assertThat(testMusixiser.getLargeAvatar()).isEqualTo(DEFAULT_LARGE_AVATAR);
         assertThat(testMusixiser.getNation()).isEqualTo(DEFAULT_NATION);
+        assertThat(testMusixiser.getIsMaster()).isEqualTo(DEFAULT_IS_MASTER);
 
         // Validate the Musixiser in ElasticSearch
         Musixiser musixiserEs = musixiserSearchRepository.findOne(testMusixiser.getId());
@@ -148,7 +153,8 @@ public class MusixiserResourceIntTest {
                 .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())))
                 .andExpect(jsonPath("$.[*].smallAvatar").value(hasItem(DEFAULT_SMALL_AVATAR.toString())))
                 .andExpect(jsonPath("$.[*].largeAvatar").value(hasItem(DEFAULT_LARGE_AVATAR.toString())))
-                .andExpect(jsonPath("$.[*].nation").value(hasItem(DEFAULT_NATION.toString())));
+                .andExpect(jsonPath("$.[*].nation").value(hasItem(DEFAULT_NATION.toString())))
+                .andExpect(jsonPath("$.[*].isMaster").value(hasItem(DEFAULT_IS_MASTER)));
     }
 
     @Test
@@ -169,7 +175,8 @@ public class MusixiserResourceIntTest {
             .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.toString()))
             .andExpect(jsonPath("$.smallAvatar").value(DEFAULT_SMALL_AVATAR.toString()))
             .andExpect(jsonPath("$.largeAvatar").value(DEFAULT_LARGE_AVATAR.toString()))
-            .andExpect(jsonPath("$.nation").value(DEFAULT_NATION.toString()));
+            .andExpect(jsonPath("$.nation").value(DEFAULT_NATION.toString()))
+            .andExpect(jsonPath("$.isMaster").value(DEFAULT_IS_MASTER));
     }
 
     @Test
@@ -199,6 +206,7 @@ public class MusixiserResourceIntTest {
         updatedMusixiser.setSmallAvatar(UPDATED_SMALL_AVATAR);
         updatedMusixiser.setLargeAvatar(UPDATED_LARGE_AVATAR);
         updatedMusixiser.setNation(UPDATED_NATION);
+        updatedMusixiser.setIsMaster(UPDATED_IS_MASTER);
 
         restMusixiserMockMvc.perform(put("/api/musixisers")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -217,6 +225,7 @@ public class MusixiserResourceIntTest {
         assertThat(testMusixiser.getSmallAvatar()).isEqualTo(UPDATED_SMALL_AVATAR);
         assertThat(testMusixiser.getLargeAvatar()).isEqualTo(UPDATED_LARGE_AVATAR);
         assertThat(testMusixiser.getNation()).isEqualTo(UPDATED_NATION);
+        assertThat(testMusixiser.getIsMaster()).isEqualTo(UPDATED_IS_MASTER);
 
         // Validate the Musixiser in ElasticSearch
         Musixiser musixiserEs = musixiserSearchRepository.findOne(testMusixiser.getId());
@@ -264,6 +273,7 @@ public class MusixiserResourceIntTest {
             .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())))
             .andExpect(jsonPath("$.[*].smallAvatar").value(hasItem(DEFAULT_SMALL_AVATAR.toString())))
             .andExpect(jsonPath("$.[*].largeAvatar").value(hasItem(DEFAULT_LARGE_AVATAR.toString())))
-            .andExpect(jsonPath("$.[*].nation").value(hasItem(DEFAULT_NATION.toString())));
+            .andExpect(jsonPath("$.[*].nation").value(hasItem(DEFAULT_NATION.toString())))
+            .andExpect(jsonPath("$.[*].isMaster").value(hasItem(DEFAULT_IS_MASTER)));
     }
 }
