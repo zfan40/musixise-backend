@@ -6,6 +6,7 @@ import musixise.domain.User;
 import musixise.repository.MusixiserRepository;
 import musixise.repository.UserRepository;
 import musixise.repository.search.MusixiserSearchRepository;
+import musixise.security.SecurityUtils;
 import musixise.service.UserService;
 import musixise.web.rest.dto.ManagedUserDTO;
 import musixise.web.rest.dto.MusixiseDTO;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -42,13 +44,13 @@ public class MusixiserResource {
     private MusixiserRepository musixiserRepository;
 
     @Inject
-    private MusixiserSearchRepository musixiserSearchRepository;
-
-    @Inject
     private UserRepository userRepository;
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private MusixiserSearchRepository musixiserSearchRepository;
 
     /**
      * POST  /musixisers : Create a new musixiser.
@@ -61,7 +63,7 @@ public class MusixiserResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Musixiser> createMusixiser(@RequestBody Musixiser musixiser) throws URISyntaxException {
+    public ResponseEntity<Musixiser> createMusixiser(@Valid @RequestBody Musixiser musixiser) throws URISyntaxException {
         log.debug("REST request to save Musixiser : {}", musixiser);
         if (musixiser.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("musixiser", "idexists", "A new musixiser cannot already have an ID")).body(null);
@@ -86,7 +88,7 @@ public class MusixiserResource {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Musixiser> updateMusixiser(@RequestBody Musixiser musixiser) throws URISyntaxException {
+    public ResponseEntity<Musixiser> updateMusixiser(@Valid @RequestBody Musixiser musixiser) throws URISyntaxException {
         log.debug("REST request to update Musixiser : {}", musixiser);
         if (musixiser.getId() == null) {
             return createMusixiser(musixiser);
@@ -197,7 +199,7 @@ public class MusixiserResource {
             //保存个人信息
             Musixiser musixiser = new Musixiser();
 
-            musixiser.setUser_id(newUser);
+            musixiser.setUserId(newUser.getId());
             musixiser.setRealname(musixiseDTO.getRealname());
             musixiser.setTel(musixiseDTO.getTel());
             musixiser.setEmail(musixiseDTO.getEmail());
@@ -213,25 +215,26 @@ public class MusixiserResource {
             musixiserSearchRepository.save(result);
 
             return ResponseEntity.created(new URI("/api/musixisers/" + newUser.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("musixiser", result.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityCreationAlert("musixiser", result.getId().toString()))
+                .body(result);
         }
 
     }
 
 
-    @RequestMapping(value = "/musixisers/getInfo/{id}",
+    @RequestMapping(value = "/musixisers/getInfo",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Musixiser> getMusixiserInfo(@PathVariable Long id) {
-        log.debug("REST request to get Musixiser : {}", id);
-        Musixiser musixiser = musixiserRepository.findOne(id);
-        return Optional.ofNullable(musixiser)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<Musixiser> getMusixiserInfo() {
+
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map(u -> {
+                Musixiser musixiser = musixiserRepository.findOneByUserId(u.getId());
+                return new ResponseEntity<>(musixiser, HttpStatus.OK);
+            })
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
 
 }
