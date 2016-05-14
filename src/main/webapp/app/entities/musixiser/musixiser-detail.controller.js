@@ -5,9 +5,9 @@
         .module('musixiseApp')
         .controller('MusixiserDetailController', MusixiserDetailController);
 
-    MusixiserDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'Musixiser', 'User'];
+    MusixiserDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'Musixiser'];
 
-    function MusixiserDetailController($scope, $rootScope, $stateParams, entity, Musixiser, User) {
+    function MusixiserDetailController($scope, $rootScope, $stateParams, entity, Musixiser) {
         var vm = this;
         vm.musixiser = entity;
         vm.load = function (id) {

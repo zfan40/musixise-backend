@@ -80,6 +80,7 @@
                                 largeAvatar: null,
                                 nation: null,
                                 isMaster: null,
+                                userId: null,
                                 id: null
                             };
                         }

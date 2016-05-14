@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -50,9 +51,9 @@ public class Musixiser implements Serializable {
     @Column(name = "is_master")
     private Integer isMaster;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private User user_id;
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     public Long getId() {
         return id;
@@ -134,12 +135,12 @@ public class Musixiser implements Serializable {
         this.isMaster = isMaster;
     }
 
-    public User getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(User user) {
-        this.user_id = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -175,6 +176,7 @@ public class Musixiser implements Serializable {
             ", largeAvatar='" + largeAvatar + "'" +
             ", nation='" + nation + "'" +
             ", isMaster='" + isMaster + "'" +
+            ", userId='" + userId + "'" +
             '}';
     }
 }

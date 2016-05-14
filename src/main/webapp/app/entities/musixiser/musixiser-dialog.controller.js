@@ -5,12 +5,11 @@
         .module('musixiseApp')
         .controller('MusixiserDialogController', MusixiserDialogController);
 
-    MusixiserDialogController.$inject = ['$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Musixiser', 'User'];
+    MusixiserDialogController.$inject = ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'Musixiser'];
 
-    function MusixiserDialogController ($scope, $stateParams, $uibModalInstance, $q, entity, Musixiser, User) {
+    function MusixiserDialogController ($scope, $stateParams, $uibModalInstance, entity, Musixiser) {
         var vm = this;
         vm.musixiser = entity;
-        vm.users = User.query();
         vm.load = function(id) {
             Musixiser.get({id : id}, function(result) {
                 vm.musixiser = result;

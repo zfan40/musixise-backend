@@ -44,13 +44,14 @@ public class MusixiserResource {
     private MusixiserRepository musixiserRepository;
 
     @Inject
+    private MusixiserSearchRepository musixiserSearchRepository;
+
+    @Inject
     private UserRepository userRepository;
 
     @Inject
     private UserService userService;
 
-    @Inject
-    private MusixiserSearchRepository musixiserSearchRepository;
 
     /**
      * POST  /musixisers : Create a new musixiser.
@@ -169,6 +170,7 @@ public class MusixiserResource {
             .stream(musixiserSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
     }
+
 
     @RequestMapping(value = "/musixisers/register",
         method = RequestMethod.POST,

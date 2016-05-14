@@ -1,14 +1,5 @@
 {
-    "relationships": [
-        {
-            "relationshipName": "user_id",
-            "otherEntityName": "user",
-            "relationshipType": "one-to-one",
-            "otherEntityField": "login",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "musixiser"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
             "fieldName": "realname",
@@ -45,6 +36,13 @@
         {
             "fieldName": "isMaster",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "userId",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20160508010035",
