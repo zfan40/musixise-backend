@@ -113,6 +113,30 @@ public class UserService {
         return newUser;
     }
 
+    public User createUserBySite(String login, String password, String firstName, String lastName, String email
+                                      ) {
+
+        User newUser = new User();
+        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Set<Authority> authorities = new HashSet<>();
+        String encryptedPassword = passwordEncoder.encode(password);
+        newUser.setLogin(login);
+        // new user gets initially a generated password
+        newUser.setPassword(encryptedPassword);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setEmail(email);
+        newUser.setLangKey("zh-cn");
+        newUser.setActivated(true);
+        // new user gets registration key
+        authorities.add(authority);
+        newUser.setAuthorities(authorities);
+        userRepository.save(newUser);
+        userSearchRepository.save(newUser);
+        log.debug("register for User: {}", newUser);
+        return newUser;
+    }
+
     public User createUser(ManagedUserDTO managedUserDTO) {
         User user = new User();
         user.setLogin(managedUserDTO.getLogin());

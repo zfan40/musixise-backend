@@ -8,9 +8,8 @@ import musixise.repository.UserRepository;
 import musixise.repository.search.MusixiserSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.UserService;
-import musixise.web.rest.MusixiserResource;
 import musixise.web.rest.dto.ManagedUserDTO;
-import musixise.web.rest.dto.MusixiseDTO;
+import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,40 +52,44 @@ public class MusixiserExtResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> registerMusixiser(@RequestBody MusixiseDTO musixiseDTO, HttpServletRequest request) throws URISyntaxException {
-        //log.debug("REST request to register Musixiser : {}", musixiseDTO);
-        if (musixiseDTO.getId() != null || musixiseDTO.getUserId() != null || musixiseDTO.getIsMaster() !=null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("musixiser", "idexists", "A new musixiser cannot already have an ID")).body(null);
-        }
+    public ResponseEntity<?> registerMusixiser(@RequestBody RegisterDTO registerDTO, HttpServletRequest request) throws URISyntaxException {
 
         //注册账号
         ManagedUserDTO managedUserDTO = new ManagedUserDTO();
-        managedUserDTO.setLogin(musixiseDTO.getNickname());
-        managedUserDTO.setPassword(musixiseDTO.getPassword());
-        managedUserDTO.setEmail(musixiseDTO.getEmail());
+        managedUserDTO.setLogin(registerDTO.getUsername());
+        managedUserDTO.setPassword(registerDTO.getPassword());
+        managedUserDTO.setEmail(registerDTO.getEmail());
 
         if (userRepository.findOneByLogin(managedUserDTO.getLogin()).isPresent()) {
             return ResponseEntity.badRequest()
                 .headers(HeaderUtil.createFailureAlert("userManagement", "userexists", "username already in use"))
                 .body(null);
-        } else if (userRepository.findOneByEmail(musixiseDTO.getEmail()).isPresent()) {
+        } else if (userRepository.findOneByEmail(registerDTO.getEmail()).isPresent()) {
             return ResponseEntity.badRequest()
                 .headers(HeaderUtil.createFailureAlert("userManagement", "emailexists", "Email already in use"))
                 .body(null);
         } else {
-            User newUser = userService.createUser(managedUserDTO);
+
+          //  User newUser = userService.createUser(managedUserDTO);
+            User newUser = userService.createUserBySite(
+                managedUserDTO.getLogin(),
+                managedUserDTO.getPassword(),
+                managedUserDTO.getFirstName(),
+                managedUserDTO.getLastName(),
+                managedUserDTO.getEmail()
+            );
             //保存个人信息
             Musixiser musixiser = new Musixiser();
 
             musixiser.setUserId(newUser.getId());
-            musixiser.setRealname(musixiseDTO.getRealname());
-            musixiser.setTel(musixiseDTO.getTel());
-            musixiser.setEmail(musixiseDTO.getEmail());
-            musixiser.setBirth(musixiseDTO.getBirth());
-            musixiser.setGender(musixiseDTO.getGender());
-            musixiser.setSmallAvatar(musixiseDTO.getSmallAvatar());
-            musixiser.setLargeAvatar(musixiseDTO.getLargeAvatar());
-            musixiser.setNation(musixiseDTO.getNation());
+            musixiser.setRealname(registerDTO.getRealname());
+            musixiser.setTel(registerDTO.getTel());
+            musixiser.setEmail(registerDTO.getEmail());
+            musixiser.setBirth(registerDTO.getBirth());
+            musixiser.setGender(registerDTO.getGender());
+            musixiser.setSmallAvatar(registerDTO.getSmallAvatar());
+            musixiser.setLargeAvatar(registerDTO.getLargeAvatar());
+            musixiser.setNation(registerDTO.getNation());
 
             Musixiser result = musixiserRepository.save(musixiser);
 
