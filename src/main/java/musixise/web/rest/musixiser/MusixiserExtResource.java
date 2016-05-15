@@ -71,7 +71,7 @@ public class MusixiserExtResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
 
-    @ApiOperation(value = "注册用户", notes = "返回用户实体对象", response = Musixiser.class, position = 2)
+    @ApiOperation(value = "音乐人注册", notes = "返回用户实体对象", response = Musixiser.class, position = 2)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "注册成功", response = Musixiser.class),
         @ApiResponse(code = 404, message = "找不到页面"),
@@ -122,7 +122,7 @@ public class MusixiserExtResource {
             //搜索索引
             musixiserSearchRepository.save(result);
 
-            return ResponseEntity.created(new URI("/api/musixisers/" + newUser.getId()))
+            return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityCreationAlert("musixiser", result.getId().toString()))
                 .body(result);
         }
