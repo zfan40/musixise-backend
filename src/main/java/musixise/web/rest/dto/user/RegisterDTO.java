@@ -1,5 +1,7 @@
 package musixise.web.rest.dto.user;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -10,10 +12,12 @@ public class RegisterDTO {
 
     @NotNull
     @Size(min = 5, max = 50)
+    @ApiModelProperty(value = "账号名称", required = true)
     private String username;
 
     @NotNull
     @Size(min = 6, max = 30)
+    @ApiModelProperty(value = "账号密码", required = true)
     private String password;
 
 

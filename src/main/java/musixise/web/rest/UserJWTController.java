@@ -1,5 +1,7 @@
 package musixise.web.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import musixise.security.jwt.JWTConfigurer;
 import musixise.security.jwt.TokenProvider;
 import musixise.web.rest.dto.LoginDTO;
@@ -20,6 +22,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
+@Api(value = "user-jwt", description = "用户登录", position = 1)
 public class UserJWTController {
 
     @Inject
@@ -28,6 +31,7 @@ public class UserJWTController {
     @Inject
     private AuthenticationManager authenticationManager;
 
+    @ApiOperation(value = "用户登录", notes = "用户认证并获取秘钥,后续接口调用都依赖此秘钥", position = 2)
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     @Timed
     public ResponseEntity<?> authorize(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {

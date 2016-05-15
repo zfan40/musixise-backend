@@ -1,15 +1,15 @@
 package musixise.web.rest.musixiser;
 
 import com.codahale.metrics.annotation.Timed;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import musixise.domain.Musixiser;
+import musixise.domain.Stages;
 import musixise.domain.User;
 import musixise.repository.MusixiserRepository;
+import musixise.repository.StagesRepository;
 import musixise.repository.UserRepository;
 import musixise.repository.search.MusixiserSearchRepository;
+import musixise.repository.search.StagesSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.UserService;
 import musixise.web.rest.dto.ManagedUserDTO;
@@ -20,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +33,7 @@ import java.net.URISyntaxException;
  */
 @Api(value = "musixisers", description = "音乐人相关接口", position = 1)
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/musixisers")
 public class MusixiserExtResource {
 
     private final Logger log = LoggerFactory.getLogger(MusixiserExtResource.class);
@@ -53,7 +50,13 @@ public class MusixiserExtResource {
     @Inject
     private UserService userService;
 
-    @RequestMapping(value = "/musixisers/register",
+    @Inject
+    private StagesRepository stagesRepository;
+
+    @Inject
+    private StagesSearchRepository stagesSearchRepository;
+
+    @RequestMapping(value = "/register",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
 
@@ -82,7 +85,7 @@ public class MusixiserExtResource {
                 .body(null);
         } else {
 
-          //  User newUser = userService.createUser(managedUserDTO);
+            //  User newUser = userService.createUser(managedUserDTO);
             User newUser = userService.createUserBySite(
                 managedUserDTO.getLogin(),
                 managedUserDTO.getPassword(),
@@ -115,7 +118,7 @@ public class MusixiserExtResource {
     }
 
 
-    @RequestMapping(value = "/musixisers/getInfo",
+    @RequestMapping(value = "/getInfo",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "获取当前用户信息", notes = "返回当前用户信息", response = Musixiser.class, position = 2)
@@ -130,7 +133,7 @@ public class MusixiserExtResource {
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @RequestMapping(value = "/musixisers/updateInfo",
+    @RequestMapping(value = "/updateInfo",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "修改当前用户信息", notes = "修改当前用户信息", response = Musixiser.class, position = 2)
@@ -154,4 +157,35 @@ public class MusixiserExtResource {
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 
     }
+
+    @RequestMapping(value = "/onStages",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "音乐人开始演出", notes = "音乐人开始演出", response = Stages.class, position = 2)
+    @Timed
+    public ResponseEntity<Stages> onStages(@Valid @RequestBody Stages stages) throws URISyntaxException {
+        log.debug("REST request to on Stages : {}", stages);
+        if (stages.getId() != null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("stages", "idexists", "A new stages cannot already have an ID")).body(null);
+        }
+        Stages result = stagesRepository.save(stages);
+        stagesSearchRepository.save(result);
+        return ResponseEntity.created(new URI("/api/stages/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert("stages", result.getId().toString()))
+            .body(result);
+    }
+
+
+    @RequestMapping(value = "/offStages/{id}",
+        method = RequestMethod.DELETE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "音乐人中止演出", notes = "音乐人中止演出", response = Stages.class, position = 2)
+    @Timed
+    public ResponseEntity<Void> offStages(@ApiParam(value = "ID", required = true) @PathVariable Long id) {
+        log.debug("REST request to off Stages : {}", id);
+        stagesRepository.delete(id);
+        stagesSearchRepository.delete(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("stages", id.toString())).build();
+    }
+
 }

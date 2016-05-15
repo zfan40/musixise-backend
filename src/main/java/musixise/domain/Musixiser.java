@@ -1,5 +1,6 @@
 package musixise.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -24,9 +25,11 @@ public class Musixiser implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @ApiModelProperty(value = "用户真实姓名", required = false)
     @Column(name = "realname")
     private String realname;
 
+    @ApiModelProperty(value = "电话号码", required = false)
     @Column(name = "tel")
     private String tel;
 
@@ -49,6 +52,7 @@ public class Musixiser implements Serializable {
     private String nation;
 
     @Column(name = "is_master")
+    @ApiModelProperty(value = "是否是大师", required = false, allowableValues = "0,1")
     private Integer isMaster;
 
     @NotNull

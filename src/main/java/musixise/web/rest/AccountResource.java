@@ -1,7 +1,10 @@
 package musixise.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import musixise.domain.Authority;
+import musixise.domain.Musixiser;
 import musixise.domain.User;
 import musixise.repository.UserRepository;
 import musixise.security.SecurityUtils;
@@ -32,6 +35,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api")
+@Api(value = "account", description = "账号管理", position = 1)
 public class AccountResource {
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
@@ -52,35 +56,35 @@ public class AccountResource {
      * @param request the HTTP request
      * @return the ResponseEntity with status 201 (Created) if the user is registred or 400 (Bad Request) if the login or e-mail is already in use
      */
-    @RequestMapping(value = "/register",
-                    method = RequestMethod.POST,
-                    produces={MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
-    @Timed
-    public ResponseEntity<?> registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
-
-        HttpHeaders textPlainHeaders = new HttpHeaders();
-        textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
-
-        return userRepository.findOneByLogin(userDTO.getLogin())
-            .map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-            .orElseGet(() -> userRepository.findOneByEmail(userDTO.getEmail())
-                .map(user -> new ResponseEntity<>("e-mail address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-                .orElseGet(() -> {
-                    User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
-                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
-                    userDTO.getLangKey());
-                    String baseUrl = request.getScheme() + // "http"
-                    "://" +                                // "://"
-                    request.getServerName() +              // "myhost"
-                    ":" +                                  // ":"
-                    request.getServerPort() +              // "80"
-                    request.getContextPath();              // "/myContextPath" or "" if deployed in root context
-
-                    mailService.sendActivationEmail(user, baseUrl);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-                })
-        );
-    }
+//    @RequestMapping(value = "/register",
+//                    method = RequestMethod.POST,
+//                    produces={MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+//    @Timed
+//    public ResponseEntity<?> registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
+//
+//        HttpHeaders textPlainHeaders = new HttpHeaders();
+//        textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
+//
+//        return userRepository.findOneByLogin(userDTO.getLogin())
+//            .map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
+//            .orElseGet(() -> userRepository.findOneByEmail(userDTO.getEmail())
+//                .map(user -> new ResponseEntity<>("e-mail address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
+//                .orElseGet(() -> {
+//                    User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
+//                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
+//                    userDTO.getLangKey());
+//                    String baseUrl = request.getScheme() + // "http"
+//                    "://" +                                // "://"
+//                    request.getServerName() +              // "myhost"
+//                    ":" +                                  // ":"
+//                    request.getServerPort() +              // "80"
+//                    request.getContextPath();              // "/myContextPath" or "" if deployed in root context
+//
+//                    mailService.sendActivationEmail(user, baseUrl);
+//                    return new ResponseEntity<>(HttpStatus.CREATED);
+//                })
+//        );
+//    }
 
     /**
      * GET  /activate : activate the registered user.
@@ -162,6 +166,7 @@ public class AccountResource {
     @RequestMapping(value = "/account/change_password",
         method = RequestMethod.POST,
         produces = MediaType.TEXT_PLAIN_VALUE)
+    @ApiOperation(value = "修改密码", notes = "修改密码", position = 2)
     @Timed
     public ResponseEntity<?> changePassword(@RequestBody String password) {
         if (!checkPasswordLength(password)) {
