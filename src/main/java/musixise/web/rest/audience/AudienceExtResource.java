@@ -8,14 +8,15 @@ import io.swagger.annotations.ApiResponses;
 import musixise.domain.Musixiser;
 import musixise.domain.Stages;
 import musixise.domain.User;
+import musixise.domain.WorkList;
 import musixise.repository.MusixiserRepository;
 import musixise.repository.UserRepository;
+import musixise.security.SecurityUtils;
 import musixise.service.AudienceService;
+import musixise.service.StagesFollowService;
 import musixise.service.StagesService;
 import musixise.service.UserService;
-import musixise.web.rest.dto.AudienceDTO;
-import musixise.web.rest.dto.ManagedUserDTO;
-import musixise.web.rest.dto.StagesDTO;
+import musixise.web.rest.dto.*;
 import musixise.web.rest.dto.response.GetState;
 import musixise.web.rest.dto.response.GetStateList;
 import musixise.web.rest.dto.user.RegisterAudienceDTO;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +39,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +74,10 @@ public class AudienceExtResource {
 
     @Inject
     private MusixiserRepository musixiserRepository;
+
+    @Inject
+    private StagesFollowService stagesFollowService;
+
 
 
     @RequestMapping(value = "/register",
@@ -166,6 +174,38 @@ public class AudienceExtResource {
         getStateList.setTotal(page.getTotalElements());
 
         return ResponseEntity.ok().body(getStateList);
+    }
+
+    @RequestMapping(value = "/joinStage",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "观看演出", notes = "用户进入某演出", response = StagesFollowDTO.class, position = 2)
+    @Timed
+    public ResponseEntity<StagesFollowDTO> joinStage(@RequestBody JoinStageDTO joinStageDTO) throws URISyntaxException {
+        log.debug("REST request to join Stages : {}", joinStageDTO);
+
+
+        //获取当前用户信息
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map(u -> {
+                StagesFollowDTO stagesFollowDTO = new StagesFollowDTO();
+                stagesFollowDTO.setAudienceUid(u.getId());
+                stagesFollowDTO.setMusixiserUid(joinStageDTO.getMusixiserUid());
+                stagesFollowDTO.setStagesId(joinStageDTO.getStagesId());
+                stagesFollowDTO.setTimestamp(ZonedDateTime.now());
+                stagesFollowDTO.setUpdatetime(ZonedDateTime.now());
+
+                StagesFollowDTO result = stagesFollowService.save(stagesFollowDTO);
+
+                return ResponseEntity.ok()
+                    .headers(HeaderUtil.createEntityCreationAlert("stagesFollow", result.getId().toString()))
+                    .body(result);
+
+            })
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+
+
+
     }
 
 }

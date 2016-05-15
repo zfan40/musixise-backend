@@ -27,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -47,6 +49,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 public class StagesFollowResourceIntTest {
 
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneId.of("Z"));
+
 
     private static final Long DEFAULT_MUSIXISER_UID = 1L;
     private static final Long UPDATED_MUSIXISER_UID = 2L;
@@ -54,14 +58,16 @@ public class StagesFollowResourceIntTest {
     private static final Long DEFAULT_AUDIENCE_UID = 1L;
     private static final Long UPDATED_AUDIENCE_UID = 2L;
 
-    private static final LocalDate DEFAULT_TIMESTAMP = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_TIMESTAMP = LocalDate.now(ZoneId.systemDefault());
-
     private static final Long DEFAULT_STAGES_ID = 1L;
     private static final Long UPDATED_STAGES_ID = 2L;
 
-    private static final LocalDate DEFAULT_UPDTETIME = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_UPDTETIME = LocalDate.now(ZoneId.systemDefault());
+    private static final ZonedDateTime DEFAULT_TIMESTAMP = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneId.systemDefault());
+    private static final ZonedDateTime UPDATED_TIMESTAMP = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final String DEFAULT_TIMESTAMP_STR = dateTimeFormatter.format(DEFAULT_TIMESTAMP);
+
+    private static final ZonedDateTime DEFAULT_UPDATETIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneId.systemDefault());
+    private static final ZonedDateTime UPDATED_UPDATETIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final String DEFAULT_UPDATETIME_STR = dateTimeFormatter.format(DEFAULT_UPDATETIME);
 
     @Inject
     private StagesFollowRepository stagesFollowRepository;
@@ -102,9 +108,9 @@ public class StagesFollowResourceIntTest {
         stagesFollow = new StagesFollow();
         stagesFollow.setMusixiserUid(DEFAULT_MUSIXISER_UID);
         stagesFollow.setAudienceUid(DEFAULT_AUDIENCE_UID);
-        stagesFollow.setTimestamp(DEFAULT_TIMESTAMP);
         stagesFollow.setStagesId(DEFAULT_STAGES_ID);
-        stagesFollow.setUpdtetime(DEFAULT_UPDTETIME);
+        stagesFollow.setTimestamp(DEFAULT_TIMESTAMP);
+        stagesFollow.setUpdatetime(DEFAULT_UPDATETIME);
     }
 
     @Test
@@ -126,9 +132,9 @@ public class StagesFollowResourceIntTest {
         StagesFollow testStagesFollow = stagesFollows.get(stagesFollows.size() - 1);
         assertThat(testStagesFollow.getMusixiserUid()).isEqualTo(DEFAULT_MUSIXISER_UID);
         assertThat(testStagesFollow.getAudienceUid()).isEqualTo(DEFAULT_AUDIENCE_UID);
-        assertThat(testStagesFollow.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
         assertThat(testStagesFollow.getStagesId()).isEqualTo(DEFAULT_STAGES_ID);
-        assertThat(testStagesFollow.getUpdtetime()).isEqualTo(DEFAULT_UPDTETIME);
+        assertThat(testStagesFollow.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
+        assertThat(testStagesFollow.getUpdatetime()).isEqualTo(DEFAULT_UPDATETIME);
 
         // Validate the StagesFollow in ElasticSearch
         StagesFollow stagesFollowEs = stagesFollowSearchRepository.findOne(testStagesFollow.getId());
@@ -148,9 +154,9 @@ public class StagesFollowResourceIntTest {
                 .andExpect(jsonPath("$.[*].id").value(hasItem(stagesFollow.getId().intValue())))
                 .andExpect(jsonPath("$.[*].musixiserUid").value(hasItem(DEFAULT_MUSIXISER_UID.intValue())))
                 .andExpect(jsonPath("$.[*].audienceUid").value(hasItem(DEFAULT_AUDIENCE_UID.intValue())))
-                .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
                 .andExpect(jsonPath("$.[*].stagesId").value(hasItem(DEFAULT_STAGES_ID.intValue())))
-                .andExpect(jsonPath("$.[*].updtetime").value(hasItem(DEFAULT_UPDTETIME.toString())));
+                .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP_STR)))
+                .andExpect(jsonPath("$.[*].updatetime").value(hasItem(DEFAULT_UPDATETIME_STR)));
     }
 
     @Test
@@ -166,9 +172,9 @@ public class StagesFollowResourceIntTest {
             .andExpect(jsonPath("$.id").value(stagesFollow.getId().intValue()))
             .andExpect(jsonPath("$.musixiserUid").value(DEFAULT_MUSIXISER_UID.intValue()))
             .andExpect(jsonPath("$.audienceUid").value(DEFAULT_AUDIENCE_UID.intValue()))
-            .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP.toString()))
             .andExpect(jsonPath("$.stagesId").value(DEFAULT_STAGES_ID.intValue()))
-            .andExpect(jsonPath("$.updtetime").value(DEFAULT_UPDTETIME.toString()));
+            .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP_STR))
+            .andExpect(jsonPath("$.updatetime").value(DEFAULT_UPDATETIME_STR));
     }
 
     @Test
@@ -192,9 +198,9 @@ public class StagesFollowResourceIntTest {
         updatedStagesFollow.setId(stagesFollow.getId());
         updatedStagesFollow.setMusixiserUid(UPDATED_MUSIXISER_UID);
         updatedStagesFollow.setAudienceUid(UPDATED_AUDIENCE_UID);
-        updatedStagesFollow.setTimestamp(UPDATED_TIMESTAMP);
         updatedStagesFollow.setStagesId(UPDATED_STAGES_ID);
-        updatedStagesFollow.setUpdtetime(UPDATED_UPDTETIME);
+        updatedStagesFollow.setTimestamp(UPDATED_TIMESTAMP);
+        updatedStagesFollow.setUpdatetime(UPDATED_UPDATETIME);
         StagesFollowDTO stagesFollowDTO = stagesFollowMapper.stagesFollowToStagesFollowDTO(updatedStagesFollow);
 
         restStagesFollowMockMvc.perform(put("/api/stages-follows")
@@ -208,9 +214,9 @@ public class StagesFollowResourceIntTest {
         StagesFollow testStagesFollow = stagesFollows.get(stagesFollows.size() - 1);
         assertThat(testStagesFollow.getMusixiserUid()).isEqualTo(UPDATED_MUSIXISER_UID);
         assertThat(testStagesFollow.getAudienceUid()).isEqualTo(UPDATED_AUDIENCE_UID);
-        assertThat(testStagesFollow.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
         assertThat(testStagesFollow.getStagesId()).isEqualTo(UPDATED_STAGES_ID);
-        assertThat(testStagesFollow.getUpdtetime()).isEqualTo(UPDATED_UPDTETIME);
+        assertThat(testStagesFollow.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
+        assertThat(testStagesFollow.getUpdatetime()).isEqualTo(UPDATED_UPDATETIME);
 
         // Validate the StagesFollow in ElasticSearch
         StagesFollow stagesFollowEs = stagesFollowSearchRepository.findOne(testStagesFollow.getId());
@@ -253,8 +259,8 @@ public class StagesFollowResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(stagesFollow.getId().intValue())))
             .andExpect(jsonPath("$.[*].musixiserUid").value(hasItem(DEFAULT_MUSIXISER_UID.intValue())))
             .andExpect(jsonPath("$.[*].audienceUid").value(hasItem(DEFAULT_AUDIENCE_UID.intValue())))
-            .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
             .andExpect(jsonPath("$.[*].stagesId").value(hasItem(DEFAULT_STAGES_ID.intValue())))
-            .andExpect(jsonPath("$.[*].updtetime").value(hasItem(DEFAULT_UPDTETIME.toString())));
+            .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP_STR)))
+            .andExpect(jsonPath("$.[*].updatetime").value(hasItem(DEFAULT_UPDATETIME_STR)));
     }
 }

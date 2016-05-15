@@ -26,28 +26,28 @@
                      />
         </div>
         <div class="form-group">
-            <label class="control-label" translate="musixiseApp.stagesFollow.timestamp" for="field_timestamp">Timestamp</label>
-                <div class="input-group">
-                    <input id="field_timestamp" type="text" class="form-control" name="timestamp" uib-datepicker-popup="{{dateformat}}" ng-model="vm.stagesFollow.timestamp" is-open="vm.datePickerOpenStatus.timestamp"
-                    />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('timestamp')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </div>
-        </div>
-        <div class="form-group">
             <label class="control-label" translate="musixiseApp.stagesFollow.stagesId" for="field_stagesId">StagesId</label>
             <input type="number" class="form-control" name="stagesId" id="field_stagesId"
                     ng-model="vm.stagesFollow.stagesId"
                      />
         </div>
         <div class="form-group">
-            <label class="control-label" translate="musixiseApp.stagesFollow.updtetime" for="field_updtetime">Updtetime</label>
+            <label class="control-label" translate="musixiseApp.stagesFollow.timestamp" for="field_timestamp">Timestamp</label>
                 <div class="input-group">
-                    <input id="field_updtetime" type="text" class="form-control" name="updtetime" uib-datepicker-popup="{{dateformat}}" ng-model="vm.stagesFollow.updtetime" is-open="vm.datePickerOpenStatus.updtetime"
-                    />
+                    <input id="field_timestamp" type="text" class="form-control" name="timestamp" datetime-picker="{{dateformat}}" ng-model="vm.stagesFollow.timestamp" is-open="vm.datePickerOpenStatus.timestamp"
+                      />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('updtetime')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('timestamp')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="musixiseApp.stagesFollow.updatetime" for="field_updatetime">Updatetime</label>
+                <div class="input-group">
+                    <input id="field_updatetime" type="text" class="form-control" name="updatetime" datetime-picker="{{dateformat}}" ng-model="vm.stagesFollow.updatetime" is-open="vm.datePickerOpenStatus.updatetime"
+                      />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('updatetime')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>

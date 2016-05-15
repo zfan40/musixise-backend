@@ -6,7 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
@@ -30,14 +30,14 @@ public class StagesFollow implements Serializable {
     @Column(name = "audience_uid")
     private Long audienceUid;
 
-    @Column(name = "timestamp")
-    private LocalDate timestamp;
-
     @Column(name = "stages_id")
     private Long stagesId;
 
-    @Column(name = "updtetime")
-    private LocalDate updtetime;
+    @Column(name = "timestamp")
+    private ZonedDateTime timestamp;
+
+    @Column(name = "updatetime")
+    private ZonedDateTime updatetime;
 
     public Long getId() {
         return id;
@@ -63,14 +63,6 @@ public class StagesFollow implements Serializable {
         this.audienceUid = audienceUid;
     }
 
-    public LocalDate getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDate timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public Long getStagesId() {
         return stagesId;
     }
@@ -79,12 +71,20 @@ public class StagesFollow implements Serializable {
         this.stagesId = stagesId;
     }
 
-    public LocalDate getUpdtetime() {
-        return updtetime;
+    public ZonedDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setUpdtetime(LocalDate updtetime) {
-        this.updtetime = updtetime;
+    public void setTimestamp(ZonedDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public ZonedDateTime getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(ZonedDateTime updatetime) {
+        this.updatetime = updatetime;
     }
 
     @Override
@@ -113,9 +113,9 @@ public class StagesFollow implements Serializable {
             "id=" + id +
             ", musixiserUid='" + musixiserUid + "'" +
             ", audienceUid='" + audienceUid + "'" +
-            ", timestamp='" + timestamp + "'" +
             ", stagesId='" + stagesId + "'" +
-            ", updtetime='" + updtetime + "'" +
+            ", timestamp='" + timestamp + "'" +
+            ", updatetime='" + updatetime + "'" +
             '}';
     }
 }

@@ -29,20 +29,22 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="timestamp" type="date">
-                <constraints nullable="true" />
-            </column>
-            
             <column name="stages_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             
-            <column name="updtetime" type="date">
+            <column name="timestamp" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="updatetime" type="timestamp">
                 <constraints nullable="true" />
             </column>
             
             <!-- jhipster-needle-liquibase-add-column - Jhipster will add columns here, do not remove-->
         </createTable>
+        <dropDefaultValue tableName="stages_follow" columnName="timestamp" columnDataType="datetime"/>
+        <dropDefaultValue tableName="stages_follow" columnName="updatetime" columnDataType="datetime"/>
         
     </changeSet>
 </databaseChangeLog>

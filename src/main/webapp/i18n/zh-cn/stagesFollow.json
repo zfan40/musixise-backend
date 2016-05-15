@@ -18,9 +18,9 @@
             },
             "musixiserUid": "MusixiserUid",
             "audienceUid": "AudienceUid",
-            "timestamp": "Timestamp",
             "stagesId": "StagesId",
-            "updtetime": "Updtetime"
+            "timestamp": "Timestamp",
+            "updatetime": "Updatetime"
         }
     }
 }

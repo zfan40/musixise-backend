@@ -38,9 +38,9 @@
                     <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="musixiserUid"><span translate="musixiseApp.stagesFollow.musixiserUid">MusixiserUid</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="audienceUid"><span translate="musixiseApp.stagesFollow.audienceUid">AudienceUid</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="timestamp"><span translate="musixiseApp.stagesFollow.timestamp">Timestamp</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="stagesId"><span translate="musixiseApp.stagesFollow.stagesId">StagesId</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="updtetime"><span translate="musixiseApp.stagesFollow.updtetime">Updtetime</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="timestamp"><span translate="musixiseApp.stagesFollow.timestamp">Timestamp</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="updatetime"><span translate="musixiseApp.stagesFollow.updatetime">Updatetime</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -49,9 +49,9 @@
                     <td><a ui-sref="stages-follow-detail({id:stagesFollow.id})">{{stagesFollow.id}}</a></td>
                     <td>{{stagesFollow.musixiserUid}}</td>
                     <td>{{stagesFollow.audienceUid}}</td>
-                        <td>{{stagesFollow.timestamp | date:'mediumDate'}}</td>
                     <td>{{stagesFollow.stagesId}}</td>
-                        <td>{{stagesFollow.updtetime | date:'mediumDate'}}</td>
+                    <td>{{stagesFollow.timestamp | date:'medium'}}</td>
+                    <td>{{stagesFollow.updatetime | date:'medium'}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

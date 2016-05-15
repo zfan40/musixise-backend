@@ -93,9 +93,9 @@
                             return {
                                 musixiserUid: null,
                                 audienceUid: null,
-                                timestamp: null,
                                 stagesId: null,
-                                updtetime: null,
+                                timestamp: null,
+                                updatetime: null,
                                 id: null
                             };
                         }

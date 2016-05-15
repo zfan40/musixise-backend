@@ -1,6 +1,6 @@
 package musixise.web.rest.dto;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -18,13 +18,13 @@ public class StagesFollowDTO implements Serializable {
     private Long audienceUid;
 
 
-    private LocalDate timestamp;
-
-
     private Long stagesId;
 
 
-    private LocalDate updtetime;
+    private ZonedDateTime timestamp;
+
+
+    private ZonedDateTime updatetime;
 
 
     public Long getId() {
@@ -48,13 +48,6 @@ public class StagesFollowDTO implements Serializable {
     public void setAudienceUid(Long audienceUid) {
         this.audienceUid = audienceUid;
     }
-    public LocalDate getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDate timestamp) {
-        this.timestamp = timestamp;
-    }
     public Long getStagesId() {
         return stagesId;
     }
@@ -62,12 +55,19 @@ public class StagesFollowDTO implements Serializable {
     public void setStagesId(Long stagesId) {
         this.stagesId = stagesId;
     }
-    public LocalDate getUpdtetime() {
-        return updtetime;
+    public ZonedDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setUpdtetime(LocalDate updtetime) {
-        this.updtetime = updtetime;
+    public void setTimestamp(ZonedDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+    public ZonedDateTime getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(ZonedDateTime updatetime) {
+        this.updatetime = updatetime;
     }
 
     @Override
@@ -97,9 +97,9 @@ public class StagesFollowDTO implements Serializable {
             "id=" + id +
             ", musixiserUid='" + musixiserUid + "'" +
             ", audienceUid='" + audienceUid + "'" +
-            ", timestamp='" + timestamp + "'" +
             ", stagesId='" + stagesId + "'" +
-            ", updtetime='" + updtetime + "'" +
+            ", timestamp='" + timestamp + "'" +
+            ", updatetime='" + updatetime + "'" +
             '}';
     }
 }

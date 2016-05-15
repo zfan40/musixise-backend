@@ -10,16 +10,16 @@
             "fieldType": "Long"
         },
         {
-            "fieldName": "timestamp",
-            "fieldType": "LocalDate"
-        },
-        {
             "fieldName": "stagesId",
             "fieldType": "Long"
         },
         {
-            "fieldName": "updtetime",
-            "fieldType": "LocalDate"
+            "fieldName": "timestamp",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "updatetime",
+            "fieldType": "ZonedDateTime"
         }
     ],
     "changelogDate": "20160515111152",
