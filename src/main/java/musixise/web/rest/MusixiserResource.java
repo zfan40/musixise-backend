@@ -172,71 +172,7 @@ public class MusixiserResource {
     }
 
 
-    @RequestMapping(value = "/musixisers/register",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<?> registerMusixiser(@RequestBody MusixiseDTO musixiseDTO, HttpServletRequest request) throws URISyntaxException {
-        log.debug("REST request to register Musixiser : {}", musixiseDTO);
-        if (musixiseDTO.getId() != null || musixiseDTO.getUserId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("musixiser", "idexists", "A new musixiser cannot already have an ID")).body(null);
-        }
 
-        //注册账号
-        ManagedUserDTO managedUserDTO = new ManagedUserDTO();
-        managedUserDTO.setLogin(musixiseDTO.getNickname());
-        managedUserDTO.setPassword(musixiseDTO.getPassword());
-        managedUserDTO.setEmail(musixiseDTO.getEmail());
-
-        if (userRepository.findOneByLogin(managedUserDTO.getLogin()).isPresent()) {
-            return ResponseEntity.badRequest()
-                .headers(HeaderUtil.createFailureAlert("userManagement", "userexists", "username already in use"))
-                .body(null);
-        } else if (userRepository.findOneByEmail(musixiseDTO.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest()
-                .headers(HeaderUtil.createFailureAlert("userManagement", "emailexists", "Email already in use"))
-                .body(null);
-        } else {
-            User newUser = userService.createUser(managedUserDTO);
-            //保存个人信息
-            Musixiser musixiser = new Musixiser();
-
-            musixiser.setUserId(newUser.getId());
-            musixiser.setRealname(musixiseDTO.getRealname());
-            musixiser.setTel(musixiseDTO.getTel());
-            musixiser.setEmail(musixiseDTO.getEmail());
-            musixiser.setBirth(musixiseDTO.getBirth());
-            musixiser.setGender(musixiseDTO.getGender());
-            musixiser.setSmallAvatar(musixiseDTO.getSmallAvatar());
-            musixiser.setLargeAvatar(musixiseDTO.getLargeAvatar());
-            musixiser.setNation(musixiseDTO.getNation());
-
-            Musixiser result = musixiserRepository.save(musixiser);
-
-            //搜索索引
-            musixiserSearchRepository.save(result);
-
-            return ResponseEntity.created(new URI("/api/musixisers/" + newUser.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert("musixiser", result.getId().toString()))
-                .body(result);
-        }
-
-    }
-
-
-    @RequestMapping(value = "/musixisers/getInfo",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<Musixiser> getMusixiserInfo() {
-
-        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
-            .map(u -> {
-                Musixiser musixiser = musixiserRepository.findOneByUserId(u.getId());
-                return new ResponseEntity<>(musixiser, HttpStatus.OK);
-            })
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
 
 
 }
