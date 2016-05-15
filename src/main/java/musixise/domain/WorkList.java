@@ -37,8 +37,7 @@ public class WorkList implements Serializable {
     @Column(name = "createtime", nullable = false)
     private LocalDate createtime;
 
-    @NotNull
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Long userId;
 
     public Long getId() {

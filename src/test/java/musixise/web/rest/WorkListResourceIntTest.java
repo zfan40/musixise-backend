@@ -3,9 +3,11 @@ package musixise.web.rest;
 import musixise.MusixiseApp;
 import musixise.domain.WorkList;
 import musixise.repository.WorkListRepository;
+import musixise.service.WorkListService;
 import musixise.repository.search.WorkListSearchRepository;
+import musixise.web.rest.dto.WorkListDTO;
+import musixise.web.rest.mapper.WorkListMapper;
 
-import musixise.web.rest.admin.WorkListResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +24,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -61,6 +64,12 @@ public class WorkListResourceIntTest {
     private WorkListRepository workListRepository;
 
     @Inject
+    private WorkListMapper workListMapper;
+
+    @Inject
+    private WorkListService workListService;
+
+    @Inject
     private WorkListSearchRepository workListSearchRepository;
 
     @Inject
@@ -77,8 +86,8 @@ public class WorkListResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         WorkListResource workListResource = new WorkListResource();
-        ReflectionTestUtils.setField(workListResource, "workListSearchRepository", workListSearchRepository);
-        ReflectionTestUtils.setField(workListResource, "workListRepository", workListRepository);
+        ReflectionTestUtils.setField(workListResource, "workListService", workListService);
+        ReflectionTestUtils.setField(workListResource, "workListMapper", workListMapper);
         this.restWorkListMockMvc = MockMvcBuilders.standaloneSetup(workListResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -100,10 +109,11 @@ public class WorkListResourceIntTest {
         int databaseSizeBeforeCreate = workListRepository.findAll().size();
 
         // Create the WorkList
+        WorkListDTO workListDTO = workListMapper.workListToWorkListDTO(workList);
 
         restWorkListMockMvc.perform(post("/api/work-lists")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(workList)))
+                .content(TestUtil.convertObjectToJsonBytes(workListDTO)))
                 .andExpect(status().isCreated());
 
         // Validate the WorkList in the database
@@ -128,10 +138,11 @@ public class WorkListResourceIntTest {
         workList.setContent(null);
 
         // Create the WorkList, which fails.
+        WorkListDTO workListDTO = workListMapper.workListToWorkListDTO(workList);
 
         restWorkListMockMvc.perform(post("/api/work-lists")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(workList)))
+                .content(TestUtil.convertObjectToJsonBytes(workListDTO)))
                 .andExpect(status().isBadRequest());
 
         List<WorkList> workLists = workListRepository.findAll();
@@ -146,28 +157,11 @@ public class WorkListResourceIntTest {
         workList.setCreatetime(null);
 
         // Create the WorkList, which fails.
+        WorkListDTO workListDTO = workListMapper.workListToWorkListDTO(workList);
 
         restWorkListMockMvc.perform(post("/api/work-lists")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(workList)))
-                .andExpect(status().isBadRequest());
-
-        List<WorkList> workLists = workListRepository.findAll();
-        assertThat(workLists).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkUserIdIsRequired() throws Exception {
-        int databaseSizeBeforeTest = workListRepository.findAll().size();
-        // set the field null
-        workList.setUserId(null);
-
-        // Create the WorkList, which fails.
-
-        restWorkListMockMvc.perform(post("/api/work-lists")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(workList)))
+                .content(TestUtil.convertObjectToJsonBytes(workListDTO)))
                 .andExpect(status().isBadRequest());
 
         List<WorkList> workLists = workListRepository.findAll();
@@ -231,10 +225,11 @@ public class WorkListResourceIntTest {
         updatedWorkList.setUrl(UPDATED_URL);
         updatedWorkList.setCreatetime(UPDATED_CREATETIME);
         updatedWorkList.setUserId(UPDATED_USER_ID);
+        WorkListDTO workListDTO = workListMapper.workListToWorkListDTO(updatedWorkList);
 
         restWorkListMockMvc.perform(put("/api/work-lists")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedWorkList)))
+                .content(TestUtil.convertObjectToJsonBytes(workListDTO)))
                 .andExpect(status().isOk());
 
         // Validate the WorkList in the database

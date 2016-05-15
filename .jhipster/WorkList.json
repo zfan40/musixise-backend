@@ -27,8 +27,8 @@
         }
     ],
     "changelogDate": "20160508024110",
-    "dto": "no",
-    "service": "no",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
     "entityTableName": "work_list",
-    "pagination": "no"
+    "pagination": "pagination"
 }

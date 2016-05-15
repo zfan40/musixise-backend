@@ -12,4 +12,5 @@ import java.util.List;
 public interface MusixiserRepository extends JpaRepository<Musixiser,Long> {
 
     Musixiser findOneByUserId(Long userId);
+
 }

@@ -3,9 +3,11 @@ package musixise.web.rest;
 import musixise.MusixiseApp;
 import musixise.domain.Stages;
 import musixise.repository.StagesRepository;
+import musixise.service.StagesService;
 import musixise.repository.search.StagesSearchRepository;
+import musixise.web.rest.dto.StagesDTO;
+import musixise.web.rest.mapper.StagesMapper;
 
-import musixise.web.rest.admin.StagesResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +61,12 @@ public class StagesResourceIntTest {
     private StagesRepository stagesRepository;
 
     @Inject
+    private StagesMapper stagesMapper;
+
+    @Inject
+    private StagesService stagesService;
+
+    @Inject
     private StagesSearchRepository stagesSearchRepository;
 
     @Inject
@@ -75,8 +83,8 @@ public class StagesResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         StagesResource stagesResource = new StagesResource();
-        ReflectionTestUtils.setField(stagesResource, "stagesSearchRepository", stagesSearchRepository);
-        ReflectionTestUtils.setField(stagesResource, "stagesRepository", stagesRepository);
+        ReflectionTestUtils.setField(stagesResource, "stagesService", stagesService);
+        ReflectionTestUtils.setField(stagesResource, "stagesMapper", stagesMapper);
         this.restStagesMockMvc = MockMvcBuilders.standaloneSetup(stagesResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -97,10 +105,11 @@ public class StagesResourceIntTest {
         int databaseSizeBeforeCreate = stagesRepository.findAll().size();
 
         // Create the Stages
+        StagesDTO stagesDTO = stagesMapper.stagesToStagesDTO(stages);
 
         restStagesMockMvc.perform(post("/api/stages")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(stages)))
+                .content(TestUtil.convertObjectToJsonBytes(stagesDTO)))
                 .andExpect(status().isCreated());
 
         // Validate the Stages in the database
@@ -124,10 +133,11 @@ public class StagesResourceIntTest {
         stages.setStatus(null);
 
         // Create the Stages, which fails.
+        StagesDTO stagesDTO = stagesMapper.stagesToStagesDTO(stages);
 
         restStagesMockMvc.perform(post("/api/stages")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(stages)))
+                .content(TestUtil.convertObjectToJsonBytes(stagesDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Stages> stages = stagesRepository.findAll();
@@ -142,10 +152,11 @@ public class StagesResourceIntTest {
         stages.setCreatetime(null);
 
         // Create the Stages, which fails.
+        StagesDTO stagesDTO = stagesMapper.stagesToStagesDTO(stages);
 
         restStagesMockMvc.perform(post("/api/stages")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(stages)))
+                .content(TestUtil.convertObjectToJsonBytes(stagesDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Stages> stages = stagesRepository.findAll();
@@ -206,10 +217,11 @@ public class StagesResourceIntTest {
         updatedStages.setStatus(UPDATED_STATUS);
         updatedStages.setCreatetime(UPDATED_CREATETIME);
         updatedStages.setUserId(UPDATED_USER_ID);
+        StagesDTO stagesDTO = stagesMapper.stagesToStagesDTO(updatedStages);
 
         restStagesMockMvc.perform(put("/api/stages")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedStages)))
+                .content(TestUtil.convertObjectToJsonBytes(stagesDTO)))
                 .andExpect(status().isOk());
 
         // Validate the Stages in the database

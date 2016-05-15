@@ -20,6 +20,7 @@ import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * Created by zhaowei on 16/5/15.
@@ -243,6 +245,18 @@ public class MusixiserExtResource {
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 
 
+    }
+
+
+    @RequestMapping(value = "/pastWorksList",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "获取当前音乐人作品列表", notes = "获取音乐人过去的演出作品列表（midi或其他形式返回）", response = WorkList.class, position = 2)
+    @Timed
+    public List<WorkList> getPassWorksList(Pageable pageable) {
+        log.debug("REST request to get all WorkLists");
+        List<WorkList> workLists = workListRepository.findAll();
+        return workLists;
     }
 
 }

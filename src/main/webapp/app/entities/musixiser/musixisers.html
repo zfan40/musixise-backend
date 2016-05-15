@@ -34,18 +34,18 @@
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr>
-                    <th><span translate="global.field.id">ID</span></th>
-                    <th><span translate="musixiseApp.musixiser.realname">Realname</span></th>
-                    <th><span translate="musixiseApp.musixiser.tel">Tel</span></th>
-                    <th><span translate="musixiseApp.musixiser.email">Email</span></th>
-                    <th><span translate="musixiseApp.musixiser.birth">Birth</span></th>
-                    <th><span translate="musixiseApp.musixiser.gender">Gender</span></th>
-                    <th><span translate="musixiseApp.musixiser.smallAvatar">SmallAvatar</span></th>
-                    <th><span translate="musixiseApp.musixiser.largeAvatar">LargeAvatar</span></th>
-                    <th><span translate="musixiseApp.musixiser.nation">Nation</span></th>
-                    <th><span translate="musixiseApp.musixiser.isMaster">IsMaster</span></th>
-                    <th><span translate="musixiseApp.musixiser.userId">UserId</span></th>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="realname"><span translate="musixiseApp.musixiser.realname">Realname</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="tel"><span translate="musixiseApp.musixiser.tel">Tel</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="email"><span translate="musixiseApp.musixiser.email">Email</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="birth"><span translate="musixiseApp.musixiser.birth">Birth</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="gender"><span translate="musixiseApp.musixiser.gender">Gender</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="smallAvatar"><span translate="musixiseApp.musixiser.smallAvatar">SmallAvatar</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="largeAvatar"><span translate="musixiseApp.musixiser.largeAvatar">LargeAvatar</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="nation"><span translate="musixiseApp.musixiser.nation">Nation</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="isMaster"><span translate="musixiseApp.musixiser.isMaster">IsMaster</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="userId"><span translate="musixiseApp.musixiser.userId">UserId</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -87,5 +87,9 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount"></jhi-item-count>
+        <uib-pagination class="pagination-sm" total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pagination>
     </div>
 </div>

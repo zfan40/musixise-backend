@@ -3,7 +3,10 @@ package musixise.web.rest;
 import musixise.MusixiseApp;
 import musixise.domain.Musixiser;
 import musixise.repository.MusixiserRepository;
+import musixise.service.MusixiserService;
 import musixise.repository.search.MusixiserSearchRepository;
+import musixise.web.rest.dto.MusixiserDTO;
+import musixise.web.rest.mapper.MusixiserMapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -69,6 +72,12 @@ public class MusixiserResourceIntTest {
     private MusixiserRepository musixiserRepository;
 
     @Inject
+    private MusixiserMapper musixiserMapper;
+
+    @Inject
+    private MusixiserService musixiserService;
+
+    @Inject
     private MusixiserSearchRepository musixiserSearchRepository;
 
     @Inject
@@ -85,8 +94,8 @@ public class MusixiserResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         MusixiserResource musixiserResource = new MusixiserResource();
-        ReflectionTestUtils.setField(musixiserResource, "musixiserSearchRepository", musixiserSearchRepository);
-        ReflectionTestUtils.setField(musixiserResource, "musixiserRepository", musixiserRepository);
+        ReflectionTestUtils.setField(musixiserResource, "musixiserService", musixiserService);
+        ReflectionTestUtils.setField(musixiserResource, "musixiserMapper", musixiserMapper);
         this.restMusixiserMockMvc = MockMvcBuilders.standaloneSetup(musixiserResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -114,10 +123,11 @@ public class MusixiserResourceIntTest {
         int databaseSizeBeforeCreate = musixiserRepository.findAll().size();
 
         // Create the Musixiser
+        MusixiserDTO musixiserDTO = musixiserMapper.musixiserToMusixiserDTO(musixiser);
 
         restMusixiserMockMvc.perform(post("/api/musixisers")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(musixiser)))
+                .content(TestUtil.convertObjectToJsonBytes(musixiserDTO)))
                 .andExpect(status().isCreated());
 
         // Validate the Musixiser in the database
@@ -148,10 +158,11 @@ public class MusixiserResourceIntTest {
         musixiser.setUserId(null);
 
         // Create the Musixiser, which fails.
+        MusixiserDTO musixiserDTO = musixiserMapper.musixiserToMusixiserDTO(musixiser);
 
         restMusixiserMockMvc.perform(post("/api/musixisers")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(musixiser)))
+                .content(TestUtil.convertObjectToJsonBytes(musixiserDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Musixiser> musixisers = musixiserRepository.findAll();
@@ -233,10 +244,11 @@ public class MusixiserResourceIntTest {
         updatedMusixiser.setNation(UPDATED_NATION);
         updatedMusixiser.setIsMaster(UPDATED_IS_MASTER);
         updatedMusixiser.setUserId(UPDATED_USER_ID);
+        MusixiserDTO musixiserDTO = musixiserMapper.musixiserToMusixiserDTO(updatedMusixiser);
 
         restMusixiserMockMvc.perform(put("/api/musixisers")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedMusixiser)))
+                .content(TestUtil.convertObjectToJsonBytes(musixiserDTO)))
                 .andExpect(status().isOk());
 
         // Validate the Musixiser in the database

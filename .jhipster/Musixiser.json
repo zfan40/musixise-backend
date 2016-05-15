@@ -46,8 +46,8 @@
         }
     ],
     "changelogDate": "20160508010035",
-    "dto": "no",
-    "service": "no",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
     "entityTableName": "musixiser",
-    "pagination": "no"
+    "pagination": "pagination"
 }
