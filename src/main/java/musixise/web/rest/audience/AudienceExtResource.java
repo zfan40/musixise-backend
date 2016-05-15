@@ -17,6 +17,7 @@ import musixise.web.rest.dto.AudienceDTO;
 import musixise.web.rest.dto.ManagedUserDTO;
 import musixise.web.rest.dto.StagesDTO;
 import musixise.web.rest.dto.response.GetState;
+import musixise.web.rest.dto.response.GetStateList;
 import musixise.web.rest.dto.user.RegisterAudienceDTO;
 import musixise.web.rest.mapper.AudienceMapper;
 import musixise.web.rest.mapper.StagesMapper;
@@ -136,12 +137,11 @@ public class AudienceExtResource {
     @ApiOperation(value = "获取演出列表", notes = "获取正在演出的音乐人列表", response = Musixiser.class, position = 2)
     @Timed
     @Transactional(readOnly = true)
-    public ResponseEntity<List<GetState>> getOnStagesList(Pageable pageable)
+    public ResponseEntity<GetStateList> getOnStagesList(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of on Stages List");
         Page<Stages> page = stagesService.findAll(pageable);
         List<StagesDTO> stagesList = stagesMapper.stagesToStagesDTOs(page.getContent());
-
         List<GetState> getStateLists = new ArrayList<>();
 
         for (StagesDTO stagesDTO : stagesList) {
@@ -158,7 +158,14 @@ public class AudienceExtResource {
             getState.setAudienceNum(100);
             getStateLists.add(getState);
         }
-        return ResponseEntity.ok().body(getStateLists);
+        //显示列表加分页信息
+        GetStateList getStateList = new GetStateList();
+        getStateList.setList(getStateLists);
+        getStateList.setCurrentPage(page.getNumber());
+        getStateList.setPageSize(page.getSize());
+        getStateList.setTotal(page.getTotalElements());
+
+        return ResponseEntity.ok().body(getStateList);
     }
 
 }
