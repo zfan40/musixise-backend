@@ -73,6 +73,7 @@
                             return {
                                 status: null,
                                 createtime: null,
+                                userId: null,
                                 id: null
                             };
                         }

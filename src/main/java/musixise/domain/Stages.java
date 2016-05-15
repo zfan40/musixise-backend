@@ -33,9 +33,9 @@ public class Stages implements Serializable {
     @Column(name = "createtime", nullable = false)
     private LocalDate createtime;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private User user_id;
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     public Long getId() {
         return id;
@@ -61,12 +61,12 @@ public class Stages implements Serializable {
         this.createtime = createtime;
     }
 
-    public User getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(User user) {
-        this.user_id = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -95,6 +95,7 @@ public class Stages implements Serializable {
             "id=" + id +
             ", status='" + status + "'" +
             ", createtime='" + createtime + "'" +
+            ", userId='" + userId + "'" +
             '}';
     }
 }

@@ -18,7 +18,7 @@
             },
             "status": "Status",
             "createtime": "Createtime",
-            "user_id": "User_id"
+            "userId": "UserId"
         }
     }
 }

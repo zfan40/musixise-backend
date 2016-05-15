@@ -1,4 +1,4 @@
-package musixise.web.rest;
+package musixise.web.rest.admin;
 
 import com.codahale.metrics.annotation.Timed;
 import musixise.domain.Stages;
@@ -7,7 +7,6 @@ import musixise.repository.search.StagesSearchRepository;
 import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +31,13 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class StagesResource {
 
     private final Logger log = LoggerFactory.getLogger(StagesResource.class);
-        
+
     @Inject
     private StagesRepository stagesRepository;
-    
+
     @Inject
     private StagesSearchRepository stagesSearchRepository;
-    
+
     /**
      * POST  /stages : Create a new stages.
      *

@@ -33,15 +33,12 @@
                 <constraints nullable="false" />
             </column>
             
-            <column name="user_id_id" type="bigint"/>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            
             <!-- jhipster-needle-liquibase-add-column - Jhipster will add columns here, do not remove-->
         </createTable>
         
-        <addForeignKeyConstraint baseColumnNames="user_id_id"
-                                 baseTableName="work_list"
-                                 constraintName="fk_worklist_user_id_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
-
     </changeSet>
 </databaseChangeLog>

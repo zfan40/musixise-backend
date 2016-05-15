@@ -5,6 +5,7 @@ import musixise.domain.WorkList;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.WorkListSearchRepository;
 
+import musixise.web.rest.admin.WorkListResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -53,6 +53,9 @@ public class WorkListResourceIntTest {
 
     private static final LocalDate DEFAULT_CREATETIME = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
+
+    private static final Long DEFAULT_USER_ID = 1L;
+    private static final Long UPDATED_USER_ID = 2L;
 
     @Inject
     private WorkListRepository workListRepository;
@@ -88,6 +91,7 @@ public class WorkListResourceIntTest {
         workList.setContent(DEFAULT_CONTENT);
         workList.setUrl(DEFAULT_URL);
         workList.setCreatetime(DEFAULT_CREATETIME);
+        workList.setUserId(DEFAULT_USER_ID);
     }
 
     @Test
@@ -109,6 +113,7 @@ public class WorkListResourceIntTest {
         assertThat(testWorkList.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testWorkList.getUrl()).isEqualTo(DEFAULT_URL);
         assertThat(testWorkList.getCreatetime()).isEqualTo(DEFAULT_CREATETIME);
+        assertThat(testWorkList.getUserId()).isEqualTo(DEFAULT_USER_ID);
 
         // Validate the WorkList in ElasticSearch
         WorkList workListEs = workListSearchRepository.findOne(testWorkList.getId());
@@ -153,6 +158,24 @@ public class WorkListResourceIntTest {
 
     @Test
     @Transactional
+    public void checkUserIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = workListRepository.findAll().size();
+        // set the field null
+        workList.setUserId(null);
+
+        // Create the WorkList, which fails.
+
+        restWorkListMockMvc.perform(post("/api/work-lists")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(workList)))
+                .andExpect(status().isBadRequest());
+
+        List<WorkList> workLists = workListRepository.findAll();
+        assertThat(workLists).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllWorkLists() throws Exception {
         // Initialize the database
         workListRepository.saveAndFlush(workList);
@@ -164,7 +187,8 @@ public class WorkListResourceIntTest {
                 .andExpect(jsonPath("$.[*].id").value(hasItem(workList.getId().intValue())))
                 .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
                 .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
-                .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())));
+                .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())))
+                .andExpect(jsonPath("$.[*].userId").value(hasItem(DEFAULT_USER_ID.intValue())));
     }
 
     @Test
@@ -180,7 +204,8 @@ public class WorkListResourceIntTest {
             .andExpect(jsonPath("$.id").value(workList.getId().intValue()))
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
             .andExpect(jsonPath("$.url").value(DEFAULT_URL.toString()))
-            .andExpect(jsonPath("$.createtime").value(DEFAULT_CREATETIME.toString()));
+            .andExpect(jsonPath("$.createtime").value(DEFAULT_CREATETIME.toString()))
+            .andExpect(jsonPath("$.userId").value(DEFAULT_USER_ID.intValue()));
     }
 
     @Test
@@ -205,6 +230,7 @@ public class WorkListResourceIntTest {
         updatedWorkList.setContent(UPDATED_CONTENT);
         updatedWorkList.setUrl(UPDATED_URL);
         updatedWorkList.setCreatetime(UPDATED_CREATETIME);
+        updatedWorkList.setUserId(UPDATED_USER_ID);
 
         restWorkListMockMvc.perform(put("/api/work-lists")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -218,6 +244,7 @@ public class WorkListResourceIntTest {
         assertThat(testWorkList.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testWorkList.getUrl()).isEqualTo(UPDATED_URL);
         assertThat(testWorkList.getCreatetime()).isEqualTo(UPDATED_CREATETIME);
+        assertThat(testWorkList.getUserId()).isEqualTo(UPDATED_USER_ID);
 
         // Validate the WorkList in ElasticSearch
         WorkList workListEs = workListSearchRepository.findOne(testWorkList.getId());
@@ -260,6 +287,7 @@ public class WorkListResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(workList.getId().intValue())))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
-            .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())));
+            .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())))
+            .andExpect(jsonPath("$.[*].userId").value(hasItem(DEFAULT_USER_ID.intValue())));
     }
 }

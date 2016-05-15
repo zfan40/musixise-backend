@@ -5,11 +5,14 @@ import io.swagger.annotations.*;
 import musixise.domain.Musixiser;
 import musixise.domain.Stages;
 import musixise.domain.User;
+import musixise.domain.WorkList;
 import musixise.repository.MusixiserRepository;
 import musixise.repository.StagesRepository;
 import musixise.repository.UserRepository;
+import musixise.repository.WorkListRepository;
 import musixise.repository.search.MusixiserSearchRepository;
 import musixise.repository.search.StagesSearchRepository;
+import musixise.repository.search.WorkListSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.UserService;
 import musixise.web.rest.dto.ManagedUserDTO;
@@ -55,6 +58,12 @@ public class MusixiserExtResource {
 
     @Inject
     private StagesSearchRepository stagesSearchRepository;
+
+    @Inject
+    private WorkListRepository workListRepository;
+
+    @Inject
+    private WorkListSearchRepository workListSearchRepository;
 
     @RequestMapping(value = "/register",
         method = RequestMethod.POST,
@@ -163,16 +172,27 @@ public class MusixiserExtResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "音乐人开始演出", notes = "音乐人开始演出", response = Stages.class, position = 2)
     @Timed
-    public ResponseEntity<Stages> onStages(@Valid @RequestBody Stages stages) throws URISyntaxException {
+    public ResponseEntity<?> onStages(@Valid @RequestBody Stages stages) throws URISyntaxException {
         log.debug("REST request to on Stages : {}", stages);
         if (stages.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("stages", "idexists", "A new stages cannot already have an ID")).body(null);
         }
-        Stages result = stagesRepository.save(stages);
-        stagesSearchRepository.save(result);
-        return ResponseEntity.created(new URI("/api/stages/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("stages", result.getId().toString()))
-            .body(result);
+
+        //获取当前用户信息
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map(u -> {
+
+                stages.setUserId(u.getId());
+                Stages result = stagesRepository.save(stages);
+                stagesSearchRepository.save(result);
+                return ResponseEntity.ok()
+                    .headers(HeaderUtil.createEntityCreationAlert("stages", result.getId().toString()))
+                    .body(result);
+
+            })
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+
+
     }
 
 
@@ -183,9 +203,36 @@ public class MusixiserExtResource {
     @Timed
     public ResponseEntity<Void> offStages(@ApiParam(value = "ID", required = true) @PathVariable Long id) {
         log.debug("REST request to off Stages : {}", id);
-        stagesRepository.delete(id);
-        stagesSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("stages", id.toString())).build();
+
+        //获取当前用户信息
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map(u -> {
+                WorkList workList = workListRepository.findOne(id);
+                //判断是当前用户操作则执行.
+                if (workList.getUserId() == u.getId()) {
+                    stagesRepository.delete(id);
+                    stagesSearchRepository.delete(id);
+                }
+                return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("stages", id.toString())).build();
+
+            })
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+    @RequestMapping(value = "/saveWork",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<WorkList> saveWork(@Valid @RequestBody WorkList workList) throws URISyntaxException {
+        log.debug("REST request to save WorkList  : {}", workList);
+        if (workList.getId() != null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("workList", "idexists", "A new workList cannot already have an ID")).body(null);
+        }
+        WorkList result = workListRepository.save(workList);
+        workListSearchRepository.save(result);
+        return ResponseEntity.created(new URI("/api/work-lists/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert("workList", result.getId().toString()))
+            .body(result);
     }
 
 }

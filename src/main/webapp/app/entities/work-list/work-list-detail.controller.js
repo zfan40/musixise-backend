@@ -5,9 +5,9 @@
         .module('musixiseApp')
         .controller('WorkListDetailController', WorkListDetailController);
 
-    WorkListDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'DataUtils', 'entity', 'WorkList', 'User'];
+    WorkListDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'DataUtils', 'entity', 'WorkList'];
 
-    function WorkListDetailController($scope, $rootScope, $stateParams, DataUtils, entity, WorkList, User) {
+    function WorkListDetailController($scope, $rootScope, $stateParams, DataUtils, entity, WorkList) {
         var vm = this;
         vm.workList = entity;
         vm.load = function (id) {

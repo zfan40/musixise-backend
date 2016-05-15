@@ -5,12 +5,11 @@
         .module('musixiseApp')
         .controller('WorkListDialogController', WorkListDialogController);
 
-    WorkListDialogController.$inject = ['$scope', '$stateParams', '$uibModalInstance', 'DataUtils', 'entity', 'WorkList', 'User'];
+    WorkListDialogController.$inject = ['$scope', '$stateParams', '$uibModalInstance', 'DataUtils', 'entity', 'WorkList'];
 
-    function WorkListDialogController ($scope, $stateParams, $uibModalInstance, DataUtils, entity, WorkList, User) {
+    function WorkListDialogController ($scope, $stateParams, $uibModalInstance, DataUtils, entity, WorkList) {
         var vm = this;
         vm.workList = entity;
-        vm.users = User.query();
         vm.load = function(id) {
             WorkList.get({id : id}, function(result) {
                 vm.workList = result;

@@ -5,6 +5,7 @@ import musixise.domain.Stages;
 import musixise.repository.StagesRepository;
 import musixise.repository.search.StagesSearchRepository;
 
+import musixise.web.rest.admin.StagesResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +52,9 @@ public class StagesResourceIntTest {
     private static final LocalDate DEFAULT_CREATETIME = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
 
+    private static final Long DEFAULT_USER_ID = 1L;
+    private static final Long UPDATED_USER_ID = 2L;
+
     @Inject
     private StagesRepository stagesRepository;
 
@@ -84,6 +88,7 @@ public class StagesResourceIntTest {
         stages = new Stages();
         stages.setStatus(DEFAULT_STATUS);
         stages.setCreatetime(DEFAULT_CREATETIME);
+        stages.setUserId(DEFAULT_USER_ID);
     }
 
     @Test
@@ -104,6 +109,7 @@ public class StagesResourceIntTest {
         Stages testStages = stages.get(stages.size() - 1);
         assertThat(testStages.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testStages.getCreatetime()).isEqualTo(DEFAULT_CREATETIME);
+        assertThat(testStages.getUserId()).isEqualTo(DEFAULT_USER_ID);
 
         // Validate the Stages in ElasticSearch
         Stages stagesEs = stagesSearchRepository.findOne(testStages.getId());
@@ -148,6 +154,24 @@ public class StagesResourceIntTest {
 
     @Test
     @Transactional
+    public void checkUserIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = stagesRepository.findAll().size();
+        // set the field null
+        stages.setUserId(null);
+
+        // Create the Stages, which fails.
+
+        restStagesMockMvc.perform(post("/api/stages")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(stages)))
+                .andExpect(status().isBadRequest());
+
+        List<Stages> stages = stagesRepository.findAll();
+        assertThat(stages).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllStages() throws Exception {
         // Initialize the database
         stagesRepository.saveAndFlush(stages);
@@ -158,7 +182,8 @@ public class StagesResourceIntTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(stages.getId().intValue())))
                 .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
-                .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())));
+                .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())))
+                .andExpect(jsonPath("$.[*].userId").value(hasItem(DEFAULT_USER_ID.intValue())));
     }
 
     @Test
@@ -173,7 +198,8 @@ public class StagesResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(stages.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS))
-            .andExpect(jsonPath("$.createtime").value(DEFAULT_CREATETIME.toString()));
+            .andExpect(jsonPath("$.createtime").value(DEFAULT_CREATETIME.toString()))
+            .andExpect(jsonPath("$.userId").value(DEFAULT_USER_ID.intValue()));
     }
 
     @Test
@@ -197,6 +223,7 @@ public class StagesResourceIntTest {
         updatedStages.setId(stages.getId());
         updatedStages.setStatus(UPDATED_STATUS);
         updatedStages.setCreatetime(UPDATED_CREATETIME);
+        updatedStages.setUserId(UPDATED_USER_ID);
 
         restStagesMockMvc.perform(put("/api/stages")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -209,6 +236,7 @@ public class StagesResourceIntTest {
         Stages testStages = stages.get(stages.size() - 1);
         assertThat(testStages.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testStages.getCreatetime()).isEqualTo(UPDATED_CREATETIME);
+        assertThat(testStages.getUserId()).isEqualTo(UPDATED_USER_ID);
 
         // Validate the Stages in ElasticSearch
         Stages stagesEs = stagesSearchRepository.findOne(testStages.getId());
@@ -250,6 +278,7 @@ public class StagesResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.[*].id").value(hasItem(stages.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
-            .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())));
+            .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())))
+            .andExpect(jsonPath("$.[*].userId").value(hasItem(DEFAULT_USER_ID.intValue())));
     }
 }

@@ -11,7 +11,4 @@ import java.util.List;
  */
 public interface WorkListRepository extends JpaRepository<WorkList,Long> {
 
-    @Query("select workList from WorkList workList where workList.user_id.login = ?#{principal.username}")
-    List<WorkList> findByUser_idIsCurrentUser();
-
 }

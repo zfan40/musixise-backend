@@ -74,6 +74,7 @@
                                 content: null,
                                 url: null,
                                 createtime: null,
+                                userId: null,
                                 id: null
                             };
                         }

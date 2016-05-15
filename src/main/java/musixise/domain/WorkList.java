@@ -37,8 +37,9 @@ public class WorkList implements Serializable {
     @Column(name = "createtime", nullable = false)
     private LocalDate createtime;
 
-    @ManyToOne
-    private User user_id;
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     public Long getId() {
         return id;
@@ -72,12 +73,12 @@ public class WorkList implements Serializable {
         this.createtime = createtime;
     }
 
-    public User getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(User user) {
-        this.user_id = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -107,6 +108,7 @@ public class WorkList implements Serializable {
             ", content='" + content + "'" +
             ", url='" + url + "'" +
             ", createtime='" + createtime + "'" +
+            ", userId='" + userId + "'" +
             '}';
     }
 }

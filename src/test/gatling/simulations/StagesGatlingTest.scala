@@ -68,7 +68,7 @@ class StagesGatlingTest extends Simulation {
             .exec(http("Create new stages")
             .post("/api/stages")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "status":"0", "createtime":"2020-01-01T00:00:00.000Z"}""")).asJSON
+            .body(StringBody("""{"id":null, "status":"0", "createtime":"2020-01-01T00:00:00.000Z", "userId":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_stages_url"))).exitHereIfFailed
             .pause(10)

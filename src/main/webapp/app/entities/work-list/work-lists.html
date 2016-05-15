@@ -39,7 +39,7 @@
                     <th><span translate="musixiseApp.workList.content">Content</span></th>
                     <th><span translate="musixiseApp.workList.url">Url</span></th>
                     <th><span translate="musixiseApp.workList.createtime">Createtime</span></th>
-                    <th><span translate="musixiseApp.workList.user_id">user_id</span></th>
+                    <th><span translate="musixiseApp.workList.userId">UserId</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -49,9 +49,7 @@
                     <td>{{workList.content}}</td>
                     <td>{{workList.url}}</td>
                         <td>{{workList.createtime | date:'mediumDate'}}</td>
-                    <td>
-                        {{workList.user_id.id}}
-                    </td>
+                    <td>{{workList.userId}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

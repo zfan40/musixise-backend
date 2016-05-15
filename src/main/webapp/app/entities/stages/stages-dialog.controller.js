@@ -5,12 +5,11 @@
         .module('musixiseApp')
         .controller('StagesDialogController', StagesDialogController);
 
-    StagesDialogController.$inject = ['$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Stages', 'User'];
+    StagesDialogController.$inject = ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'Stages'];
 
-    function StagesDialogController ($scope, $stateParams, $uibModalInstance, $q, entity, Stages, User) {
+    function StagesDialogController ($scope, $stateParams, $uibModalInstance, entity, Stages) {
         var vm = this;
         vm.stages = entity;
-        vm.users = User.query();
         vm.load = function(id) {
             Stages.get({id : id}, function(result) {
                 vm.stages = result;

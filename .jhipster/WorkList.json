@@ -1,12 +1,5 @@
 {
-    "relationships": [
-        {
-            "relationshipName": "user_id",
-            "otherEntityName": "user",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
             "fieldName": "content",
@@ -23,6 +16,13 @@
         {
             "fieldName": "createtime",
             "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "userId",
+            "fieldType": "Long",
             "fieldValidateRules": [
                 "required"
             ]

@@ -5,9 +5,9 @@
         .module('musixiseApp')
         .controller('StagesDetailController', StagesDetailController);
 
-    StagesDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'Stages', 'User'];
+    StagesDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'Stages'];
 
-    function StagesDetailController($scope, $rootScope, $stateParams, entity, Stages, User) {
+    function StagesDetailController($scope, $rootScope, $stateParams, entity, Stages) {
         var vm = this;
         vm.stages = entity;
         vm.load = function (id) {
