@@ -1,0 +1,26 @@
+{
+    "musixiseApp": {
+        "stagesFollow" : {
+            "home": {
+                "title": "StagesFollows",
+                "createLabel": "Create a new StagesFollow",
+                "createOrEditLabel": "Create or edit a StagesFollow",
+                "search": "Search for StagesFollow"
+            },
+            "created": "A new StagesFollow is created with identifier {{ param }}",
+            "updated": "A StagesFollow is updated with identifier {{ param }}",
+            "deleted": "A StagesFollow is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete StagesFollow {{ id }}?"
+            },
+            "detail": {
+                "title": "StagesFollow"
+            },
+            "musixiserUid": "MusixiserUid",
+            "audienceUid": "AudienceUid",
+            "timestamp": "Timestamp",
+            "stagesId": "StagesId",
+            "updtetime": "Updtetime"
+        }
+    }
+}

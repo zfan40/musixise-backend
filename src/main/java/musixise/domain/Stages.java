@@ -36,6 +36,9 @@ public class Stages implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "audience_num")
+    private Integer audienceNum;
+
     public Long getId() {
         return id;
     }
@@ -68,6 +71,14 @@ public class Stages implements Serializable {
         this.userId = userId;
     }
 
+    public Integer getAudienceNum() {
+        return audienceNum;
+    }
+
+    public void setAudienceNum(Integer audienceNum) {
+        this.audienceNum = audienceNum;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -95,6 +106,7 @@ public class Stages implements Serializable {
             ", status='" + status + "'" +
             ", createtime='" + createtime + "'" +
             ", userId='" + userId + "'" +
+            ", audienceNum='" + audienceNum + "'" +
             '}';
     }
 }

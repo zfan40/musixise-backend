@@ -1,0 +1,30 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "musixiserUid",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "audienceUid",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "timestamp",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "stagesId",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "updtetime",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20160515111152",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
+    "entityTableName": "stages_follow",
+    "pagination": "pagination"
+}

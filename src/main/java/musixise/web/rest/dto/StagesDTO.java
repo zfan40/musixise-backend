@@ -24,6 +24,9 @@ public class StagesDTO implements Serializable {
     private Long userId;
 
 
+    private Integer audienceNum;
+
+
     public Long getId() {
         return id;
     }
@@ -51,6 +54,13 @@ public class StagesDTO implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+    public Integer getAudienceNum() {
+        return audienceNum;
+    }
+
+    public void setAudienceNum(Integer audienceNum) {
+        this.audienceNum = audienceNum;
     }
 
     @Override
@@ -81,6 +91,7 @@ public class StagesDTO implements Serializable {
             ", status='" + status + "'" +
             ", createtime='" + createtime + "'" +
             ", userId='" + userId + "'" +
+            ", audienceNum='" + audienceNum + "'" +
             '}';
     }
 }

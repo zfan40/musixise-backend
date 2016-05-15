@@ -18,7 +18,10 @@
         {
             "fieldName": "userId",
             "fieldType": "Long"
-
+        },
+        {
+            "fieldName": "audienceNum",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20160508023025",

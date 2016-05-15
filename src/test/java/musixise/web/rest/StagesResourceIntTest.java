@@ -57,6 +57,9 @@ public class StagesResourceIntTest {
     private static final Long DEFAULT_USER_ID = 1L;
     private static final Long UPDATED_USER_ID = 2L;
 
+    private static final Integer DEFAULT_AUDIENCE_NUM = 1;
+    private static final Integer UPDATED_AUDIENCE_NUM = 2;
+
     @Inject
     private StagesRepository stagesRepository;
 
@@ -97,6 +100,7 @@ public class StagesResourceIntTest {
         stages.setStatus(DEFAULT_STATUS);
         stages.setCreatetime(DEFAULT_CREATETIME);
         stages.setUserId(DEFAULT_USER_ID);
+        stages.setAudienceNum(DEFAULT_AUDIENCE_NUM);
     }
 
     @Test
@@ -119,6 +123,7 @@ public class StagesResourceIntTest {
         assertThat(testStages.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testStages.getCreatetime()).isEqualTo(DEFAULT_CREATETIME);
         assertThat(testStages.getUserId()).isEqualTo(DEFAULT_USER_ID);
+        assertThat(testStages.getAudienceNum()).isEqualTo(DEFAULT_AUDIENCE_NUM);
 
         // Validate the Stages in ElasticSearch
         Stages stagesEs = stagesSearchRepository.findOne(testStages.getId());
@@ -176,7 +181,8 @@ public class StagesResourceIntTest {
                 .andExpect(jsonPath("$.[*].id").value(hasItem(stages.getId().intValue())))
                 .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
                 .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())))
-                .andExpect(jsonPath("$.[*].userId").value(hasItem(DEFAULT_USER_ID.intValue())));
+                .andExpect(jsonPath("$.[*].userId").value(hasItem(DEFAULT_USER_ID.intValue())))
+                .andExpect(jsonPath("$.[*].audienceNum").value(hasItem(DEFAULT_AUDIENCE_NUM)));
     }
 
     @Test
@@ -192,7 +198,8 @@ public class StagesResourceIntTest {
             .andExpect(jsonPath("$.id").value(stages.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS))
             .andExpect(jsonPath("$.createtime").value(DEFAULT_CREATETIME.toString()))
-            .andExpect(jsonPath("$.userId").value(DEFAULT_USER_ID.intValue()));
+            .andExpect(jsonPath("$.userId").value(DEFAULT_USER_ID.intValue()))
+            .andExpect(jsonPath("$.audienceNum").value(DEFAULT_AUDIENCE_NUM));
     }
 
     @Test
@@ -217,6 +224,7 @@ public class StagesResourceIntTest {
         updatedStages.setStatus(UPDATED_STATUS);
         updatedStages.setCreatetime(UPDATED_CREATETIME);
         updatedStages.setUserId(UPDATED_USER_ID);
+        updatedStages.setAudienceNum(UPDATED_AUDIENCE_NUM);
         StagesDTO stagesDTO = stagesMapper.stagesToStagesDTO(updatedStages);
 
         restStagesMockMvc.perform(put("/api/stages")
@@ -231,6 +239,7 @@ public class StagesResourceIntTest {
         assertThat(testStages.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testStages.getCreatetime()).isEqualTo(UPDATED_CREATETIME);
         assertThat(testStages.getUserId()).isEqualTo(UPDATED_USER_ID);
+        assertThat(testStages.getAudienceNum()).isEqualTo(UPDATED_AUDIENCE_NUM);
 
         // Validate the Stages in ElasticSearch
         Stages stagesEs = stagesSearchRepository.findOne(testStages.getId());
@@ -273,6 +282,7 @@ public class StagesResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(stages.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
             .andExpect(jsonPath("$.[*].createtime").value(hasItem(DEFAULT_CREATETIME.toString())))
-            .andExpect(jsonPath("$.[*].userId").value(hasItem(DEFAULT_USER_ID.intValue())));
+            .andExpect(jsonPath("$.[*].userId").value(hasItem(DEFAULT_USER_ID.intValue())))
+            .andExpect(jsonPath("$.[*].audienceNum").value(hasItem(DEFAULT_AUDIENCE_NUM)));
     }
 }

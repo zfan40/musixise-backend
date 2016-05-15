@@ -14,26 +14,30 @@
     <property name="floatType" value="float" dbms="mysql, oracle"/>
 
     <!--
-        Added the entity Stages.
+        Added the entity StagesFollow.
     -->
-    <changeSet id="20160508023025" author="jhipster">
-        <createTable tableName="stages">
+    <changeSet id="20160515111152" author="jhipster">
+        <createTable tableName="stages_follow">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="status" type="integer">
-                <constraints nullable="false" />
-            </column>
-            
-            <column name="createtime" type="date">
-                <constraints nullable="false" />
-            </column>
-            
-            <column name="user_id" type="bigint">
+            <column name="musixiser_uid" type="bigint">
                 <constraints nullable="true" />
             </column>
             
-            <column name="audience_num" type="integer">
+            <column name="audience_uid" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="timestamp" type="date">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="stages_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="updtetime" type="date">
                 <constraints nullable="true" />
             </column>
             

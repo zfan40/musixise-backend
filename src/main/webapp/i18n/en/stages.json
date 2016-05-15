@@ -18,7 +18,8 @@
             },
             "status": "Status",
             "createtime": "Createtime",
-            "userId": "UserId"
+            "userId": "UserId",
+            "audienceNum": "AudienceNum"
         }
     }
 }
