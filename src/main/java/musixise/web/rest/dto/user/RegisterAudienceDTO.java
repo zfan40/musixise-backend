@@ -1,6 +1,7 @@
 package musixise.web.rest.dto.user;
 
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,7 +26,7 @@ public class RegisterAudienceDTO {
 
     private String realname;
 
-
+    @Email(message="不是有效的 Email 格式")
     private String email;
 
 
