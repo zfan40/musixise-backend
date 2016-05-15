@@ -222,17 +222,27 @@ public class MusixiserExtResource {
     @RequestMapping(value = "/saveWork",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "保存作品信息", notes = "储存音乐人表演的作品信息", response = WorkList.class, position = 2)
     @Timed
     public ResponseEntity<WorkList> saveWork(@Valid @RequestBody WorkList workList) throws URISyntaxException {
         log.debug("REST request to save WorkList  : {}", workList);
         if (workList.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("workList", "idexists", "A new workList cannot already have an ID")).body(null);
         }
-        WorkList result = workListRepository.save(workList);
-        workListSearchRepository.save(result);
-        return ResponseEntity.created(new URI("/api/work-lists/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("workList", result.getId().toString()))
-            .body(result);
+
+        //获取当前用户信息
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map(u -> {
+                workList.setUserId(u.getId());
+                WorkList result = workListRepository.save(workList);
+                workListSearchRepository.save(result);
+                return ResponseEntity.ok()
+                    .headers(HeaderUtil.createEntityCreationAlert("workList", result.getId().toString()))
+                    .body(result);
+            })
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+
+
     }
 
 }

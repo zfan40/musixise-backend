@@ -154,24 +154,6 @@ public class StagesResourceIntTest {
 
     @Test
     @Transactional
-    public void checkUserIdIsRequired() throws Exception {
-        int databaseSizeBeforeTest = stagesRepository.findAll().size();
-        // set the field null
-        stages.setUserId(null);
-
-        // Create the Stages, which fails.
-
-        restStagesMockMvc.perform(post("/api/stages")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(stages)))
-                .andExpect(status().isBadRequest());
-
-        List<Stages> stages = stagesRepository.findAll();
-        assertThat(stages).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllStages() throws Exception {
         // Initialize the database
         stagesRepository.saveAndFlush(stages);
