@@ -1,6 +1,10 @@
 package musixise.web.rest.musixiser;
 
 import com.codahale.metrics.annotation.Timed;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import musixise.domain.Musixiser;
 import musixise.domain.User;
 import musixise.repository.MusixiserRepository;
@@ -30,6 +34,7 @@ import java.net.URISyntaxException;
 /**
  * Created by zhaowei on 16/5/15.
  */
+@Api(value = "musixisers", description = "音乐人相关接口", position = 1)
 @RestController
 @RequestMapping("/api")
 public class MusixiserExtResource {
@@ -51,6 +56,13 @@ public class MusixiserExtResource {
     @RequestMapping(value = "/musixisers/register",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @ApiOperation(value = "注册用户", notes = "返回用户实体对象", response = Musixiser.class, position = 2)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "注册成功", response = Musixiser.class),
+        @ApiResponse(code = 404, message = "找不到页面"),
+        @ApiResponse(code = 500, message = "内部报错")}
+    )
     @Timed
     public ResponseEntity<?> registerMusixiser(@RequestBody RegisterDTO registerDTO, HttpServletRequest request) throws URISyntaxException {
 
@@ -106,6 +118,7 @@ public class MusixiserExtResource {
     @RequestMapping(value = "/musixisers/getInfo",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "获取当前用户信息", notes = "返回当前用户信息", response = Musixiser.class, position = 2)
     @Timed
     public ResponseEntity<Musixiser> getMusixiserInfo() {
 
@@ -120,6 +133,7 @@ public class MusixiserExtResource {
     @RequestMapping(value = "/musixisers/updateInfo",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "修改当前用户信息", notes = "修改当前用户信息", response = Musixiser.class, position = 2)
     @Timed
     public ResponseEntity<Musixiser> updateMusixiserEx(@Valid @RequestBody Musixiser musixiser) {
         log.debug("REST request to update MusixiserEx : {}", musixiser);
