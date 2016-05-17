@@ -21,7 +21,7 @@ spring:
         url: jdbc:mysql://localhost:3306/musixise?useUnicode=true&characterEncoding=utf8&useSSL=false
         name:
         username: root
-        password:
+        password: www.musixise.com#1live
         hikari:
             data-source-properties:
                 cachePrepStmts: true
@@ -53,7 +53,7 @@ liquibase:
     contexts: prod
 
 server:
-    port: 8080
+    port: 8081
     compression:
         enabled: true
         mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
