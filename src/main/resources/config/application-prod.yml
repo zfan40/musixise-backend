@@ -20,8 +20,8 @@ spring:
     datasource:
         url: jdbc:mysql://localhost:3306/musixise?useUnicode=true&characterEncoding=utf8&useSSL=false
         name:
-        username: root
-        password: www.musixise.com#1live
+        username: musixise
+        password: musixise#@!!@#
         hikari:
             data-source-properties:
                 cachePrepStmts: true
