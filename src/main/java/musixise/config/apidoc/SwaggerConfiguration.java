@@ -28,7 +28,7 @@ import static springfox.documentation.builders.PathSelectors.regex;
  */
 @Configuration
 @EnableSwagger2
-@ConditionalOnExpression("#{!environment.acceptsProfiles('" + Constants.SPRING_PROFILE_NO_SWAGGER + "') && !environment.acceptsProfiles('" + Constants.SPRING_PROFILE_PRODUCTION + "')}")
+//@ConditionalOnExpression("#{!environment.acceptsProfiles('" + Constants.SPRING_PROFILE_NO_SWAGGER + "') && !environment.acceptsProfiles('" + Constants.SPRING_PROFILE_PRODUCTION + "')}")
 public class SwaggerConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(SwaggerConfiguration.class);

@@ -31,6 +31,8 @@ sudo service jenkins start
 sudo -u jenkins git ls-remote -h git@github.com:zfan40/musixise-backend.git HEAD
 
 ip:8080 
+curl -X POST http://JENKINS_URL/job/JOB_NAME/lastBuild/stop;
+vim /etc/sysconfig/jenkins
 
 # specify which version we want
 export NODE_VERSION=4.3.1
@@ -75,3 +77,41 @@ sudo /sbin/chkconfig --levels 235 mysqld on
 
 sudo service mysqld start
 sudo mysql_secure_installation
+
+create user &database
+create database musixise;
+grant all on musixise.* to 'musixise' identified by 'password';
+
+git update
+wget https://github.com/git/git/archive/v2.2.1.tar.gz
+tar zxvf v2.2.1.tar.gz
+cd git-2.2.1
+make configure
+./configure --prefix=/usr/local/git --with-iconv=/usr/local/libiconv
+make all doc
+make install install-doc install-html
+echo "export PATH=$PATH:/usr/local/git/bin" >> /etc/bashrc
+source /etc/bashrc
+
+cp /usr/local/git/bin/git /usr/bin/
+
+gcc update
+
+curl -O ftp://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.gz; tar zxf gcc-4.8.2.tar.gz
+mkdir gcc-build-4.8.2
+cd gcc-build-4.8.2
+../configure --prefix=/usr
+make && make install
+
+install phantomjs
+git clone git://github.com/ariya/phantomjs.git
+cd phantomjs
+git checkout 2.1.1
+git submodule init
+git submodule update
+
+python build.py
+
+or 
+
+wget wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
