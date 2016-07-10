@@ -16,6 +16,7 @@ import musixise.repository.search.WorkListSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.UserService;
 import musixise.web.rest.dto.ManagedUserDTO;
+import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -87,13 +88,10 @@ public class MusixiserExtResource {
         managedUserDTO.setEmail(registerDTO.getEmail());
 
         if (userRepository.findOneByLogin(managedUserDTO.getLogin()).isPresent()) {
-            return ResponseEntity.badRequest()
-                .headers(HeaderUtil.createFailureAlert("userManagement", "userexists", "username already in use"))
-                .body(null);
+            return ResponseEntity.ok(new OutputDTO<>(20000, "用户名已存在"));
+
         } else if (userRepository.findOneByEmail(registerDTO.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest()
-                .headers(HeaderUtil.createFailureAlert("userManagement", "emailexists", "Email already in use"))
-                .body(null);
+            return ResponseEntity.ok(new OutputDTO<>(20000, "邮箱已存在"));
         } else {
 
             //  User newUser = userService.createUser(managedUserDTO);
@@ -122,9 +120,7 @@ public class MusixiserExtResource {
             //搜索索引
             musixiserSearchRepository.save(result);
 
-            return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityCreationAlert("musixiser", result.getId().toString()))
-                .body(result);
+            return ResponseEntity.ok(new OutputDTO<>(0, "success", result));
         }
     }
 
@@ -134,12 +130,12 @@ public class MusixiserExtResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "获取当前用户信息", notes = "返回当前用户信息", response = Musixiser.class, position = 2)
     @Timed
-    public ResponseEntity<Musixiser> getMusixiserInfo() {
+    public ResponseEntity<?> getMusixiserInfo() {
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map(u -> {
                 Musixiser musixiser = musixiserRepository.findOneByUserId(u.getId());
-                return new ResponseEntity<>(musixiser, HttpStatus.OK);
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", musixiser));
             })
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
