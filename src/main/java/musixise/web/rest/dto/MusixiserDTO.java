@@ -12,6 +12,8 @@ public class MusixiserDTO implements Serializable {
 
     private Long id;
 
+    private String username;
+
     private String realname;
 
 
@@ -121,6 +123,32 @@ public class MusixiserDTO implements Serializable {
         this.userId = userId;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String toString() {
+        return "MusixiserDTO{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", realname='" + realname + '\'' +
+            ", tel='" + tel + '\'' +
+            ", email='" + email + '\'' +
+            ", birth='" + birth + '\'' +
+            ", gender='" + gender + '\'' +
+            ", smallAvatar='" + smallAvatar + '\'' +
+            ", largeAvatar='" + largeAvatar + '\'' +
+            ", nation='" + nation + '\'' +
+            ", isMaster=" + isMaster +
+            ", userId=" + userId +
+            '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -142,20 +170,4 @@ public class MusixiserDTO implements Serializable {
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "MusixiserDTO{" +
-            "id=" + id +
-            ", realname='" + realname + "'" +
-            ", tel='" + tel + "'" +
-            ", email='" + email + "'" +
-            ", birth='" + birth + "'" +
-            ", gender='" + gender + "'" +
-            ", smallAvatar='" + smallAvatar + "'" +
-            ", largeAvatar='" + largeAvatar + "'" +
-            ", nation='" + nation + "'" +
-            ", isMaster='" + isMaster + "'" +
-            ", userId='" + userId + "'" +
-            '}';
-    }
 }

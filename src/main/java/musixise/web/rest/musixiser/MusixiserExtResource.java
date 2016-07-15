@@ -16,6 +16,8 @@ import musixise.repository.search.WorkListSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.UserService;
 import musixise.web.rest.dto.ManagedUserDTO;
+import musixise.web.rest.dto.MusixiseDTO;
+import musixise.web.rest.dto.MusixiserDTO;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.util.HeaderUtil;
@@ -135,7 +137,18 @@ public class MusixiserExtResource {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map(u -> {
                 Musixiser musixiser = musixiserRepository.findOneByUserId(u.getId());
-                return ResponseEntity.ok(new OutputDTO<>(0, "success", musixiser));
+                MusixiserDTO musixiserDTO = new MusixiserDTO();
+                //musixiserDTO.setId(musixiser.getId());
+                musixiserDTO.setUserId(musixiser.getUserId());
+                musixiserDTO.setUsername(SecurityUtils.getCurrentUserLogin());
+                musixiserDTO.setEmail(musixiser.getEmail());
+                musixiserDTO.setLargeAvatar(musixiser.getLargeAvatar());
+                musixiserDTO.setSmallAvatar(musixiser.getSmallAvatar());
+                musixiserDTO.setNation(musixiser.getNation());
+                musixiserDTO.setBirth(musixiser.getBirth());
+                musixiserDTO.setTel(musixiser.getTel());
+
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", musixiserDTO));
             })
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
