@@ -1,6 +1,10 @@
 package musixise.web.rest.musixiser;
 
 import com.codahale.metrics.annotation.Timed;
+import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.util.Auth;
 import io.swagger.annotations.*;
 import musixise.domain.Musixiser;
 import musixise.domain.Stages;
@@ -16,24 +20,37 @@ import musixise.repository.search.WorkListSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.UserService;
 import musixise.web.rest.dto.ManagedUserDTO;
-import musixise.web.rest.dto.MusixiseDTO;
 import musixise.web.rest.dto.MusixiserDTO;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.util.HeaderUtil;
+import org.apache.catalina.Context;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import sun.tools.java.Environment;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -69,6 +86,12 @@ public class MusixiserExtResource {
 
     @Inject
     private WorkListSearchRepository workListSearchRepository;
+
+    @Autowired
+    private UploadManager uploadManager;
+
+    @Autowired
+    private Auth auth;
 
     @RequestMapping(value = "/register",
         method = RequestMethod.POST,
@@ -266,6 +289,49 @@ public class MusixiserExtResource {
         log.debug("REST request to get all WorkLists");
         List<WorkList> workLists = workListRepository.findAll();
         return workLists;
+    }
+
+    @RequestMapping(value = "/uploadPic", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "上传图片", notes = "上传图片返回图片链接,使用云存储.", response = OutputDTO.class, position = 2)
+    @Timed
+    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, Context context) {
+
+        //上传到七牛后保存的文件名
+        String key = file.getOriginalFilename();
+        String bucketname = "muixise-img";
+        //上传文件的路径
+        //密钥配置
+
+        String fileName = String.format("%s_%s", RandomStringUtils.randomAlphanumeric(8), key);
+
+        try {
+            Response res = uploadManager.put(multipartToFile(file), fileName, auth.uploadToken(bucketname));
+        } catch (QiniuException e) {
+            Response r = e.response;
+            // 请求失败时打印的异常的信息
+            System.out.println(r.toString());
+
+            try {
+                //响应的文本信息
+                System.out.println(r.bodyString());
+            } catch (QiniuException e1) {
+                //ignore
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return ResponseEntity.ok(new OutputDTO<>(0, "success", file.getOriginalFilename()));
+    }
+
+    public File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException {
+        String filePath = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
+        File tmpFile = new File(filePath, multipart.getOriginalFilename());
+        tmpFile.createNewFile();
+        multipart.transferTo(tmpFile);
+        return tmpFile;
     }
 
 }
