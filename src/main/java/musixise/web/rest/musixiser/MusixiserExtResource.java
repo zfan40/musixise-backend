@@ -314,7 +314,7 @@ public class MusixiserExtResource {
         }
 
 
-        return ResponseEntity.ok(new OutputDTO<>(0, "success", file.getOriginalFilename()));
+        return ResponseEntity.ok(new OutputDTO<>(0, "success", fileName));
     }
 
     public File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException {
