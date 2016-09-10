@@ -173,7 +173,7 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         config.setAllowCredentials(true);
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
-        config.setAllowedMethods(Arrays.asList(new String[]{"GET", "PUT", "POST", "DELETE"}));
+        config.setAllowedMethods(Arrays.asList(new String[]{"GET", "PUT", "POST", "DELETE", "OPTIONS"}));
         if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
             source.registerCorsConfiguration("/api/**", config);
             source.registerCorsConfiguration("/v2/api-docs", config);
