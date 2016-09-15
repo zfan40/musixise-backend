@@ -42,7 +42,7 @@ public class AsyncSpringLiquibase extends SpringLiquibase {
     @Override
     public void afterPropertiesSet() throws LiquibaseException {
         if (!env.acceptsProfiles(Constants.SPRING_PROFILE_NO_LIQUIBASE)) {
-            if (env.acceptsProfiles(Constants.SPRING_PROFILE_DEVELOPMENT, Constants.SPRING_PROFILE_HEROKU)) {
+            if (env.acceptsProfiles(Constants.SPRING_PROFILE_DEVELOPMENT, Constants.SPRING_PROFILE_HEROKU, "local")) {
                 taskExecutor.execute(() -> {
                     try {
                         log.warn("Starting Liquibase asynchronously, your database might not be ready at startup!");

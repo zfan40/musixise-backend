@@ -18,16 +18,17 @@ spring:
         livereload:
             enabled: false # we use gulp + BrowserSync for livereload
     datasource:
-        url: jdbc:h2:file:./target/h2db/db/musixise;DB_CLOSE_DELAY=-1
+        url: jdbc:mysql://localhost:3306/musixise?useUnicode=true&characterEncoding=utf8&useSSL=false
+
         name:
         username: musixise
-        password:
+        password: musixise#@!!@#
     h2:
         console:
             enabled: false
     jpa:
-        database-platform: musixise.domain.util.FixedH2Dialect
-        database: H2
+        database-platform: org.hibernate.dialect.MySQLInnoDBDialect
+        database: MYSQL
         show_sql: true
         properties:
             hibernate.cache.use_second_level_cache: true

@@ -23,6 +23,7 @@ import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
+import org.springframework.social.wechat.connect.WechatConnectionFactory;
 // jhipster-needle-add-social-connection-factory-import-package
 
 import javax.inject.Inject;
@@ -95,6 +96,19 @@ public class SocialConfiguration implements SocialConfigurer {
             connectionFactoryConfigurer.addConnectionFactory(
                     new WeiboConnectionFactory(
                             weiboClientId,
+                            weiboClientSecret
+                    )
+            );
+        }
+
+        String wechatClientId = "1";
+        String wechatClientSecret = "2";
+
+        if (wechatClientId != null && wechatClientSecret != null) {
+            log.debug("Configuring WeiboConnectionFactory");
+            connectionFactoryConfigurer.addConnectionFactory(
+                    new WechatConnectionFactory(
+                            wechatClientId,
                             weiboClientSecret
                     )
             );
