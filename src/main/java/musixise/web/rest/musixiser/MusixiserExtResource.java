@@ -285,7 +285,7 @@ public class MusixiserExtResource {
     @RequestMapping(value = "/uploadPic", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "上传图片", notes = "上传图片返回图片链接,使用云存储.", response = OutputDTO.class, position = 2)
     @Timed
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> upload(@RequestParam("files") MultipartFile file) {
 
         //上传到七牛后保存的文件名
         String key = file.getOriginalFilename();
