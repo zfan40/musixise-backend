@@ -101,18 +101,18 @@ public class SocialConfiguration implements SocialConfigurer {
             );
         }
 
-        String wechatClientId = "1";
-        String wechatClientSecret = "2";
-
-        if (wechatClientId != null && wechatClientSecret != null) {
-            log.debug("Configuring WeiboConnectionFactory");
-            connectionFactoryConfigurer.addConnectionFactory(
-                    new WechatConnectionFactory(
-                            wechatClientId,
-                            weiboClientSecret
-                    )
-            );
-        }
+//        String wechatClientId = "1";
+//        String wechatClientSecret = "2";
+//
+//        if (wechatClientId != null && wechatClientSecret != null) {
+//            log.debug("Configuring WeiboConnectionFactory");
+//            connectionFactoryConfigurer.addConnectionFactory(
+//                    new WechatConnectionFactory(
+//                            wechatClientId,
+//                            weiboClientSecret
+//                    )
+//            );
+//        }
 
         // jhipster-needle-add-social-connection-factory
     }
