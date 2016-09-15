@@ -115,3 +115,56 @@ python build.py
 or 
 
 wget wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+
+
+
+# 自动启动
+切换用户 sudo su jenkins -s /bin/bash
+/var/lib/jenkins/spring-boot-jenkins/api-deploy.sh dev 8082 musixise-test application-localhost.yml
+
+设置参数
+java -jar jhipster-0.0.1-SNAPSHOT.war --spring.profiles.active=prod --server.port=9000
+
+上传文件跨域问题
+vim /etc/nginx/conf.d/virtual.conf
+location / {
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Server $host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#       dav_methods DELETE PUT;
+#       auth_basic "Restricted";
+#       auth_basic_user_file /etc/nginx/.htpasswd;
+
+        if ($request_method = 'OPTIONS') {
+                    add_header 'Access-Control-Allow-Origin' $http_origin;
+                    #
+                    # Om nom nom cookies
+                    #
+                    add_header 'Access-Control-Allow-Credentials' 'true';
+                    add_header 'Access-Control-Allow-Methods' 'GET, DELETE, PUT, POST, OPTIONS';
+                    #
+                    #
+                        # Custom headers and headers various browsers *should* be OK with but aren't
+                        #
+                        add_header 'Access-Control-Allow-Headers' 'Authorization,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+                        #
+                        # Tell client that this pre-flight info is valid for 20 days
+                        #
+                        add_header 'Access-Control-Max-Age' 1728000;
+                        add_header 'Content-Type' 'text/plain charset=UTF-8';
+                        add_header 'Content-Length' 0;
+                        return 204;
+                }
+                if ($request_method = 'POST') {
+                        add_header 'Access-Control-Allow-Origin' '*';
+                        add_header 'Access-Control-Allow-Credentials' 'true';
+                        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+                        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+                }
+                if ($request_method = 'GET') {
+                        add_header 'Access-Control-Allow-Origin' '*';
+                        add_header 'Access-Control-Allow-Credentials' 'true';
+                        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+                        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+                }
+    }

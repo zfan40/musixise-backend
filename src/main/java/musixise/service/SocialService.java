@@ -58,7 +58,7 @@ public class SocialService {
         String providerId = connection.getKey().getProviderId();
         User user = createUserIfNotExist(userProfile, langKey, providerId);
         createSocialConnection(user.getLogin(), connection);
-        mailService.sendSocialRegistrationValidationEmail(user, providerId);
+        //mailService.sendSocialRegistrationValidationEmail(user, providerId);
     }
 
     private User createUserIfNotExist(UserProfile userProfile, String langKey, String providerId) {
@@ -66,13 +66,13 @@ public class SocialService {
         String userName = userProfile.getUsername();
         if (StringUtils.isBlank(email) && StringUtils.isBlank(userName)) {
             log.error("Cannot create social user because email and login are null");
-            throw new IllegalArgumentException("Email and login cannot be null");
+            //throw new IllegalArgumentException("Email and login cannot be null");
         }
-        if (StringUtils.isBlank(email) && userRepository.findOneByLogin(userName).isPresent()) {
+        if (userRepository.findOneByLogin(userName).isPresent()) {
             log.error("Cannot create social user because email is null and login already exist, login -> {}", userName);
             throw new IllegalArgumentException("Email cannot be null with an existing login");
         }
-        Optional<User> user = userRepository.findOneByEmail(email);
+        Optional<User> user = userRepository.findOneByLogin(userName);
         if (user.isPresent()) {
             log.info("User already exist associate the connection to this account");
             return user.get();
@@ -88,6 +88,7 @@ public class SocialService {
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userProfile.getFirstName());
         newUser.setLastName(userProfile.getLastName());
+        email = String.format("%s@musixise.com", login);
         newUser.setEmail(email);
         newUser.setActivated(true);
         newUser.setAuthorities(authorities);
@@ -104,6 +105,9 @@ public class SocialService {
         switch (providerId) {
             case "twitter":
                 return userProfile.getUsername().toLowerCase();
+
+            case "weibo":
+                return userProfile.getUsername();
             default:
                 return userProfile.getEmail();
         }

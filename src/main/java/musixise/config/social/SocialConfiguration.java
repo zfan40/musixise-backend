@@ -4,6 +4,7 @@ import musixise.repository.SocialUserConnectionRepository;
 import musixise.repository.CustomSocialUsersConnectionRepository;
 import musixise.security.social.CustomSignInAdapter;
 
+import net.gplatform.spring.social.weibo.connect.WeiboConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -85,6 +86,18 @@ public class SocialConfiguration implements SocialConfigurer {
             );
         } else {
             log.error("Cannot configure TwitterConnectionFactory id or secret null");
+        }
+
+        String weiboClientId = environment.getProperty("spring.social.weibo.clientId");
+        String weiboClientSecret = environment.getProperty("spring.social.weibo.clientSecret");
+        if (weiboClientId != null && weiboClientSecret != null) {
+            log.debug("Configuring WeiboConnectionFactory");
+            connectionFactoryConfigurer.addConnectionFactory(
+                    new WeiboConnectionFactory(
+                            weiboClientId,
+                            weiboClientSecret
+                    )
+            );
         }
 
         // jhipster-needle-add-social-connection-factory
