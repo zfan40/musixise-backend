@@ -118,7 +118,7 @@ wget wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-
 
 
 
-# 自动启动
+#### 自动启动
 切换用户 sudo su jenkins -s /bin/bash
 /var/lib/jenkins/spring-boot-jenkins/api-deploy.sh dev 8082 musixise-test application-localhost.yml
 
@@ -131,9 +131,9 @@ location / {
                 proxy_set_header X-Forwarded-Host $host;
                 proxy_set_header X-Forwarded-Server $host;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#       dav_methods DELETE PUT;
-#       auth_basic "Restricted";
-#       auth_basic_user_file /etc/nginx/.htpasswd;
+      dav_methods DELETE PUT;
+      auth_basic "Restricted";
+      auth_basic_user_file /etc/nginx/.htpasswd;
 
         if ($request_method = 'OPTIONS') {
                     add_header 'Access-Control-Allow-Origin' $http_origin;
@@ -168,3 +168,15 @@ location / {
                         add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
                 }
     }
+
+
+### jenkins 配置
+
+#### Execute shell 01
+ #!/bin/sh
+ bower install
+
+ ./mvnw -Pdev package -Dmaven.test.skip=true -X
+
+#### Execute shell 02
+ BUILD_ID=dontKillMe /var/lib/jenkins/spring-boot-jenkins/api-deploy.sh dev 8082 musixise-test application-localhost.yml
