@@ -184,12 +184,7 @@
 
     <addUniqueConstraint tableName="jhi_social_user_connection" columnNames="user_id, provider_id, rank"/>
 
-        <!--<sql dbms="mysql">-->
-        <!--ALTER TABLE jhi_user ENGINE=InnoDB, CONVERT TO CHARACTER SET utf8;-->
-        <!--</sql>-->
-        <!--<sql dbms="mysql">-->
-        <!--ALTER TABLE jhi_social_user_connection ENGINE=InnoDB, CONVERT TO CHARACTER SET utf8;-->
-        <!--</sql>-->
+
 
     </changeSet>
 </databaseChangeLog>
