@@ -108,7 +108,10 @@ public class SocialService {
                 return userProfile.getUsername().toLowerCase();
 
             case "weibo":
+            case "wechat":
+            case "qq":
                 return userProfile.getUsername();
+
             default:
                 return userProfile.getEmail();
         }

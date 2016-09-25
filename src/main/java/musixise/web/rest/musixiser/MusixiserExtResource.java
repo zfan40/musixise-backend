@@ -357,7 +357,7 @@ public class MusixiserExtResource {
     @RequestMapping(value = "/authByAccessToken/{platform}",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "社交登录", notes = "使用社交平台access_token登录, 平台标识 platform=weibo", response = WorkList.class, position = 2)
+    @ApiOperation(value = "社交登录", notes = "使用社交平台access_token登录, 平台标识 platform=weibo, wechat, qq", response = WorkList.class, position = 2)
     @Timed
     public ResponseEntity<?> authenticateBySocialToken(@ApiParam(value = "platform", required = true, defaultValue = "weibo") @PathVariable String platform, @RequestBody AccessGrantDTO accessGrantDTO) {
 

@@ -4,6 +4,7 @@ import musixise.repository.SocialUserConnectionRepository;
 import musixise.repository.CustomSocialUsersConnectionRepository;
 import musixise.security.social.CustomSignInAdapter;
 
+import net.gplatform.spring.social.qq.connect.QQConnectionFactory;
 import net.gplatform.spring.social.weibo.connect.WeiboConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
+import org.springframework.social.wechat.connect.WeChatConnectionFactory;
 // jhipster-needle-add-social-connection-factory-import-package
 
 import javax.inject.Inject;
@@ -96,28 +98,49 @@ public class SocialConfiguration implements SocialConfigurer {
             log.error("Cannot configure TwitterConnectionFactory id or secret null");
         }
 
+        //Weibo configuretion
         String weiboClientId = environment.getProperty("spring.social.weibo.clientId");
         String weiboClientSecret = environment.getProperty("spring.social.weibo.clientSecret");
         if (weiboClientId != null && weiboClientSecret != null) {
             log.debug("Configuring WeiboConnectionFactory");
             ConnectionFactory weiBoConnectionFactory = new WeiboConnectionFactory(weiboClientId, weiboClientSecret);
             connectionFactoryConfigurer.addConnectionFactory( weiBoConnectionFactory );
-            OAuth2ConnectionFactory oAuth2ConnectionFactory = new WeiboConnectionFactory(weiboClientId, weiboClientSecret);
-            oAuth2ConnectionFactoryMap.put("weibo", oAuth2ConnectionFactory);
+            OAuth2ConnectionFactory weiboAuth2ConnectionFactory = new WeiboConnectionFactory(weiboClientId, weiboClientSecret);
+            oAuth2ConnectionFactoryMap.put("weibo", weiboAuth2ConnectionFactory);
         }
 
-//        String wechatClientId = "1";
-//        String wechatClientSecret = "2";
-//
-//        if (wechatClientId != null && wechatClientSecret != null) {
-//            log.debug("Configuring WeiboConnectionFactory");
-//            connectionFactoryConfigurer.addConnectionFactory(
-//                    new WechatConnectionFactory(
-//                            wechatClientId,
-//                            weiboClientSecret
-//                    )
-//            );
-//        }
+        //wechat configuretion
+        String wechatClientId = environment.getProperty("spring.social.wechat.clientId");
+        String wechatClientSecret = environment.getProperty("spring.social.wechat.clientSecret");
+
+        if (wechatClientId != null && wechatClientSecret != null) {
+            log.debug("Configuring WechatConnectionFactory");
+            connectionFactoryConfigurer.addConnectionFactory(
+                    new WeChatConnectionFactory(
+                            wechatClientId,
+                            wechatClientSecret
+                    )
+            );
+            OAuth2ConnectionFactory weichatAuth2ConnectionFactory = new WeChatConnectionFactory(wechatClientId, wechatClientSecret);
+            oAuth2ConnectionFactoryMap.put("wechat", weichatAuth2ConnectionFactory);
+        }
+
+        //qq codniguretion
+        String qqClientId = environment.getProperty("spring.social.qq.clientId");
+        String qqClientSecret = environment.getProperty("spring.social.qq.clientSecret");
+
+        if (qqClientId != null && qqClientSecret != null) {
+            log.debug("Configuring qqConnectionFactory");
+            connectionFactoryConfigurer.addConnectionFactory(
+                new QQConnectionFactory(
+                    qqClientId,
+                    qqClientSecret
+                )
+            );
+            OAuth2ConnectionFactory qqAuth2ConnectionFactory = new QQConnectionFactory(weiboClientId, weiboClientSecret);
+            oAuth2ConnectionFactoryMap.put("qq", qqAuth2ConnectionFactory);
+
+        }
 
         // jhipster-needle-add-social-connection-factory
     }
