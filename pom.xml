@@ -664,8 +664,8 @@
                     <driver>com.mysql.jdbc.Driver</driver>
                     <url>jdbc:mysql://localhost:3306/musixise</url>
                     <defaultSchemaName></defaultSchemaName>
-                    <username>musixise</username>
-                    <password>musixise#@!!@#</password>
+                    <username>root</username>
+                    <password></password>
                     <referenceUrl>hibernate:spring:musixise.domain?dialect=org.hibernate.dialect.H2Dialect&amp;hibernate.ejb.naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy</referenceUrl>
                     <verbose>true</verbose>
                     <logging>debug</logging>

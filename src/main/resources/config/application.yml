@@ -44,8 +44,8 @@ spring:
             clientSecret: xxx
 
         weibo:
-            clientId: 2844432698
-            clientSecret: 57c7876fe44642a2b5125994663843c2
+            clientId: 238770519
+            clientSecret: 408465c899e19890eb41389bac64b21b
         # jhipster-needle-add-social-configuration
 
 security:

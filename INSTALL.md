@@ -127,6 +127,7 @@ java -jar jhipster-0.0.1-SNAPSHOT.war --spring.profiles.active=prod --server.por
 
 上传文件跨域问题
 vim /etc/nginx/conf.d/virtual.conf
+```
 location / {
                 proxy_set_header X-Forwarded-Host $host;
                 proxy_set_header X-Forwarded-Server $host;
@@ -168,7 +169,7 @@ location / {
                         add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
                 }
     }
-
+```
 
 ### jenkins 配置
 
@@ -180,3 +181,12 @@ location / {
 
 #### Execute shell 02
  BUILD_ID=dontKillMe /var/lib/jenkins/spring-boot-jenkins/api-deploy.sh dev 8082 musixise-test application-localhost.yml
+ 
+ 
+ ### 微信回调调试
+ 本机执行
+ ```
+ #ssh -NfR 9999:localhost:8082 root@101.200.212.87
+ ```
+ 浏览器访问 wx.musixise.com
+

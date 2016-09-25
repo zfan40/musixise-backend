@@ -6,6 +6,8 @@ import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import io.swagger.annotations.*;
+import musixise.config.JHipsterProperties;
+import musixise.config.social.SocialConfiguration;
 import musixise.domain.Musixiser;
 import musixise.domain.Stages;
 import musixise.domain.User;
@@ -18,13 +20,16 @@ import musixise.repository.search.MusixiserSearchRepository;
 import musixise.repository.search.StagesSearchRepository;
 import musixise.repository.search.WorkListSearchRepository;
 import musixise.security.SecurityUtils;
+import musixise.security.jwt.TokenProvider;
+import musixise.service.SocialService;
 import musixise.service.UserService;
+import musixise.web.rest.JWTToken;
+import musixise.web.rest.dto.AccessGrantDTO;
 import musixise.web.rest.dto.ManagedUserDTO;
 import musixise.web.rest.dto.MusixiserDTO;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.util.HeaderUtil;
-import org.apache.catalina.Context;
 import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +38,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.UserProfile;
+import org.springframework.social.connect.support.OAuth2ConnectionFactory;
+import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +56,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhaowei on 16/5/15.
@@ -83,6 +97,21 @@ public class MusixiserExtResource {
 
     @Autowired
     private Auth auth;
+
+    @Autowired
+    SocialConfiguration socialConfiguration;
+
+    @Inject
+    private SocialService socialService;
+
+    @Inject
+    private UserDetailsService userDetailsService;
+
+    @Inject
+    private JHipsterProperties jHipsterProperties;
+
+    @Inject
+    private TokenProvider tokenProvider;
 
     @RequestMapping(value = "/register",
         method = RequestMethod.POST,
@@ -323,6 +352,47 @@ public class MusixiserExtResource {
         tmpFile.createNewFile();
         multipart.transferTo(tmpFile);
         return tmpFile;
+    }
+
+    @RequestMapping(value = "/authByAccessToken/{platform}",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "社交登录", notes = "使用社交平台access_token登录, 平台标识 platform=weibo", response = WorkList.class, position = 2)
+    @Timed
+    public ResponseEntity<?> authenticateBySocialToken(@ApiParam(value = "platform", required = true, defaultValue = "weibo") @PathVariable String platform, @RequestBody AccessGrantDTO accessGrantDTO) {
+
+        log.debug("REST request to auth social : {}", platform);
+
+        AccessGrant accessGrant = new AccessGrant(accessGrantDTO.getAccessToken());
+
+        Map<String, OAuth2ConnectionFactory> oAuth2ConnectionFactoryMap = socialConfiguration.getoAuth2ConnectionFactoryMap();
+
+        if (oAuth2ConnectionFactoryMap.containsKey(platform)) {
+            Connection<?> connection  = oAuth2ConnectionFactoryMap.get(platform).createConnection(accessGrant);
+            UserProfile userProfile = connection.fetchUserProfile();
+
+            try {
+                //init user account
+                socialService.createSocialUser(connection, "en");
+                //get jwt
+                UserDetails user = userDetailsService.loadUserByUsername(userProfile.getUsername());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    user,
+                    null,
+                    user.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                String jwt = tokenProvider.createToken(authenticationToken, false);
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
+            } catch (Exception e) {
+                log.error("Exception creating social user: ", e);
+                return ResponseEntity.ok(new OutputDTO<>(2000, "创建用户信息失败", userProfile));
+            }
+        } else {
+
+            return ResponseEntity.ok(new OutputDTO<>(2000, "不存在的平台标识", platform));
+        }
+
     }
 
 }

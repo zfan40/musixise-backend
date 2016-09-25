@@ -14,8 +14,10 @@ import org.springframework.social.UserIdSource;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
 import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.config.annotation.SocialConfigurer;
+import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.connect.web.ProviderSignInController;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.connect.web.SignInAdapter;
@@ -26,6 +28,9 @@ import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 // jhipster-needle-add-social-connection-factory-import-package
 
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Basic Spring Social configuration.
@@ -41,8 +46,11 @@ public class SocialConfiguration implements SocialConfigurer {
     @Inject
     private SocialUserConnectionRepository socialUserConnectionRepository;
 
+    private Map<String, OAuth2ConnectionFactory> oAuth2ConnectionFactoryMap = new HashMap<>();
+
     @Override
     public void addConnectionFactories(ConnectionFactoryConfigurer connectionFactoryConfigurer, Environment environment) {
+
         // Google configuration
         String googleClientId = environment.getProperty("spring.social.google.clientId");
         String googleClientSecret = environment.getProperty("spring.social.google.clientSecret");
@@ -92,12 +100,10 @@ public class SocialConfiguration implements SocialConfigurer {
         String weiboClientSecret = environment.getProperty("spring.social.weibo.clientSecret");
         if (weiboClientId != null && weiboClientSecret != null) {
             log.debug("Configuring WeiboConnectionFactory");
-            connectionFactoryConfigurer.addConnectionFactory(
-                    new WeiboConnectionFactory(
-                            weiboClientId,
-                            weiboClientSecret
-                    )
-            );
+            ConnectionFactory weiBoConnectionFactory = new WeiboConnectionFactory(weiboClientId, weiboClientSecret);
+            connectionFactoryConfigurer.addConnectionFactory( weiBoConnectionFactory );
+            OAuth2ConnectionFactory oAuth2ConnectionFactory = new WeiboConnectionFactory(weiboClientId, weiboClientSecret);
+            oAuth2ConnectionFactoryMap.put("weibo", oAuth2ConnectionFactory);
         }
 
 //        String wechatClientId = "1";
@@ -141,5 +147,9 @@ public class SocialConfiguration implements SocialConfigurer {
     @Bean
     public ProviderSignInUtils getProviderSignInUtils(ConnectionFactoryLocator connectionFactoryLocator, UsersConnectionRepository usersConnectionRepository) {
         return new ProviderSignInUtils(connectionFactoryLocator, usersConnectionRepository);
+    }
+
+    public Map<String, OAuth2ConnectionFactory> getoAuth2ConnectionFactoryMap() {
+        return oAuth2ConnectionFactoryMap;
     }
 }

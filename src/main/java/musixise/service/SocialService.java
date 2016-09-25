@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class SocialService {
         }
         if (userRepository.findOneByLogin(userName).isPresent()) {
             log.error("Cannot create social user because email is null and login already exist, login -> {}", userName);
-            throw new IllegalArgumentException("Email cannot be null with an existing login");
+            //throw new IllegalArgumentException("Email cannot be null with an existing login");
         }
         Optional<User> user = userRepository.findOneByLogin(userName);
         if (user.isPresent()) {
@@ -114,7 +115,11 @@ public class SocialService {
     }
 
     private void createSocialConnection(String login, Connection<?> connection) {
-        ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(login);
-        connectionRepository.addConnection(connection);
+        List<String> userConnectionRes = usersConnectionRepository.findUserIdsWithConnection(connection);
+
+        if (userConnectionRes.size() == 0) {
+            ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(login);
+            connectionRepository.addConnection(connection);
+        }
     }
 }
