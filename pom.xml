@@ -483,7 +483,7 @@
             <artifactId>spring-social-wechat</artifactId>
             <version>1.0.RELEASE</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/webapp/WEB-INF/libs/spring-social-wechat-1.0.RELEASE.jar</systemPath>
+            <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/spring-social-wechat-1.0.RELEASE.jar</systemPath>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
 
