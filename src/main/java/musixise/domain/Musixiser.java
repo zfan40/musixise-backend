@@ -51,8 +51,7 @@ public class Musixiser implements Serializable {
     @Column(name = "is_master")
     private Integer isMaster;
 
-    @NotNull
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Long userId;
 
     public Long getId() {

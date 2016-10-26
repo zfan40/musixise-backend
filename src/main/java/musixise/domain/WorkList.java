@@ -33,8 +33,7 @@ public class WorkList implements Serializable {
     @Column(name = "url")
     private String url;
 
-    @NotNull
-    @Column(name = "createtime", nullable = false)
+    @Column(name = "createtime")
     private LocalDate createtime;
 
     @Column(name = "user_id")

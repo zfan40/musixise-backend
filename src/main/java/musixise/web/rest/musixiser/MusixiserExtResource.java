@@ -55,6 +55,8 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +69,8 @@ import java.util.Map;
 public class MusixiserExtResource {
 
     private final Logger log = LoggerFactory.getLogger(MusixiserExtResource.class);
+
+    private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
 
     @Inject
     private MusixiserRepository musixiserRepository;
@@ -288,6 +292,7 @@ public class MusixiserExtResource {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map(u -> {
                 workList.setUserId(u.getId());
+                workList.setCreatetime(UPDATED_CREATETIME);
                 WorkList result = workListRepository.save(workList);
                 workListSearchRepository.save(result);
                 return ResponseEntity.ok()
