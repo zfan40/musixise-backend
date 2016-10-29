@@ -6,6 +6,7 @@ import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import io.swagger.annotations.*;
+import musixise.config.Constants;
 import musixise.config.JHipsterProperties;
 import musixise.config.social.SocialConfiguration;
 import musixise.domain.Musixiser;
@@ -201,6 +202,20 @@ public class MusixiserExtResource {
                 musixiserDTO.setUserId(musixiser.getUserId());
                 musixiserDTO.setUsername(SecurityUtils.getCurrentUserLogin());
                 musixiserDTO.setEmail(musixiser.getEmail());
+
+                //拼接图片地址
+                if (musixiser.getLargeAvatar() != null && !musixiser.getLargeAvatar().equals("") && musixiser.getLargeAvatar().indexOf("alicdn") == -1) {
+                    if (musixiser.getLargeAvatar().indexOf("http") == -1) {
+                        musixiser.setLargeAvatar(String.format(Constants.QINIU_IMG_DOMAIN, musixiser.getLargeAvatar()));
+                    }
+                }
+
+                if (musixiser.getSmallAvatar() != null && !musixiser.getSmallAvatar().equals("") && musixiser.getSmallAvatar().indexOf("alicdn") == -1) {
+                    if (musixiser.getSmallAvatar().indexOf("http") == -1) {
+                        musixiser.setSmallAvatar(String.format(Constants.QINIU_IMG_DOMAIN, musixiser.getSmallAvatar()));
+                    }
+                }
+
                 musixiserDTO.setLargeAvatar(musixiser.getLargeAvatar());
                 musixiserDTO.setSmallAvatar(musixiser.getSmallAvatar());
                 musixiserDTO.setNation(musixiser.getNation());
