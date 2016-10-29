@@ -27,6 +27,9 @@ sudo yum install jenkins
 
 sudo service jenkins start
 
+jenkins plugin
+textFinder plugin
+
 生产秘钥
 sudo -u jenkins git ls-remote -h git@github.com:zfan40/musixise-backend.git HEAD
 

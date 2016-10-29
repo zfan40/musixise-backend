@@ -13,6 +13,9 @@
         <sql dbms="mysql">
         ALTER TABLE jhi_social_user_connection ENGINE=InnoDB, CONVERT TO CHARACTER SET utf8;
         </sql>
+        <sql dbms="mysql">
+            ALTER TABLE musixiser ENGINE=InnoDB, CONVERT TO CHARACTER SET utf8;
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

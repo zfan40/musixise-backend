@@ -167,7 +167,7 @@ public class MusixiserExtResource {
             Musixiser result = musixiserRepository.save(musixiser);
 
             //搜索索引
-           // musixiserSearchRepository.save(result);
+            musixiserSearchRepository.save(result);
 
             return ResponseEntity.ok(new OutputDTO<>(0, "success", result));
         }
@@ -215,7 +215,7 @@ public class MusixiserExtResource {
                 musixiser.setId(musixiserCmp.getId());
                 musixiser.setUserId(u.getId());
                 Musixiser result = musixiserRepository.save(musixiser);
-                //musixiserSearchRepository.save(result);
+                musixiserSearchRepository.save(result);
 
                 return ResponseEntity.ok()
                     .headers(HeaderUtil.createEntityUpdateAlert("musixiser", musixiser.getId().toString()))
