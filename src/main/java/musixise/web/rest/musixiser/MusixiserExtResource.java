@@ -194,6 +194,8 @@ public class MusixiserExtResource {
                 musixiserDTO.setNation(musixiser.getNation());
                 musixiserDTO.setBirth(musixiser.getBirth());
                 musixiserDTO.setTel(musixiser.getTel());
+                musixiserDTO.setRealname(musixiser.getRealname());
+                musixiserDTO.setIsMaster(musixiser.getIsMaster());
 
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", musixiserDTO));
             })
