@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,19 +30,19 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class MusixiserServiceImpl implements MusixiserService{
 
     private final Logger log = LoggerFactory.getLogger(MusixiserServiceImpl.class);
-    
+
     @Inject
     private MusixiserRepository musixiserRepository;
-    
+
     @Inject
     private MusixiserMapper musixiserMapper;
-    
+
     @Inject
     private MusixiserSearchRepository musixiserSearchRepository;
-    
+
     /**
      * Save a musixiser.
-     * 
+     *
      * @param musixiserDTO the entity to save
      * @return the persisted entity
      */
@@ -56,14 +57,14 @@ public class MusixiserServiceImpl implements MusixiserService{
 
     /**
      *  Get all the musixisers.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<Musixiser> findAll(Pageable pageable) {
         log.debug("Request to get all Musixisers");
-        Page<Musixiser> result = musixiserRepository.findAll(pageable); 
+        Page<Musixiser> result = musixiserRepository.findAll(pageable);
         return result;
     }
 
@@ -73,7 +74,7 @@ public class MusixiserServiceImpl implements MusixiserService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public MusixiserDTO findOne(Long id) {
         log.debug("Request to get Musixiser : {}", id);
         Musixiser musixiser = musixiserRepository.findOne(id);
@@ -83,7 +84,7 @@ public class MusixiserServiceImpl implements MusixiserService{
 
     /**
      *  Delete the  musixiser by id.
-     *  
+     *
      *  @param id the id of the entity
      */
     public void delete(Long id) {
@@ -103,4 +104,20 @@ public class MusixiserServiceImpl implements MusixiserService{
         log.debug("Request to search for a page of Musixisers for query {}", query);
         return musixiserSearchRepository.search(queryStringQuery(query), pageable);
     }
+
+    public String getDefaultAvatar() {
+        List<String> list = new ArrayList<>();
+        list.add("https://gw.alicdn.com/tps/TB1wTxdOXXXXXXbXXXXXXXXXXXX-750-750.png");
+        list.add("https://gw.alicdn.com/tps/TB15cU5NVXXXXcYXpXXXXXXXXXX-750-750.png");
+        list.add("https://gw.alicdn.com/tps/TB10xXcOXXXXXaOXXXXXXXXXXXX-750-750.png");
+        list.add("https://gw.alicdn.com/tps/TB1IXADNVXXXXaeapXXXXXXXXXX-750-750.png");
+        list.add("https://gw.alicdn.com/tps/TB1vYheOXXXXXaOXXXXXXXXXXXX-750-750.png");
+        list.add("https://gw.alicdn.com/tps/TB1gQQONVXXXXczXVXXXXXXXXXX-750-750.png");
+        list.add("https://gw.alicdn.com/tps/TB13OMFNVXXXXcoaXXXXXXXXXXX-750-750.png");
+        list.add("https://gw.alicdn.com/tps/TB1fcMYNVXXXXXqXVXXXXXXXXXX-750-750.png");
+
+        int index=(int)(Math.random()* list.size());
+        return list.get(index);
+    }
+
 }

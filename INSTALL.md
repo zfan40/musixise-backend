@@ -227,3 +227,12 @@ sysctl -a | grep swappiness
 sysctl -w vm.swappiness=60
 注：若想永久修改，则编辑/etc/sysctl.conf文件
 (内核参数中有一个vm.swappiness参数，此参数代表了内核对于交换空间的喜好(或厌恶)程度。Swappiness 可以有 0 到 100 的值，默认的大小通常是60，但也有的是30。设置这个参数为较低的值会减少内存的交换，从而提升一些系统上的响应度。如果内存较为充裕，则可以将vm.swappiness大小设定为30，如果内存较少，可以设定为60。如果将此数值调整的过大，可能损失内存本来能提供的性能，并增加磁盘IO消耗和CPU的消耗。)
+
+
+### 开发问题 
+
+js与后端交互采用 JSON串,使用前先打包.
+JSON.stringify({
+            message: $scope.newMessage,
+            username: $scope.username
+        }));

@@ -21,6 +21,7 @@ import musixise.repository.search.StagesSearchRepository;
 import musixise.repository.search.WorkListSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.security.jwt.TokenProvider;
+import musixise.service.MusixiserService;
 import musixise.service.SocialService;
 import musixise.service.UserService;
 import musixise.web.rest.JWTToken;
@@ -117,6 +118,9 @@ public class MusixiserExtResource {
     @Inject
     private TokenProvider tokenProvider;
 
+    @Inject
+    private MusixiserService musixiserService;
+
     @RequestMapping(value = "/register",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -160,6 +164,14 @@ public class MusixiserExtResource {
             musixiser.setEmail(registerDTO.getEmail());
             musixiser.setBirth(registerDTO.getBirth());
             musixiser.setGender(registerDTO.getGender());
+
+            //判断图片是否为空,为空则设置默认图片
+            if (registerDTO.getLargeAvatar() == null || registerDTO.getLargeAvatar().equals("")) {
+                String defalutAvatar = musixiserService.getDefaultAvatar();
+                registerDTO.setLargeAvatar(defalutAvatar);
+                registerDTO.setSmallAvatar(defalutAvatar);
+            }
+
             musixiser.setSmallAvatar(registerDTO.getSmallAvatar());
             musixiser.setLargeAvatar(registerDTO.getLargeAvatar());
             musixiser.setNation(registerDTO.getNation());

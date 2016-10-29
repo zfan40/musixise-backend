@@ -15,7 +15,7 @@ public interface MusixiserService {
 
     /**
      * Save a musixiser.
-     * 
+     *
      * @param musixiserDTO the entity to save
      * @return the persisted entity
      */
@@ -23,7 +23,7 @@ public interface MusixiserService {
 
     /**
      *  Get all the musixisers.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
@@ -31,7 +31,7 @@ public interface MusixiserService {
 
     /**
      *  Get the "id" musixiser.
-     *  
+     *
      *  @param id the id of the entity
      *  @return the entity
      */
@@ -39,16 +39,18 @@ public interface MusixiserService {
 
     /**
      *  Delete the "id" musixiser.
-     *  
+     *
      *  @param id the id of the entity
      */
     void delete(Long id);
 
     /**
      * Search for the musixiser corresponding to the query.
-     * 
+     *
      *  @param query the query of the search
      *  @return the list of entities
      */
     Page<Musixiser> search(String query, Pageable pageable);
+
+    String getDefaultAvatar();
 }
