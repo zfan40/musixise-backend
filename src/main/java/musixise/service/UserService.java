@@ -45,6 +45,9 @@ public class UserService {
     @Inject
     private AuthorityRepository authorityRepository;
 
+    @Inject
+    private MusixiserService musixiserService;
+
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)
@@ -188,6 +191,15 @@ public class UserService {
         });
     }
 
+    public void deleteUserInformation(Long id) {
+        userRepository.findOneById(id).ifPresent(u -> {
+            socialService.deleteUserSocialConnection(u.getLogin());
+            userRepository.delete(u);
+            userSearchRepository.delete(u);
+            log.debug("Deleted User: {}", u);
+        });
+    }
+
     public void changePassword(String password) {
         userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).ifPresent(u -> {
             String encryptedPassword = passwordEncoder.encode(password);
@@ -201,6 +213,14 @@ public class UserService {
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
         return userRepository.findOneByLogin(login).map(u -> {
             u.getAuthorities().size();
+            return u;
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> getUserWithAuthoritiesById(Long id) {
+        return userRepository.findOneById(id).map(u -> {
+           u.getAuthorities().size();
             return u;
         });
     }

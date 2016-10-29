@@ -173,7 +173,7 @@ public class UserResource {
 
     /**
      * GET  /users : get all users.
-     * 
+     *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and with body all users
      * @throws URISyntaxException if the pagination headers couldnt be generated
@@ -196,16 +196,16 @@ public class UserResource {
     /**
      * GET  /users/:login : get the "login" user.
      *
-     * @param login the login of the user to find
+     * @param id the id of the user to find
      * @return the ResponseEntity with status 200 (OK) and with body the "login" user, or with status 404 (Not Found)
      */
-    @RequestMapping(value = "/users/{login:[_'.@a-z0-9-]+}",
+    @RequestMapping(value = "/users/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<ManagedUserDTO> getUser(@PathVariable String login) {
-        log.debug("REST request to get User : {}", login);
-        return userService.getUserWithAuthoritiesByLogin(login)
+    public ResponseEntity<ManagedUserDTO> getUser(@PathVariable Long id) {
+        log.debug("REST request to get User : {}", id);
+        return userService.getUserWithAuthoritiesById(id)
                 .map(ManagedUserDTO::new)
                 .map(managedUserDTO -> new ResponseEntity<>(managedUserDTO, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -213,18 +213,18 @@ public class UserResource {
     /**
      * DELETE  USER :login : delete the "login" User.
      *
-     * @param login the login of the user to delete
+     * @param id the id of the user to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @RequestMapping(value = "/users/{login:[_'.@a-z0-9-]+}",
+    @RequestMapping(value = "/users/{id}",
         method = RequestMethod.DELETE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Secured(AuthoritiesConstants.ADMIN)
-    public ResponseEntity<Void> deleteUser(@PathVariable String login) {
-        log.debug("REST request to delete User: {}", login);
-        userService.deleteUserInformation(login);
-        return ResponseEntity.ok().headers(HeaderUtil.createAlert( "userManagement.deleted", login)).build();
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        log.debug("REST request to delete User: {}", id);
+        userService.deleteUserInformation(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createAlert( "userManagement.deleted", id.toString())).build();
     }
 
     /**
