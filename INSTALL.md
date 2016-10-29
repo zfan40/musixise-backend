@@ -189,4 +189,38 @@ location / {
  #ssh -NfR 9999:localhost:8082 root@101.200.212.87
  ```
  浏览器访问 wx.musixise.com
+ 
+ 2.00gqZxZB06HrJQ4f93f164af0_9UZs
+ 
+ 
+ org.springframework.social.connect.web.completeConnection
+ 
+ 
+ 
+### 服务器
+SWAP 分区设置
+阿里云服务器默认关闭交换分区,为了减少因内存不足导致的CRASH ,开启SWAP.
+创建用于交换分区的文件
+dd if=/dev/zero of=/mnt/swap bs=block_size count=number_of_block
+注：block_size、number_of_block 大小可以自定义，比如bs=1M count=1024 代表设置1G大小swap分区
 
+设置交换分区文件
+mkswap /mnt/swap
+
+立即启用交换分区文件
+swapon /mnt/swap
+如果在/etc/rc.local中有swapoff -a 需要修改为swapon -a 
+
+设置开机时自启用swap分区
+
+需要修改文件/etc/fstab中的swap行。
+
+添加 /mnt/swap swap swap defaults 0 0
+
+
+查看内核参数vm.swappiness中的数值是否为0，如果为0则根据实际需要调整成30或者60
+cat /proc/sys/vm/swappiness   
+sysctl -a | grep swappiness    
+sysctl -w vm.swappiness=60
+注：若想永久修改，则编辑/etc/sysctl.conf文件
+(内核参数中有一个vm.swappiness参数，此参数代表了内核对于交换空间的喜好(或厌恶)程度。Swappiness 可以有 0 到 100 的值，默认的大小通常是60，但也有的是30。设置这个参数为较低的值会减少内存的交换，从而提升一些系统上的响应度。如果内存较为充裕，则可以将vm.swappiness大小设定为30，如果内存较少，可以设定为60。如果将此数值调整的过大，可能损失内存本来能提供的性能，并增加磁盘IO消耗和CPU的消耗。)
