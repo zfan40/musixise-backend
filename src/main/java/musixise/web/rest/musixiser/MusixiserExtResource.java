@@ -241,9 +241,19 @@ public class MusixiserExtResource {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map(u -> {
                 Musixiser musixiserCmp = musixiserRepository.findOneByUserId(u.getId());
-                musixiser.setId(musixiserCmp.getId());
-                musixiser.setUserId(u.getId());
-                Musixiser result = musixiserRepository.save(musixiser);
+                musixiser.setId(0l);
+                if (musixiser.getLargeAvatar() != null) {
+                    musixiserCmp.setLargeAvatar(musixiser.getLargeAvatar());
+                }
+                if (musixiser.getSmallAvatar() != null) {
+                    musixiserCmp.setSmallAvatar(musixiser.getSmallAvatar());
+                }
+
+                if (musixiser.getRealname() != null) {
+                    musixiserCmp.setRealname(musixiser.getRealname());
+                }
+
+                Musixiser result = musixiserRepository.save(musixiserCmp);
                 musixiserSearchRepository.save(result);
 
                 return ResponseEntity.ok()

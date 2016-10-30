@@ -2,6 +2,8 @@ package musixise.domain;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
@@ -16,6 +18,8 @@ import java.util.Objects;
 @Table(name = "musixiser")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "musixiser")
+@DynamicUpdate
+@SelectBeforeUpdate
 public class Musixiser implements Serializable {
 
     private static final long serialVersionUID = 1L;
