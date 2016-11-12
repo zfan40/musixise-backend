@@ -84,3 +84,28 @@ x: abort (exit)
 d: show the differences between the old and the new file
 h: help, list all options
 
+艺人详细页
+我的页面
+个人收藏
+
+
+getInfoById
+getWorksById
+getFavoriteMusixisers
+getMyInfo token
+
+
+
+
+getMyWorks
+
+updateMyWorkStatusById
+
+addToMyFavoriteMusixisers id token
+addToMyFavoriteWorks id token
+getContentByWorkId id 
+getMyFavoriteWorks
+
+
+
+

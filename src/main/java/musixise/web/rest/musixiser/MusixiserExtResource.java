@@ -264,96 +264,59 @@ public class MusixiserExtResource {
 
     }
 
-    @RequestMapping(value = "/onStages",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "音乐人开始演出", notes = "音乐人开始演出", response = Stages.class, position = 2)
-    @Timed
-    public ResponseEntity<?> onStages(@Valid @RequestBody Stages stages) throws URISyntaxException {
-        log.debug("REST request to on Stages : {}", stages);
-        if (stages.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("stages", "idexists", "A new stages cannot already have an ID")).body(null);
-        }
-
-        //获取当前用户信息
-        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
-            .map(u -> {
-
-                stages.setUserId(u.getId());
-                Stages result = stagesRepository.save(stages);
-                stagesSearchRepository.save(result);
-                return ResponseEntity.ok()
-                    .headers(HeaderUtil.createEntityCreationAlert("stages", result.getId().toString()))
-                    .body(result);
-
-            })
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-
-
-    }
-
-
-    @RequestMapping(value = "/offStages/{id}",
-        method = RequestMethod.DELETE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "音乐人中止演出", notes = "音乐人中止演出", response = Stages.class, position = 2)
-    @Timed
-    public ResponseEntity<Void> offStages(@ApiParam(value = "ID", required = true) @PathVariable Long id) {
-        log.debug("REST request to off Stages : {}", id);
-
-        //获取当前用户信息
-        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
-            .map(u -> {
-                WorkList workList = workListRepository.findOne(id);
-                //判断是当前用户操作则执行.
-                if (workList.getUserId() == u.getId()) {
-                    stagesRepository.delete(id);
-                    stagesSearchRepository.delete(id);
-                }
-                return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("stages", id.toString())).build();
-
-            })
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-    }
-
-    @RequestMapping(value = "/saveWork",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "保存作品信息", notes = "储存音乐人表演的作品信息", response = WorkList.class, position = 2)
-    @Timed
-    public ResponseEntity<WorkList> saveWork(@Valid @RequestBody WorkList workList) throws URISyntaxException {
-        log.debug("REST request to save WorkList  : {}", workList);
-        if (workList.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("workList", "idexists", "A new workList cannot already have an ID")).body(null);
-        }
-
-        //获取当前用户信息
-        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
-            .map(u -> {
-                workList.setUserId(u.getId());
-                workList.setCreatetime(UPDATED_CREATETIME);
-                WorkList result = workListRepository.save(workList);
-                workListSearchRepository.save(result);
-                return ResponseEntity.ok()
-                    .headers(HeaderUtil.createEntityCreationAlert("workList", result.getId().toString()))
-                    .body(result);
-            })
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+//    @RequestMapping(value = "/onStages",
+//        method = RequestMethod.POST,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiOperation(value = "音乐人开始演出", notes = "音乐人开始演出", response = Stages.class, position = 2)
+//    @Timed
+//    public ResponseEntity<?> onStages(@Valid @RequestBody Stages stages) throws URISyntaxException {
+//        log.debug("REST request to on Stages : {}", stages);
+//        if (stages.getId() != null) {
+//            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("stages", "idexists", "A new stages cannot already have an ID")).body(null);
+//        }
+//
+//        //获取当前用户信息
+//        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+//            .map(u -> {
+//
+//                stages.setUserId(u.getId());
+//                Stages result = stagesRepository.save(stages);
+//                stagesSearchRepository.save(result);
+//                return ResponseEntity.ok()
+//                    .headers(HeaderUtil.createEntityCreationAlert("stages", result.getId().toString()))
+//                    .body(result);
+//
+//            })
+//            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+//
+//
+//    }
+//
+//
+//    @RequestMapping(value = "/offStages/{id}",
+//        method = RequestMethod.DELETE,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiOperation(value = "音乐人中止演出", notes = "音乐人中止演出", response = Stages.class, position = 2)
+//    @Timed
+//    public ResponseEntity<Void> offStages(@ApiParam(value = "ID", required = true) @PathVariable Long id) {
+//        log.debug("REST request to off Stages : {}", id);
+//
+//        //获取当前用户信息
+//        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+//            .map(u -> {
+//                WorkList workList = workListRepository.findOne(id);
+//                //判断是当前用户操作则执行.
+//                if (workList.getUserId() == u.getId()) {
+//                    stagesRepository.delete(id);
+//                    stagesSearchRepository.delete(id);
+//                }
+//                return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("stages", id.toString())).build();
+//
+//            })
+//            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+//    }
 
 
-    }
-
-
-    @RequestMapping(value = "/pastWorksList",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "获取当前音乐人作品列表", notes = "获取音乐人过去的演出作品列表（midi或其他形式返回）", response = WorkList.class, position = 2)
-    @Timed
-    public List<WorkList> getPassWorksList(Pageable pageable) {
-        log.debug("REST request to get all WorkLists");
-        List<WorkList> workLists = workListRepository.findAll();
-        return workLists;
-    }
 
     @RequestMapping(value = "/uploadPic", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "上传图片", notes = "上传图片返回图片链接,使用云存储.", response = OutputDTO.class, position = 2)
