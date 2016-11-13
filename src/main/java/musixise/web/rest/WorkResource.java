@@ -3,7 +3,6 @@ package musixise.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import musixise.domain.User;
 import musixise.domain.WorkList;
 import musixise.repository.UserRepository;
 import musixise.repository.WorkListRepository;
@@ -25,6 +24,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +40,8 @@ public class WorkResource {
     private final Logger log = LoggerFactory.getLogger(WorkResource.class);
 
     private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
+
+    private static final LocalDateTime DEFAULT_CREATETIME = LocalDateTime.now();
 
     @Inject
     private UserRepository userRepository;
@@ -69,7 +71,11 @@ public class WorkResource {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map(u -> {
                 workList.setUserId(u.getId());
-                workList.setCreatetime(UPDATED_CREATETIME);
+                if (workList.getStatus() == null) {
+                    workList.setStatus(0);
+                } else {
+                    workList.setStatus(workList.getStatus());
+                }
                 WorkList result = workListRepository.save(workList);
                 workListSearchRepository.save(result);
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", result));
@@ -111,6 +117,5 @@ public class WorkResource {
             .map(result -> ResponseEntity.ok(new OutputDTO<>(0, "success", workListDTO)))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
 
 }

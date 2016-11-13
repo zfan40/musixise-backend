@@ -3,6 +3,7 @@ package musixise.web.rest.dto;
 import java.time.LocalDate;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Lob;
 
@@ -12,6 +13,7 @@ import javax.persistence.Lob;
  */
 public class WorkListDTO implements Serializable {
 
+    private static final long serialVersionUID = 1870328135512535520L;
     private Long id;
 
     @NotNull
@@ -23,7 +25,7 @@ public class WorkListDTO implements Serializable {
 
 
     @NotNull
-    private LocalDate createtime;
+    private LocalDateTime createtime;
 
 
     private Long userId;
@@ -50,11 +52,11 @@ public class WorkListDTO implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
-    public LocalDate getCreatetime() {
+    public LocalDateTime getCreatetime() {
         return createtime;
     }
 
-    public void setCreatetime(LocalDate createtime) {
+    public void setCreatetime(LocalDateTime createtime) {
         this.createtime = createtime;
     }
     public Long getUserId() {

@@ -12,6 +12,6 @@
     <include file="config/liquibase/changelog/20160515081001_added_entity_Audience.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20160515111152_added_entity_StagesFollow.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/change_table_struck_09162016.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20161112045033_changelog.xml" relativeToChangelogFile="false"/>
+    <!--<include file="config/liquibase/changelog/20161112045033_changelog.xml" relativeToChangelogFile="false"/>-->
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

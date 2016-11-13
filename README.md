@@ -89,22 +89,24 @@ h: help, list all options
 个人收藏
 
 
-getInfoById
-getWorksById
-getFavoriteMusixisers
-getMyInfo token
+getInfoById 获取指定用户信息
+getFavoriteMusixisers 获取我关注的人
 
 
 
-
-getMyWorks
 
 updateMyWorkStatusById
 
 addToMyFavoriteMusixisers id token
-addToMyFavoriteWorks id token
+
 getContentByWorkId id 
-getMyFavoriteWorks
+
+
+x getMyInfo token
+x getWorksById
+x addToMyFavoriteWorks id token
+x getMyWorks
+x getMyFavoriteWorks
 
 
 

@@ -30,8 +30,15 @@ public class WorkListFollowRepositoryTest {
     @Test
     public void testFindAllByUserIdAndWorkId() throws Exception {
         Long userId = 3l;
-        Long workId = 1l;
+        Long workId = 5l;
         Optional<WorkListFollow> workListFollow = workListFollowRepository.findOneByUserIdAndWorkId(userId, workId);
         System.out.println(workListFollow);
+    }
+
+    @Test
+    public void testDeleteByUserIdAndWorkId() {
+        Long userId = 3l;
+        Long workId = 2l;
+        int s = workListFollowRepository.deleteByUserIdAndWorkId(userId, workId);
     }
 }

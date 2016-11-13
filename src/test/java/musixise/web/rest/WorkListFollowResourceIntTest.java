@@ -82,7 +82,7 @@ public class WorkListFollowResourceIntTest {
     public void initTest() {
         workListFollowSearchRepository.deleteAll();
         workListFollow = new WorkListFollow();
-        workListFollow.setCreatetime(DEFAULT_CREATETIME);
+        //workListFollow.setCreatetime(DEFAULT_CREATETIME);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class WorkListFollowResourceIntTest {
         List<WorkListFollow> workListFollows = workListFollowRepository.findAll();
         assertThat(workListFollows).hasSize(databaseSizeBeforeCreate + 1);
         WorkListFollow testWorkListFollow = workListFollows.get(workListFollows.size() - 1);
-        assertThat(testWorkListFollow.getCreatetime()).isEqualTo(DEFAULT_CREATETIME);
+        //assertThat(testWorkListFollow.getCreatetime()).isEqualTo(DEFAULT_CREATETIME);
 
         // Validate the WorkListFollow in ElasticSearch
         WorkListFollow workListFollowEs = workListFollowSearchRepository.findOne(testWorkListFollow.getId());
@@ -113,7 +113,7 @@ public class WorkListFollowResourceIntTest {
     public void checkCreatetimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = workListFollowRepository.findAll().size();
         // set the field null
-        workListFollow.setCreatetime(null);
+        //workListFollow.setCreatetime(null);
 
         // Create the WorkListFollow, which fails.
 
@@ -173,7 +173,7 @@ public class WorkListFollowResourceIntTest {
         // Update the workListFollow
         WorkListFollow updatedWorkListFollow = new WorkListFollow();
         updatedWorkListFollow.setId(workListFollow.getId());
-        updatedWorkListFollow.setCreatetime(UPDATED_CREATETIME);
+        //updatedWorkListFollow.setCreatetime(UPDATED_CREATETIME);
 
         restWorkListFollowMockMvc.perform(put("/api/work-list-follows")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -184,7 +184,7 @@ public class WorkListFollowResourceIntTest {
         List<WorkListFollow> workListFollows = workListFollowRepository.findAll();
         assertThat(workListFollows).hasSize(databaseSizeBeforeUpdate);
         WorkListFollow testWorkListFollow = workListFollows.get(workListFollows.size() - 1);
-        assertThat(testWorkListFollow.getCreatetime()).isEqualTo(UPDATED_CREATETIME);
+        //assertThat(testWorkListFollow.getCreatetime()).isEqualTo(UPDATED_CREATETIME);
 
         // Validate the WorkListFollow in ElasticSearch
         WorkListFollow workListFollowEs = workListFollowSearchRepository.findOne(testWorkListFollow.getId());

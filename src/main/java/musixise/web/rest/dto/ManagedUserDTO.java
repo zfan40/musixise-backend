@@ -1,5 +1,6 @@
 package musixise.web.rest.dto;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import musixise.domain.User;
@@ -11,11 +12,11 @@ public class ManagedUserDTO extends UserDTO {
 
     private Long id;
 
-    private ZonedDateTime createdDate;
+    private LocalDateTime createdDate;
 
     private String lastModifiedBy;
 
-    private ZonedDateTime lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     public ManagedUserDTO() {
     }
@@ -36,11 +37,11 @@ public class ManagedUserDTO extends UserDTO {
         this.id = id;
     }
 
-    public ZonedDateTime getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -52,11 +53,11 @@ public class ManagedUserDTO extends UserDTO {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public ZonedDateTime getLastModifiedDate() {
+    public LocalDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 

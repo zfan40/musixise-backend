@@ -2,8 +2,7 @@ package musixise.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiOperation;
 import musixise.config.Constants;
 import musixise.domain.Musixiser;
 import musixise.domain.User;
@@ -21,10 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -44,9 +40,6 @@ public class FavoriteResource {
 
     private final Logger log = LoggerFactory.getLogger(WorkResource.class);
 
-    private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDateTime today = LocalDateTime.now();
-
     @Inject private WorkListFollowRepository workListFollowRepository;
 
     @Inject private UserRepository userRepository;
@@ -58,6 +51,7 @@ public class FavoriteResource {
     @RequestMapping(value = "/addToMyFavoriteWorks",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "添加到我的收藏", notes = "", response = WorkListFollow.class, position = 2)
     @Timed
     public ResponseEntity<?> addToMyFavoriteWorks(@Valid @RequestBody AddToMyfavoriteWorksDTO addToMyfavoriteWorksDTO) throws URISyntaxException {
         log.debug("REST request to save addToMyFavoriteWorks : {}", addToMyfavoriteWorksDTO);
@@ -87,7 +81,6 @@ public class FavoriteResource {
                 workList.setId(addToMyfavoriteWorksDTO.getWorkId());
                 workListFollow.setWork(workList);
                 workListFollow.setId(0l);
-                workListFollow.setCreatetime(UPDATED_CREATETIME);
 
                 WorkListFollow result = workListFollowRepository.save(workListFollow);
 
@@ -98,13 +91,37 @@ public class FavoriteResource {
             })
             .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
 
-
     }
 
+
+    @RequestMapping(value = "/delMyFavoriteWorks/{id}",
+        method = RequestMethod.DELETE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "删除我的收藏", notes = "", response = Integer.class, position = 2)
+    @Timed
+    public ResponseEntity<?> delMyFavoriteWork(@PathVariable Long id) {
+        log.debug("REST request to delete delMyFavoriteWork: {}", id);
+
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map( u -> {
+
+               int del = workListFollowRepository.deleteByUserIdAndWorkId(u.getId(), id);
+
+                if (del > 1) {
+                    return ResponseEntity.ok(new OutputDTO<>(0, "success"));
+                } else {
+                    return ResponseEntity.ok(new OutputDTO<>(20000, "del fail"));
+                }
+
+            })
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+
+    }
 
     @RequestMapping(value = "/getMyFavoriteWorks",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "获取我的收藏列表", notes = "", response = WorkListFollow.class, position = 3)
     @Timed
     public ResponseEntity<?> getMyFavoriteWorks() {
         log.debug("REST request to get all getMyFavoriteWorks");

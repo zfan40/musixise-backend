@@ -17,17 +17,13 @@ import java.util.Objects;
 @Table(name = "work_list_follow")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "worklistfollow")
-public class WorkListFollow implements Serializable {
+public class WorkListFollow extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @NotNull
-    @Column(name = "createtime", nullable = false)
-    private LocalDate createtime;
 
     @ManyToOne
     private WorkList work;
@@ -42,14 +38,6 @@ public class WorkListFollow implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(LocalDate createtime) {
-        this.createtime = createtime;
     }
 
     public WorkList getWork() {
@@ -92,7 +80,8 @@ public class WorkListFollow implements Serializable {
     public String toString() {
         return "WorkListFollow{" +
             "id=" + id +
-            ", createtime='" + createtime + "'" +
+            ", work=" + work +
+            ", user=" + user +
             '}';
     }
 }

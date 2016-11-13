@@ -12,13 +12,14 @@
 
 spring:
     datasource:
-        url: jdbc:h2:mem:musixise;DB_CLOSE_DELAY=-1
+        url: jdbc:mysql://localhost:3306/musixise?useUnicode=true&characterEncoding=utf8&useSSL=false
+
         name:
-        username: musixise
+        username: root
         password:
     jpa:
-        database-platform: musixise.domain.util.FixedH2Dialect
-        database: H2
+        database-platform: org.hibernate.dialect.MySQLInnoDBDialect
+        database: MYSQL
         open-in-view: false
         show_sql: true
         hibernate:
@@ -28,7 +29,7 @@ spring:
             hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
-            hibernate.hbm2ddl.auto: validate
+            hibernate.hbm2ddl.auto: none
     data:
         elasticsearch:
             cluster-name:
@@ -46,7 +47,7 @@ spring:
         mode: XHTML
 
 liquibase:
-    contexts: test
+    contexts: dev
 
 security:
     basic:

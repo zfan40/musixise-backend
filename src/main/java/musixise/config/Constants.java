@@ -28,4 +28,5 @@ public final class Constants {
     public static final Integer ERROR_CODE_FAVORITE_WORK_NOT_EXIST = 500001;
     public static final Integer ERROR_CODE_FAVORITE_ALREADY_ADD = 5000002;
 
+
 }

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Objects;
 @Table(name = "work_list")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "worklist")
-public class WorkList implements Serializable {
+public class WorkList extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,11 +34,11 @@ public class WorkList implements Serializable {
     @Column(name = "url")
     private String url;
 
-    @Column(name = "createtime")
-    private LocalDate createtime;
-
     @Column(name = "user_id")
     private Long userId;
+
+    @Column(name = "status")
+    private Integer status;
 
     public Long getId() {
         return id;
@@ -61,14 +62,6 @@ public class WorkList implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public LocalDate getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(LocalDate createtime) {
-        this.createtime = createtime;
     }
 
     public Long getUserId() {
@@ -99,14 +92,26 @@ public class WorkList implements Serializable {
         return Objects.hashCode(id);
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "WorkList{" +
             "id=" + id +
-            ", content='" + content + "'" +
-            ", url='" + url + "'" +
-            ", createtime='" + createtime + "'" +
-            ", userId='" + userId + "'" +
+            ", content='" + content + '\'' +
+            ", url='" + url + '\'' +
+            ", userId=" + userId +
+            ", status=" + status +
             '}';
     }
 }

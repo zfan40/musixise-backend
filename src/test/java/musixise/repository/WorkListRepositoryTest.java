@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -28,6 +30,10 @@ public class WorkListRepositoryTest {
 
     @Inject WorkListRepository workListRepository;
 
+    private static final LocalDateTime today = LocalDateTime.now();
+
+    private static final ZonedDateTime createdDate = ZonedDateTime.now();
+
     @Test
     public void testFindAllByUserIdOrderByIdDesc() throws Exception {
 
@@ -35,5 +41,15 @@ public class WorkListRepositoryTest {
         List<WorkList> workListList = workListRepository.findAllByUserIdOrderByIdDesc(userId);
         System.out.println(workListList);
 
+    }
+
+    @Test
+    public void testSave() {
+
+        WorkList workList = new WorkList();
+        workList.setUserId(3l);
+        workList.setContent("aaa");
+        workList.setStatus(1);
+        workListRepository.save(workList);
     }
 }
