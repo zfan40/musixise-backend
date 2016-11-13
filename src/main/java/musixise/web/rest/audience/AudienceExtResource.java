@@ -46,9 +46,9 @@ import java.util.List;
 /**
  * Created by zhaowei on 16/5/15.
  */
-@RestController
-@RequestMapping("/api/audiences")
-@Api(value = "audience", description = "观众相关接口", position = 2)
+//@RestController
+//@RequestMapping("/api/audiences"
+// @Api(value = "audience", description = "观众相关接口", position = 2)
 public class AudienceExtResource {
 
     private final Logger log = LoggerFactory.getLogger(AudienceExtResource.class);

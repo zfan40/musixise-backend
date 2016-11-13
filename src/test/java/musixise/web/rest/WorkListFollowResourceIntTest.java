@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -47,6 +48,8 @@ public class WorkListFollowResourceIntTest {
 
     private static final LocalDate DEFAULT_CREATETIME = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
+    //private static final LocalDateTime DEFAULT_CREATETIME = LocalDateTime.now();
+    //private static final LocalDateTime UPDATED_CREATETIME = LocalDateTime.now();
 
     @Inject
     private WorkListFollowRepository workListFollowRepository;
@@ -67,7 +70,7 @@ public class WorkListFollowResourceIntTest {
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        WorkListFollowResource workListFollowResource = new WorkListFollowResource();
+        musixise.web.rest.WorkListFollowResource workListFollowResource = new musixise.web.rest.WorkListFollowResource();
         ReflectionTestUtils.setField(workListFollowResource, "workListFollowSearchRepository", workListFollowSearchRepository);
         ReflectionTestUtils.setField(workListFollowResource, "workListFollowRepository", workListFollowRepository);
         this.restWorkListFollowMockMvc = MockMvcBuilders.standaloneSetup(workListFollowResource)

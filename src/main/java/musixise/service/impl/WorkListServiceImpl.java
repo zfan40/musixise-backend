@@ -29,19 +29,19 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class WorkListServiceImpl implements WorkListService{
 
     private final Logger log = LoggerFactory.getLogger(WorkListServiceImpl.class);
-    
+
     @Inject
     private WorkListRepository workListRepository;
-    
+
     @Inject
     private WorkListMapper workListMapper;
-    
+
     @Inject
     private WorkListSearchRepository workListSearchRepository;
-    
+
     /**
      * Save a workList.
-     * 
+     *
      * @param workListDTO the entity to save
      * @return the persisted entity
      */
@@ -56,14 +56,14 @@ public class WorkListServiceImpl implements WorkListService{
 
     /**
      *  Get all the workLists.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<WorkList> findAll(Pageable pageable) {
         log.debug("Request to get all WorkLists");
-        Page<WorkList> result = workListRepository.findAll(pageable); 
+        Page<WorkList> result = workListRepository.findAll(pageable);
         return result;
     }
 
@@ -73,7 +73,7 @@ public class WorkListServiceImpl implements WorkListService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public WorkListDTO findOne(Long id) {
         log.debug("Request to get WorkList : {}", id);
         WorkList workList = workListRepository.findOne(id);
@@ -83,7 +83,7 @@ public class WorkListServiceImpl implements WorkListService{
 
     /**
      *  Delete the  workList by id.
-     *  
+     *
      *  @param id the id of the entity
      */
     public void delete(Long id) {
