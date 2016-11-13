@@ -30,6 +30,19 @@ public class WorkListDTO implements Serializable {
 
     private Long userId;
 
+    private Integer status;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Long getId() {
         return id;

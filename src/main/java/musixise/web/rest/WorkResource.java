@@ -11,6 +11,7 @@ import musixise.security.SecurityUtils;
 import musixise.service.WorkListService;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.WorkListDTO;
+import musixise.web.rest.dto.request.UpdateMyWorkStatusDTO;
 import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class WorkResource {
             .map(u -> {
                 workList.setUserId(u.getId());
                 if (workList.getStatus() == null) {
-                    workList.setStatus(0);
+                    workList.setStatus(workList.getStatus());
                 } else {
                     workList.setStatus(workList.getStatus());
                 }
@@ -112,10 +113,31 @@ public class WorkResource {
         log.debug("REST request to get getWorksById : {}", id);
 
         WorkListDTO workListDTO = workListService.findOne(id);
+
         //TODO: 私有作品只有自己查看
         return Optional.ofNullable(workListDTO)
             .map(result -> ResponseEntity.ok(new OutputDTO<>(0, "success", workListDTO)))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @RequestMapping(value = "/updateMyWorkStatusById",
+        method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "更新作品状态", notes = "更新作品状态", response = WorkList.class, position = 2)
+    @Timed
+    public ResponseEntity<?> updateMyWorkStatusById(@Valid @RequestBody UpdateMyWorkStatusDTO updateMyWorkStatusDTO) {
+
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map( u -> {
+
+                int update = workListRepository.updateStatusByUserIdAndWorkId(
+                    updateMyWorkStatusDTO.getStatus(), updateMyWorkStatusDTO.getWorkId(), u.getId());
+
+                return ResponseEntity.ok(new OutputDTO<>(0, "success"));
+
+            })
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+
     }
 
 }
