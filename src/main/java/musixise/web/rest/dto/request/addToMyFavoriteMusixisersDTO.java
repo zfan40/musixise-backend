@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * Created by zhaowei on 16/11/14.
+ * Created by zhaowei on 16/11/14. sss
  */
 public class AddToMyFavoriteMusixisersDTO implements Serializable {
 
