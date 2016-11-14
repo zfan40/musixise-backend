@@ -4,30 +4,35 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import musixise.config.Constants;
-import musixise.domain.Musixiser;
-import musixise.domain.User;
-import musixise.domain.WorkList;
-import musixise.domain.WorkListFollow;
+import musixise.domain.*;
 import musixise.repository.UserRepository;
 import musixise.repository.WorkListFollowRepository;
 import musixise.repository.search.WorkListFollowSearchRepository;
 import musixise.security.SecurityUtils;
+import musixise.service.MusixiserFollowService;
+import musixise.service.MusixiserService;
 import musixise.service.WorkListService;
+import musixise.web.rest.dto.MusixiserFollowDTO;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.WorkListDTO;
+import musixise.web.rest.dto.request.AddToMyFavoriteMusixisersDTO;
 import musixise.web.rest.dto.request.AddToMyfavoriteWorksDTO;
+import musixise.web.rest.mapper.MusixiserMapper;
+import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.*;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by zhaowei on 16/11/12.
@@ -48,10 +53,16 @@ public class FavoriteResource {
 
     @Inject private WorkListService workListService;
 
+    @Inject private MusixiserService musixiserService;
+
+    @Inject private MusixiserMapper musixiserMapper;
+
+    @Inject private MusixiserFollowService musixiserFollowService;
+
     @RequestMapping(value = "/addToMyFavoriteWorks",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "添加到我的收藏", notes = "", response = WorkListFollow.class, position = 2)
+    @ApiOperation(value = "添加作品到我的收藏", notes = "", response = WorkListFollow.class, position = 2)
     @Timed
     public ResponseEntity<?> addToMyFavoriteWorks(@Valid @RequestBody AddToMyfavoriteWorksDTO addToMyfavoriteWorksDTO) throws URISyntaxException {
         log.debug("REST request to save addToMyFavoriteWorks : {}", addToMyfavoriteWorksDTO);
@@ -97,7 +108,7 @@ public class FavoriteResource {
     @RequestMapping(value = "/delMyFavoriteWorks/{id}",
         method = RequestMethod.DELETE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "删除我的收藏", notes = "", response = Integer.class, position = 2)
+    @ApiOperation(value = "删除我收藏的作品", notes = "", response = Integer.class, position = 2)
     @Timed
     public ResponseEntity<?> delMyFavoriteWork(@PathVariable Long id) {
         log.debug("REST request to delete delMyFavoriteWork: {}", id);
@@ -121,7 +132,7 @@ public class FavoriteResource {
     @RequestMapping(value = "/getMyFavoriteWorks",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "获取我的收藏列表", notes = "", response = WorkListFollow.class, position = 3)
+    @ApiOperation(value = "获取我的作品收藏列表", notes = "", response = WorkListFollow.class, position = 3)
     @Timed
     public ResponseEntity<?> getMyFavoriteWorks() {
         log.debug("REST request to get all getMyFavoriteWorks");
@@ -137,5 +148,48 @@ public class FavoriteResource {
             .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
     }
 
+    @RequestMapping(value = "/getFavoriteMusixisers",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "获取我关注用户列表", notes = "", response = MusixiserFollow.class, position = 3)
+    @Timed
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getAllMusixisers(Pageable pageable)
+        throws URISyntaxException {
+        log.debug("REST request to get a page of Musixisers");
+
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map( u -> {
+                Page<MusixiserFollow> page = musixiserFollowService.findAllByUserId(pageable, u.getId());
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
+
+            })
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+    }
+
+    @RequestMapping(value = "/addToMyFavoriteMusixisers",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "关注用户", notes = "", response = MusixiserFollow.class, position = 3)
+    @Timed
+    public ResponseEntity<?> createMusixiserFollow(@Valid @RequestBody AddToMyFavoriteMusixisersDTO addToMyFavoriteMusixisersDTO) throws URISyntaxException {
+        log.debug("REST request to save addToMyFavoriteMusixisers : {}", addToMyFavoriteMusixisersDTO);
+
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map( u -> {
+
+                MusixiserFollowDTO musixiserFollowDTO = new MusixiserFollowDTO();
+                musixiserFollowDTO.setUserId(u.getId());
+                User user = new User();
+                user.setId(addToMyFavoriteMusixisersDTO.getFollowId());
+                musixiserFollowDTO.setUser(user);
+
+                MusixiserFollowDTO result = musixiserFollowService.save(musixiserFollowDTO);
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", result));
+
+            })
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+
+    }
 
 }

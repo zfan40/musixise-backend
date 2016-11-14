@@ -13,6 +13,7 @@
                 "workListFollow": "WorkListFollow",
                 "audience": "Audience",
                 "stagesFollow": "StagesFollow",
+                "musixiserFollow": "MusixiserFollow",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
