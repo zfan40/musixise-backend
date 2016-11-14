@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+   <changeSet author="zhaowei (generated)" id="1478926264825-5">
+      <dropNotNullConstraint columnDataType="bigint" columnName="user_id" tableName="musixiser"/>
+
+      <sql dbms="mysql">
+
+          ALTER TABLE `musixise`.`work_list_follow` DROP INDEX `user_id`, ADD UNIQUE `user_id` (`user_id`, `work_id`) USING BTREE;
+          ALTER TABLE `work_list` ADD `status` TINYINT UNSIGNED NULL DEFAULT '0' COMMENT '0=正常，1=私有，2=删除' AFTER `user_id`;
+
+          ALTER TABLE `work_list` ADD `created_by` VARCHAR(50) NOT NULL AFTER `user_id`, ADD `created_date` TIMESTAMP NULL AFTER `created_by`, ADD `last_modified_by` VARCHAR(50) NULL DEFAULT NULL AFTER `created_date`, ADD `last_modified_date` TIMESTAMP NULL DEFAULT NULL AFTER `last_modified_by`;
+          ALTER TABLE `work_list_follow` ADD `created_by` VARCHAR(50) NOT NULL AFTER `user_id`, ADD `created_date` TIMESTAMP NULL AFTER `created_by`, ADD `last_modified_by` VARCHAR(50) NULL DEFAULT NULL AFTER `created_date`, ADD `last_modified_date` TIMESTAMP NULL DEFAULT NULL AFTER `last_modified_by`;
+
+          ALTER TABLE `musixiser_follow` ADD `created_by` VARCHAR(50) NOT NULL AFTER `user_id`, ADD `created_date` TIMESTAMP NULL AFTER `created_by`, ADD `last_modified_by` VARCHAR(50) NULL DEFAULT NULL AFTER `created_date`, ADD `last_modified_date` TIMESTAMP NULL DEFAULT NULL AFTER `last_modified_by`
+
+          ALTER TABLE `musixiser_follow`
+          ADD CONSTRAINT `musixiser_follow_ibfk_1` FOREIGN KEY (`follow_uid`) REFERENCES `jhi_user` (`id`);
+
+          ALTER TABLE `work_list_follow`
+          ADD CONSTRAINT `fk_worklistfollow_user_id` FOREIGN KEY (`user_id`) REFERENCES `jhi_user` (`id`),
+          ADD CONSTRAINT `fk_worklistfollow_work_id` FOREIGN KEY (`work_id`) REFERENCES `work_list` (`id`);
+
+      </sql>
+   </changeSet>
+</databaseChangeLog>
