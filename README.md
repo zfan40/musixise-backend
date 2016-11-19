@@ -89,19 +89,16 @@ h: help, list all options
 个人收藏
 
 
-getInfoById 获取指定用户信息
-getFavoriteMusixisers 获取我关注的人
+x getInfoById 获取指定用户信息
 
-
-
-
-updateMyWorkStatusById
+x getFavoriteMusixisers 获取我关注的人
 
 addToMyFavoriteMusixisers id token
 
+
 getContentByWorkId id 
 
-
+x updateMyWorkStatusById
 x getMyInfo token
 x getWorksById
 x addToMyFavoriteWorks id token

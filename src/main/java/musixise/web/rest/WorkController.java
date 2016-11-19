@@ -11,7 +11,7 @@ import musixise.security.SecurityUtils;
 import musixise.service.WorkListService;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.WorkListDTO;
-import musixise.web.rest.dto.request.UpdateMyWorkStatusDTO;
+import musixise.web.rest.dto.favorite.UpdateMyWorkStatusDTO;
 import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +35,10 @@ import java.util.Optional;
  */
 @Api(value = "work", description = "作品接口", position = 1)
 @RestController
-@RequestMapping("/api/musixisers")
-public class WorkResource {
+@RequestMapping("/api/work")
+public class WorkController {
 
-    private final Logger log = LoggerFactory.getLogger(WorkResource.class);
+    private final Logger log = LoggerFactory.getLogger(WorkController.class);
 
     private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
 
@@ -57,12 +57,12 @@ public class WorkResource {
     private WorkListService workListService;
 
 
-    @RequestMapping(value = "/saveWork",
+    @RequestMapping(value = "/create",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "保存作品信息", notes = "储存音乐人表演的作品信息", response = WorkList.class, position = 2)
     @Timed
-    public ResponseEntity<?> saveWork(@Valid @RequestBody WorkList workList) throws URISyntaxException {
+    public ResponseEntity<?> create(@Valid @RequestBody WorkList workList) throws URISyntaxException {
         log.debug("REST request to save WorkList  : {}", workList);
         if (workList.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("workList", "idexists", "A new workList cannot already have an ID")).body(null);
@@ -85,12 +85,12 @@ public class WorkResource {
     }
 
 
-    @RequestMapping(value = "/getMyWorks",
-        method = RequestMethod.GET,
+    @RequestMapping(value = "/getList",
+        method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "获取我的作品列表", notes = "获取自己的演出作品列表", response = WorkList.class, position = 2)
     @Timed
-    public ResponseEntity<?> getMyWorks(Pageable pageable) {
+    public ResponseEntity<?> getList(Pageable pageable) {
         log.debug("REST request to get all getMyWorks");
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
@@ -104,28 +104,26 @@ public class WorkResource {
 
     }
 
-    @RequestMapping(value = "/getWorksById/{id}",
-        method = RequestMethod.GET,
+    @RequestMapping(value = "/getListByUid/{id}",
+        method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "获取作品详细信息", notes = "获取作品详细信息", response = WorkList.class, position = 2)
+    @ApiOperation(value = " 获取指定用户作品列表", notes = "获取指定用户作品列表", response = WorkList.class, position = 2)
     @Timed
-    public ResponseEntity<?> getWorksById(@PathVariable Long id) {
-        log.debug("REST request to get getWorksById : {}", id);
+    public ResponseEntity<?> getListByUid(@PathVariable Long id) {
+        log.debug("REST request to get getListByUid : {}", id);
 
-        WorkListDTO workListDTO = workListService.findOne(id);
+        List<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(id);
 
-        //TODO: 私有作品只有自己查看
-        return Optional.ofNullable(workListDTO)
-            .map(result -> ResponseEntity.ok(new OutputDTO<>(0, "success", workListDTO)))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return ResponseEntity.ok(new OutputDTO<>(0, "success", workLists));
+
     }
 
-    @RequestMapping(value = "/updateMyWorkStatusById",
-        method = RequestMethod.PUT,
+    @RequestMapping(value = "/updateStatus",
+        method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "更新作品状态", notes = "更新作品状态", response = WorkList.class, position = 2)
     @Timed
-    public ResponseEntity<?> updateMyWorkStatusById(@Valid @RequestBody UpdateMyWorkStatusDTO updateMyWorkStatusDTO) {
+    public ResponseEntity<?> updateStatus(@Valid @RequestBody UpdateMyWorkStatusDTO updateMyWorkStatusDTO) {
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
@@ -138,6 +136,22 @@ public class WorkResource {
             })
             .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
 
+    }
+
+    @RequestMapping(value = "/detail/{id}",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "获取作品详细信息", notes = "获取作品详细信息", response = WorkList.class, position = 2)
+    @Timed
+    public ResponseEntity<?> detail(@PathVariable Long id) {
+        log.debug("REST request to get detail : {}", id);
+
+        WorkListDTO workListDTO = workListService.findOne(id);
+
+        //TODO: 私有作品只有自己查看
+        return Optional.ofNullable(workListDTO)
+            .map(result -> ResponseEntity.ok(new OutputDTO<>(0, "success", workListDTO)))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 }

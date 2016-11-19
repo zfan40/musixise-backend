@@ -1,4 +1,4 @@
-package musixise.web.rest.dto.request;
+package musixise.web.rest.dto.favorite;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,7 +14,7 @@ public class UpdateMyWorkStatusDTO implements Serializable {
     private Long workId;
 
     @NotNull
-    private Integer status;
+    private Integer status;//0remove 1public 2 private
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

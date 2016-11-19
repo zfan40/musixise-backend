@@ -1,4 +1,4 @@
-package musixise.web.rest.dto.request;
+package musixise.web.rest.dto.favorite;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,10 +14,20 @@ public class AddToMyfavoriteWorksDTO implements Serializable {
     @NotNull
     private Long workId;
 
+    //0=收藏,1=取消收藏
+    private Long status;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
+    public Long getStatus() {
+        return status;
+    }
+
+    public void setStatus(Long status) {
+        this.status = status;
+    }
 
     public Long getWorkId() {
         return workId;

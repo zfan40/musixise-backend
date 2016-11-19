@@ -53,4 +53,6 @@ public interface MusixiserService {
     Page<Musixiser> search(String query, Pageable pageable);
 
     String getDefaultAvatar();
+
+    MusixiserDTO getInfoByUid(Long id);
 }

@@ -53,4 +53,5 @@ public interface MusixiserFollowService {
      *  @return the list of entities
      */
     Page<MusixiserFollow> search(String query, Pageable pageable);
+
 }

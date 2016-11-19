@@ -1,5 +1,7 @@
 package musixise.service.impl;
 
+import musixise.config.Constants;
+import musixise.security.SecurityUtils;
 import musixise.service.MusixiserService;
 import musixise.domain.Musixiser;
 import musixise.repository.MusixiserRepository;
@@ -120,4 +122,39 @@ public class MusixiserServiceImpl implements MusixiserService{
         return list.get(index);
     }
 
+    @Override
+    public MusixiserDTO getInfoByUid(Long id) {
+
+        Musixiser musixiser = musixiserRepository.findOneByUserId(id);
+
+        if (musixiser == null) return null;
+        MusixiserDTO musixiserDTO = new MusixiserDTO();
+        //musixiserDTO.setId(musixiser.getId());
+        musixiserDTO.setUserId(musixiser.getUserId());
+        musixiserDTO.setUsername(SecurityUtils.getCurrentUserLogin());
+        musixiserDTO.setEmail(musixiser.getEmail());
+
+        //拼接图片地址
+        if (musixiser.getLargeAvatar() != null && !musixiser.getLargeAvatar().equals("") && musixiser.getLargeAvatar().indexOf("alicdn") == -1) {
+            if (musixiser.getLargeAvatar().indexOf("http") == -1) {
+                musixiser.setLargeAvatar(String.format(Constants.QINIU_IMG_DOMAIN, musixiser.getLargeAvatar()));
+            }
+        }
+
+        if (musixiser.getSmallAvatar() != null && !musixiser.getSmallAvatar().equals("") && musixiser.getSmallAvatar().indexOf("alicdn") == -1) {
+            if (musixiser.getSmallAvatar().indexOf("http") == -1) {
+                musixiser.setSmallAvatar(String.format(Constants.QINIU_IMG_DOMAIN, musixiser.getSmallAvatar()));
+            }
+        }
+
+        musixiserDTO.setLargeAvatar(musixiser.getLargeAvatar());
+        musixiserDTO.setSmallAvatar(musixiser.getSmallAvatar());
+        musixiserDTO.setNation(musixiser.getNation());
+        musixiserDTO.setBirth(musixiser.getBirth());
+        musixiserDTO.setTel(musixiser.getTel());
+        musixiserDTO.setRealname(musixiser.getRealname());
+        musixiserDTO.setIsMaster(musixiser.getIsMaster());
+
+        return musixiserDTO;
+    }
 }

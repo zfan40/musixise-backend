@@ -35,7 +35,6 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "account", description = "账号管理", position = 1)
 public class AccountResource {
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);

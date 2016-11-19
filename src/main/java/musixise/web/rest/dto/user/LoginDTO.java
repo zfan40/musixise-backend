@@ -1,4 +1,6 @@
-package musixise.web.rest.dto;
+package musixise.web.rest.dto.user;
+
+import musixise.web.rest.dto.UserDTO;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

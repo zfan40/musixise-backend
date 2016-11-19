@@ -1,16 +1,12 @@
-package musixise.web.rest.musixiser;
+package musixise.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.qiniu.common.QiniuException;
-import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import io.swagger.annotations.*;
-import musixise.config.Constants;
 import musixise.config.JHipsterProperties;
 import musixise.config.social.SocialConfiguration;
 import musixise.domain.Musixiser;
-import musixise.domain.Stages;
 import musixise.domain.User;
 import musixise.domain.WorkList;
 import musixise.repository.MusixiserRepository;
@@ -25,22 +21,19 @@ import musixise.security.jwt.TokenProvider;
 import musixise.service.MusixiserService;
 import musixise.service.SocialService;
 import musixise.service.UserService;
-import musixise.web.rest.JWTToken;
-import musixise.web.rest.dto.AccessGrantDTO;
-import musixise.web.rest.dto.ManagedUserDTO;
-import musixise.web.rest.dto.MusixiserDTO;
-import musixise.web.rest.dto.OutputDTO;
+import musixise.web.rest.dto.*;
+import musixise.web.rest.dto.user.LoginDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.util.HeaderUtil;
-import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,30 +42,23 @@ import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by zhaowei on 16/5/15.
+ * Created by zhaowei on 16/11/19.
  */
-@Api(value = "musixisers", description = "音乐人相关接口", position = 1)
+@Api(value = "user", description = "账号管理", position = 0)
 @RestController
-@RequestMapping("/api/musixisers")
-public class MusixiserExtResource {
+@RequestMapping("/api/user")
+public class UserController {
 
-    private final Logger log = LoggerFactory.getLogger(MusixiserExtResource.class);
-
-    private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
+    private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Inject
     private MusixiserRepository musixiserRepository;
@@ -122,18 +108,21 @@ public class MusixiserExtResource {
     @Inject
     private MusixiserService musixiserService;
 
+    @Inject
+    private AuthenticationManager authenticationManager;
+
     @RequestMapping(value = "/register",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
 
-    @ApiOperation(value = "音乐人注册", notes = "返回用户实体对象", response = Musixiser.class, position = 2)
+    @ApiOperation(value = "注册", notes = "返回用户实体对象", response = Musixiser.class, position = 1)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "注册成功", response = Musixiser.class),
         @ApiResponse(code = 404, message = "找不到页面"),
         @ApiResponse(code = 500, message = "内部报错")}
     )
     @Timed
-    public ResponseEntity<?> registerMusixiser(@RequestBody RegisterDTO registerDTO, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO, HttpServletRequest request) throws URISyntaxException {
 
         //注册账号
         ManagedUserDTO managedUserDTO = new ManagedUserDTO();
@@ -186,55 +175,45 @@ public class MusixiserExtResource {
         }
     }
 
+    @ApiOperation(value = "登录", notes = "用户认证并获取秘钥,后续接口调用都依赖此秘钥", position = 2)
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @Timed
+    public ResponseEntity<?> authorize(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+            new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
+
+        try {
+            String jwt = userService.auth(authenticationToken);
+            return ResponseEntity.ok(new JWTToken(jwt));
+        } catch (AuthenticationException exception) {
+            return new ResponseEntity<>(exception.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     @RequestMapping(value = "/getInfo",
-        method = RequestMethod.GET,
+        method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "获取当前用户信息", notes = "返回当前用户信息", response = Musixiser.class, position = 2)
+    @ApiOperation(value = "获取我的个人信息", notes = "返回当前用户信息", response = Musixiser.class, position = 3)
     @Timed
     public ResponseEntity<?> getMusixiserInfo() {
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map(u -> {
-                Musixiser musixiser = musixiserRepository.findOneByUserId(u.getId());
-                MusixiserDTO musixiserDTO = new MusixiserDTO();
-                //musixiserDTO.setId(musixiser.getId());
-                musixiserDTO.setUserId(musixiser.getUserId());
-                musixiserDTO.setUsername(SecurityUtils.getCurrentUserLogin());
-                musixiserDTO.setEmail(musixiser.getEmail());
 
-                //拼接图片地址
-                if (musixiser.getLargeAvatar() != null && !musixiser.getLargeAvatar().equals("") && musixiser.getLargeAvatar().indexOf("alicdn") == -1) {
-                    if (musixiser.getLargeAvatar().indexOf("http") == -1) {
-                        musixiser.setLargeAvatar(String.format(Constants.QINIU_IMG_DOMAIN, musixiser.getLargeAvatar()));
-                    }
-                }
-
-                if (musixiser.getSmallAvatar() != null && !musixiser.getSmallAvatar().equals("") && musixiser.getSmallAvatar().indexOf("alicdn") == -1) {
-                    if (musixiser.getSmallAvatar().indexOf("http") == -1) {
-                        musixiser.setSmallAvatar(String.format(Constants.QINIU_IMG_DOMAIN, musixiser.getSmallAvatar()));
-                    }
-                }
-
-                musixiserDTO.setLargeAvatar(musixiser.getLargeAvatar());
-                musixiserDTO.setSmallAvatar(musixiser.getSmallAvatar());
-                musixiserDTO.setNation(musixiser.getNation());
-                musixiserDTO.setBirth(musixiser.getBirth());
-                musixiserDTO.setTel(musixiser.getTel());
-                musixiserDTO.setRealname(musixiser.getRealname());
-                musixiserDTO.setIsMaster(musixiser.getIsMaster());
+                MusixiserDTO musixiserDTO = musixiserService.getInfoByUid(u.getId());
 
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", musixiserDTO));
             })
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
     }
 
     @RequestMapping(value = "/updateInfo",
-        method = RequestMethod.PUT,
+        method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "修改当前用户信息", notes = "修改当前用户信息", response = Musixiser.class, position = 2)
+    @ApiOperation(value = "修改当前用户信息", notes = "修改当前用户信息", response = Musixiser.class, position = 4)
     @Timed
-    public ResponseEntity<Musixiser> updateMusixiserEx(@Valid @RequestBody Musixiser musixiser) {
+    public ResponseEntity<Musixiser> updateInfo(@Valid @RequestBody Musixiser musixiser) {
         log.debug("REST request to update MusixiserEx : {}", musixiser);
 
         //获取当前用户信息
@@ -264,107 +243,10 @@ public class MusixiserExtResource {
 
     }
 
-//    @RequestMapping(value = "/onStages",
-//        method = RequestMethod.POST,
-//        produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ApiOperation(value = "音乐人开始演出", notes = "音乐人开始演出", response = Stages.class, position = 2)
-//    @Timed
-//    public ResponseEntity<?> onStages(@Valid @RequestBody Stages stages) throws URISyntaxException {
-//        log.debug("REST request to on Stages : {}", stages);
-//        if (stages.getId() != null) {
-//            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("stages", "idexists", "A new stages cannot already have an ID")).body(null);
-//        }
-//
-//        //获取当前用户信息
-//        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
-//            .map(u -> {
-//
-//                stages.setUserId(u.getId());
-//                Stages result = stagesRepository.save(stages);
-//                stagesSearchRepository.save(result);
-//                return ResponseEntity.ok()
-//                    .headers(HeaderUtil.createEntityCreationAlert("stages", result.getId().toString()))
-//                    .body(result);
-//
-//            })
-//            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-//
-//
-//    }
-//
-//
-//    @RequestMapping(value = "/offStages/{id}",
-//        method = RequestMethod.DELETE,
-//        produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ApiOperation(value = "音乐人中止演出", notes = "音乐人中止演出", response = Stages.class, position = 2)
-//    @Timed
-//    public ResponseEntity<Void> offStages(@ApiParam(value = "ID", required = true) @PathVariable Long id) {
-//        log.debug("REST request to off Stages : {}", id);
-//
-//        //获取当前用户信息
-//        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
-//            .map(u -> {
-//                WorkList workList = workListRepository.findOne(id);
-//                //判断是当前用户操作则执行.
-//                if (workList.getUserId() == u.getId()) {
-//                    stagesRepository.delete(id);
-//                    stagesSearchRepository.delete(id);
-//                }
-//                return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("stages", id.toString())).build();
-//
-//            })
-//            .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-//    }
-
-
-
-    @RequestMapping(value = "/uploadPic", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "上传图片", notes = "上传图片返回图片链接,使用云存储.", response = OutputDTO.class, position = 2)
-    @Timed
-    public ResponseEntity<?> upload(@RequestParam("files") MultipartFile file) {
-
-        //上传到七牛后保存的文件名
-        String key = file.getOriginalFilename();
-        String bucketname = "muixise-img";
-        //上传文件的路径
-        //密钥配置
-
-        String fileName = String.format("%s_%s", RandomStringUtils.randomAlphanumeric(8), key);
-
-        try {
-            Response res = uploadManager.put(multipartToFile(file), fileName, auth.uploadToken(bucketname));
-        } catch (QiniuException e) {
-            Response r = e.response;
-            // 请求失败时打印的异常的信息
-            System.out.println(r.toString());
-
-            try {
-                //响应的文本信息
-                System.out.println(r.bodyString());
-            } catch (QiniuException e1) {
-                //ignore
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return ResponseEntity.ok(new OutputDTO<>(0, "success", fileName));
-    }
-
-    public File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException {
-        String filePath = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
-        File tmpFile = new File(filePath, multipart.getOriginalFilename());
-        tmpFile.createNewFile();
-        multipart.transferTo(tmpFile);
-        return tmpFile;
-    }
-
     @RequestMapping(value = "/authByAccessToken/{platform}",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "社交登录", notes = "使用社交平台access_token登录, 平台标识 platform=weibo, wechat, qq", response = WorkList.class, position = 2)
+    @ApiOperation(value = "社交登录", notes = "使用社交平台access_token登录, 平台标识 platform=weibo, wechat, qq", response = WorkList.class, position = 5)
     @Timed
     public ResponseEntity<?> authenticateBySocialToken(@ApiParam(value = "platform", required = true, defaultValue = "weibo") @PathVariable String platform, @RequestBody AccessGrantDTO accessGrantDTO) {
 
@@ -393,13 +275,31 @@ public class MusixiserExtResource {
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
             } catch (Exception e) {
                 log.error("Exception creating social user: ", e);
-                return ResponseEntity.ok(new OutputDTO<>(2000, "创建用户信息失败", userProfile));
+                return ResponseEntity.ok(new OutputDTO<>(20000, "创建用户信息失败", userProfile));
             }
         } else {
 
-            return ResponseEntity.ok(new OutputDTO<>(2000, "不存在的平台标识", platform));
+            return ResponseEntity.ok(new OutputDTO<>(20000, "不存在的平台标识", platform));
         }
 
     }
 
+
+    @RequestMapping(value = "/detail/{id}",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "通过 UID 获取用户信息", notes = "通过 UID 获取用户信息", response = MusixiserDTO.class, position = 5)
+    @Timed
+    public ResponseEntity<?> getMusixiser(@PathVariable Long id) {
+
+        if (id > 0) {
+            MusixiserDTO musixiserDTO = musixiserService.getInfoByUid(id);
+            if (musixiserDTO != null) {
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", musixiserDTO));
+            }
+        }
+
+        return ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆"));
+
+    }
 }

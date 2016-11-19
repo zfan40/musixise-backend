@@ -6,6 +6,7 @@ import musixise.repository.AuthorityRepository;
 import musixise.repository.UserRepository;
 import musixise.repository.search.UserSearchRepository;
 import musixise.security.SecurityUtils;
+import musixise.security.jwt.TokenProvider;
 import musixise.service.util.RandomUtil;
 import musixise.web.rest.dto.ManagedUserDTO;
 import java.time.ZonedDateTime;
@@ -13,6 +14,10 @@ import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +52,13 @@ public class UserService {
 
     @Inject
     private MusixiserService musixiserService;
+
+    @Inject
+    private TokenProvider tokenProvider;
+
+    @Inject
+    private AuthenticationManager authenticationManager;
+
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -254,5 +266,12 @@ public class UserService {
             userRepository.delete(user);
             userSearchRepository.delete(user);
         }
+    }
+
+    public String auth(UsernamePasswordAuthenticationToken authenticationToken) {
+        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        boolean rememberMe = true;
+        return tokenProvider.createToken(authentication, rememberMe);
     }
 }
