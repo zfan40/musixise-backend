@@ -5,7 +5,6 @@ import musixise.repository.CustomSocialUsersConnectionRepository;
 import musixise.security.social.CustomSignInAdapter;
 
 import net.gplatform.spring.social.qq.connect.QQConnectionFactory;
-import net.gplatform.spring.social.weibo.connect.WeiboConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +26,7 @@ import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.social.wechat.connect.WeChatConnectionFactory;
+import org.springframework.social.weibo.connect.WeiboConnectionFactory;
 // jhipster-needle-add-social-connection-factory-import-package
 
 import javax.inject.Inject;
