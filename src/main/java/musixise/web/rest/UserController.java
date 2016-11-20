@@ -242,10 +242,14 @@ public class UserController {
                 Connection<?> connection  = oAuth2ConnectionFactoryMap.get(platform).createConnection(accessGrant);
                 userProfile = connection.fetchUserProfile();
 
-                //init user account
-                socialService.createSocialUser(connection, "zh-cn", userProfile);
-                //get jwt
                 UserDetails user = userDetailsService.loadUserByUsername(userProfile.getUsername());
+
+                //get jwt
+                if (user == null) {
+                    //init user account
+                    socialService.createSocialUser(connection, "zh-cn", userProfile);
+                    user = userDetailsService.loadUserByUsername(userProfile.getUsername());
+                }
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     user,
                     null,
