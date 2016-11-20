@@ -2,6 +2,7 @@ package musixise.service;
 
 import musixise.domain.Musixiser;
 import musixise.web.rest.dto.MusixiserDTO;
+import musixise.web.rest.dto.user.RegisterDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -55,4 +56,6 @@ public interface MusixiserService {
     String getDefaultAvatar();
 
     MusixiserDTO getInfoByUid(Long id);
+
+    Musixiser registerMusixiser(Long id, RegisterDTO registerDTO);
 }

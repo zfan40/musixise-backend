@@ -5,6 +5,7 @@ import musixise.domain.User;
 import musixise.repository.AuthorityRepository;
 import musixise.repository.UserRepository;
 
+import musixise.web.rest.dto.user.RegisterDTO;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +42,9 @@ public class SocialService {
     @Inject
     private MailService mailService;
 
+    @Inject
+    private MusixiserService musixiserService;
+
     public void deleteUserSocialConnection(String login) {
         ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(login);
         connectionRepository.findAllConnections().keySet().stream()
@@ -51,14 +55,28 @@ public class SocialService {
     }
 
     public void createSocialUser(Connection<?> connection, String langKey) {
+
+    }
+    public void createSocialUser(Connection<?> connection, String langKey, UserProfile userProfile) {
         if (connection == null) {
             log.error("Cannot create social user because connection is null");
             throw new IllegalArgumentException("Connection cannot be null");
         }
-        UserProfile userProfile = connection.fetchUserProfile();
+       // UserProfile userProfile = connection.fetchUserProfile();
         String providerId = connection.getKey().getProviderId();
         User user = createUserIfNotExist(userProfile, langKey, providerId);
         createSocialConnection(user.getLogin(), connection);
+        //注册用到到 musixiser table
+
+        RegisterDTO registerDTO = new RegisterDTO();
+        registerDTO.setRealname(user.getFirstName());
+        //保存社交图片
+        if (connection.getProfileUrl() != null) {
+            registerDTO.setLargeAvatar(connection.getImageUrl());
+            registerDTO.setSmallAvatar(connection.getImageUrl());
+        }
+        musixiserService.registerMusixiser(user.getId(), registerDTO);
+
         //mailService.sendSocialRegistrationValidationEmail(user, providerId);
     }
 

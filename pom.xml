@@ -481,9 +481,9 @@
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-weibo</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.1.0.RELEASE</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/spring-social-weibo-1.0.1-SNAPSHOT.jar</systemPath>
+            <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/spring-social-weibo.jar</systemPath>
         </dependency>
 
 

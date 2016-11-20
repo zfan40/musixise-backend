@@ -7,6 +7,7 @@ import musixise.domain.Musixiser;
 import musixise.repository.MusixiserRepository;
 import musixise.repository.search.MusixiserSearchRepository;
 import musixise.web.rest.dto.MusixiserDTO;
+import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.mapper.MusixiserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,5 +157,31 @@ public class MusixiserServiceImpl implements MusixiserService{
         musixiserDTO.setIsMaster(musixiser.getIsMaster());
 
         return musixiserDTO;
+    }
+
+    @Override
+    public Musixiser registerMusixiser(Long id, RegisterDTO registerDTO) {
+        //保存个人信息
+        Musixiser musixiser = new Musixiser();
+
+        musixiser.setUserId(id);
+        musixiser.setRealname(registerDTO.getRealname());
+        musixiser.setTel(registerDTO.getTel());
+        musixiser.setEmail(registerDTO.getEmail());
+        musixiser.setBirth(registerDTO.getBirth());
+        musixiser.setGender(registerDTO.getGender());
+
+        //判断图片是否为空,为空则设置默认图片
+        if (registerDTO.getLargeAvatar() == null || registerDTO.getLargeAvatar().equals("")) {
+            String defalutAvatar = getDefaultAvatar();
+            registerDTO.setLargeAvatar(defalutAvatar);
+            registerDTO.setSmallAvatar(defalutAvatar);
+        }
+
+        musixiser.setSmallAvatar(registerDTO.getSmallAvatar());
+        musixiser.setLargeAvatar(registerDTO.getLargeAvatar());
+        musixiser.setNation(registerDTO.getNation());
+
+        return musixiserRepository.save(musixiser);
     }
 }

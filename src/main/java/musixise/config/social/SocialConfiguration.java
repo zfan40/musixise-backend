@@ -103,6 +103,8 @@ public class SocialConfiguration implements SocialConfigurer {
         String weiboClientSecret = environment.getProperty("spring.social.weibo.clientSecret");
         if (weiboClientId != null && weiboClientSecret != null) {
             log.debug("Configuring WeiboConnectionFactory");
+
+
             ConnectionFactory weiBoConnectionFactory = new WeiboConnectionFactory(weiboClientId, weiboClientSecret);
             connectionFactoryConfigurer.addConnectionFactory( weiBoConnectionFactory );
             OAuth2ConnectionFactory weiboAuth2ConnectionFactory = new WeiboConnectionFactory(weiboClientId, weiboClientSecret);

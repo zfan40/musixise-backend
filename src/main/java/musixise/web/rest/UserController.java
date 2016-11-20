@@ -145,28 +145,8 @@ public class UserController {
                 managedUserDTO.getLastName(),
                 managedUserDTO.getEmail()
             );
-            //保存个人信息
-            Musixiser musixiser = new Musixiser();
-
-            musixiser.setUserId(newUser.getId());
-            musixiser.setRealname(registerDTO.getRealname());
-            musixiser.setTel(registerDTO.getTel());
-            musixiser.setEmail(registerDTO.getEmail());
-            musixiser.setBirth(registerDTO.getBirth());
-            musixiser.setGender(registerDTO.getGender());
-
-            //判断图片是否为空,为空则设置默认图片
-            if (registerDTO.getLargeAvatar() == null || registerDTO.getLargeAvatar().equals("")) {
-                String defalutAvatar = musixiserService.getDefaultAvatar();
-                registerDTO.setLargeAvatar(defalutAvatar);
-                registerDTO.setSmallAvatar(defalutAvatar);
-            }
-
-            musixiser.setSmallAvatar(registerDTO.getSmallAvatar());
-            musixiser.setLargeAvatar(registerDTO.getLargeAvatar());
-            musixiser.setNation(registerDTO.getNation());
-
-            Musixiser result = musixiserRepository.save(musixiser);
+            //注册个人信息
+            Musixiser result = musixiserService.registerMusixiser(newUser.getId(), registerDTO);
 
             //搜索索引
             musixiserSearchRepository.save(result);
@@ -257,12 +237,13 @@ public class UserController {
         Map<String, OAuth2ConnectionFactory> oAuth2ConnectionFactoryMap = socialConfiguration.getoAuth2ConnectionFactoryMap();
 
         if (oAuth2ConnectionFactoryMap.containsKey(platform)) {
-            Connection<?> connection  = oAuth2ConnectionFactoryMap.get(platform).createConnection(accessGrant);
-            UserProfile userProfile = connection.fetchUserProfile();
-
+            UserProfile userProfile = null;
             try {
+                Connection<?> connection  = oAuth2ConnectionFactoryMap.get(platform).createConnection(accessGrant);
+                userProfile = connection.fetchUserProfile();
+
                 //init user account
-                socialService.createSocialUser(connection, "en");
+                socialService.createSocialUser(connection, "zh-cn", userProfile);
                 //get jwt
                 UserDetails user = userDetailsService.loadUserByUsername(userProfile.getUsername());
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -272,10 +253,11 @@ public class UserController {
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 String jwt = tokenProvider.createToken(authenticationToken, false);
+
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
             } catch (Exception e) {
                 log.error("Exception creating social user: ", e);
-                return ResponseEntity.ok(new OutputDTO<>(20000, "创建用户信息失败", userProfile));
+                return ResponseEntity.ok(new OutputDTO<>(20000, String.format("创建用户信息失败 %s", e.getMessage()), userProfile));
             }
         } else {
 
