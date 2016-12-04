@@ -242,7 +242,13 @@ public class UserController {
                 Connection<?> connection  = oAuth2ConnectionFactoryMap.get(platform).createConnection(accessGrant);
                 userProfile = connection.fetchUserProfile();
 
-                UserDetails user = userDetailsService.loadUserByUsername(userProfile.getUsername());
+                UserDetails user = null;
+                try {
+                    user = userDetailsService.loadUserByUsername(userProfile.getUsername());
+                } catch (AuthenticationException au) {
+                    log.debug("{}", au);
+                    user = null;
+                }
 
                 //get jwt
                 if (user == null) {
