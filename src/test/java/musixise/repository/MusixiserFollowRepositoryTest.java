@@ -35,4 +35,11 @@ public class MusixiserFollowRepositoryTest {
         Page<MusixiserFollow> musixiserFollows = musixiserFollowRepository.findAll(pageable);
 
     }
+
+    @Test
+    public void testfindByUserIdAndFollowUid() {
+        MusixiserFollow musixiserFollow = musixiserFollowRepository.findByUserIdAndFollowUid(3l, 4l);
+        MusixiserFollow musixiserFollow2 = musixiserFollowRepository.findByUserIdAndFollowUid(1l, 4l);
+        System.out.println(musixiserFollow);
+    }
 }

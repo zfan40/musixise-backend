@@ -1,9 +1,8 @@
 package musixise.config.social;
 
-import musixise.repository.SocialUserConnectionRepository;
 import musixise.repository.CustomSocialUsersConnectionRepository;
+import musixise.repository.SocialUserConnectionRepository;
 import musixise.security.social.CustomSignInAdapter;
-
 import net.gplatform.spring.social.qq.connect.QQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +26,12 @@ import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.social.wechat.connect.WeChatConnectionFactory;
 import org.springframework.social.weibo.connect.WeiboConnectionFactory;
-// jhipster-needle-add-social-connection-factory-import-package
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+// jhipster-needle-add-social-connection-factory-import-package
 
 /**
  * Basic Spring Social configuration.

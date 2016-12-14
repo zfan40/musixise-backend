@@ -7,6 +7,7 @@ import io.swagger.annotations.*;
 import musixise.config.JHipsterProperties;
 import musixise.config.social.SocialConfiguration;
 import musixise.domain.Musixiser;
+import musixise.domain.MusixiserFollow;
 import musixise.domain.User;
 import musixise.domain.WorkList;
 import musixise.repository.MusixiserRepository;
@@ -49,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by zhaowei on 16/11/19.
@@ -287,11 +289,17 @@ public class UserController {
         if (id > 0) {
             MusixiserDTO musixiserDTO = musixiserService.getInfoByUid(id);
             if (musixiserDTO != null) {
+                Optional<MusixiserFollow> musixiserFollow = userService.getFollowInfo(musixiserDTO.getUserId());
+                if (musixiserFollow.isPresent()) {
+                   musixiserDTO.setFollowStatus(1);
+                } else {
+                    musixiserDTO.setFollowStatus(0);
+                }
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", musixiserDTO));
             }
         }
 
-        return ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆"));
+        return ResponseEntity.ok(new OutputDTO<>(20000, "用户不存在"));
 
     }
 }

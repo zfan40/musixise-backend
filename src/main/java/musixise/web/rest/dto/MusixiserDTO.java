@@ -40,6 +40,8 @@ public class MusixiserDTO implements Serializable {
 
     private Integer isMaster;
 
+    private Integer followStatus;
+
 
     @NotNull
     private Long userId;
@@ -147,6 +149,14 @@ public class MusixiserDTO implements Serializable {
             ", isMaster=" + isMaster +
             ", userId=" + userId +
             '}';
+    }
+
+    public Integer getFollowStatus() {
+        return followStatus;
+    }
+
+    public void setFollowStatus(Integer followStatus) {
+        this.followStatus = followStatus;
     }
 
     @Override

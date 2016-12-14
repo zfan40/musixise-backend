@@ -497,6 +497,14 @@
         <!-- jhipster-needle-maven-add-dependency -->
 
         <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-qq</artifactId>
+            <version>1.0.3-SNAPHOT</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/spring-social-qq-1.0.3-SNAPSHOT.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
             <version>[7.0.0, 7.0.99]</version>

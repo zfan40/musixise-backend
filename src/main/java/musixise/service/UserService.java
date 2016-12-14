@@ -1,16 +1,16 @@
 package musixise.service;
 
 import musixise.domain.Authority;
+import musixise.domain.MusixiserFollow;
 import musixise.domain.User;
 import musixise.repository.AuthorityRepository;
+import musixise.repository.MusixiserFollowRepository;
 import musixise.repository.UserRepository;
 import musixise.repository.search.UserSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.security.jwt.TokenProvider;
 import musixise.service.util.RandomUtil;
 import musixise.web.rest.dto.ManagedUserDTO;
-import java.time.ZonedDateTime;
-import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,9 +22,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
 import javax.inject.Inject;
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service class for managing users.
@@ -59,6 +62,8 @@ public class UserService {
     @Inject
     private AuthenticationManager authenticationManager;
 
+    @Inject
+    MusixiserFollowRepository musixiserFollowRepository;
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -273,5 +278,12 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         boolean rememberMe = true;
         return tokenProvider.createToken(authentication, rememberMe);
+    }
+
+    public Optional<MusixiserFollow>  getFollowInfo(Long userId) {
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).map(
+            u -> {
+                return musixiserFollowRepository.findByUserIdAndFollowUid( u.getId(), userId);
+            });
     }
 }

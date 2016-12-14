@@ -52,7 +52,7 @@ spring:
             clientSecret: 49aa9efd7ea3d90b4f533eaedc67c49b
 
         qq:
-            clientId: 1105701694APP
+            clientId: 1105701694
             clientSecret: VbuvBvAPy24bhVNG
         # jhipster-needle-add-social-configuration
 
