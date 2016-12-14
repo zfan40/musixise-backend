@@ -1,11 +1,10 @@
 package musixise.web.rest.dto;
 
-import java.time.LocalDate;
-import javax.validation.constraints.*;
+import javax.persistence.Lob;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import javax.persistence.Lob;
 
 
 /**
@@ -23,12 +22,22 @@ public class WorkListDTO implements Serializable {
 
     private String url;
 
+    private Integer followStatus;
+
 
     @NotNull
     private LocalDateTime createtime;
 
 
     private Long userId;
+
+    public Integer getFollowStatus() {
+        return followStatus;
+    }
+
+    public void setFollowStatus(Integer followStatus) {
+        this.followStatus = followStatus;
+    }
 
     private Integer status;
 

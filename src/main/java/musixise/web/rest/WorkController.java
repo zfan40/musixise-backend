@@ -4,11 +4,13 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import musixise.domain.WorkList;
+import musixise.domain.WorkListFollow;
 import musixise.repository.UserRepository;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.WorkListSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.WorkListService;
+import musixise.service.impl.WorkListFollowServiceImpl;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.WorkListDTO;
 import musixise.web.rest.dto.favorite.UpdateMyWorkStatusDTO;
@@ -16,7 +18,6 @@ import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,10 @@ public class WorkController {
     private static final LocalDate UPDATED_CREATETIME = LocalDate.now(ZoneId.systemDefault());
 
     private static final LocalDateTime DEFAULT_CREATETIME = LocalDateTime.now();
+
+
+    @Inject
+    WorkListFollowServiceImpl workListFollowService;
 
     @Inject
     private UserRepository userRepository;
@@ -149,9 +154,19 @@ public class WorkController {
         WorkListDTO workListDTO = workListService.findOne(id);
 
         //TODO: 私有作品只有自己查看
-        return Optional.ofNullable(workListDTO)
-            .map(result -> ResponseEntity.ok(new OutputDTO<>(0, "success", workListDTO)))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (workListDTO.getId() > 0) {
+
+            Optional<WorkListFollow> workListFollow = workListFollowService.getFollowWorkInfo(id);
+            if (workListFollow.isPresent()) {
+                workListDTO.setFollowStatus(1);
+            } else {
+                workListDTO.setFollowStatus(0);
+            }
+            return ResponseEntity.ok(new OutputDTO<>(0, "success", workListDTO));
+        } else {
+            return ResponseEntity.ok(new OutputDTO<>(20000, "该作品不存在"));
+        }
+
     }
 
 }
