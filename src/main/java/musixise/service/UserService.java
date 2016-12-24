@@ -3,8 +3,10 @@ package musixise.service;
 import musixise.domain.Authority;
 import musixise.domain.MusixiserFollow;
 import musixise.domain.User;
+import musixise.domain.UserBind;
 import musixise.repository.AuthorityRepository;
 import musixise.repository.MusixiserFollowRepository;
+import musixise.repository.UserBindRepository;
 import musixise.repository.UserRepository;
 import musixise.repository.search.UserSearchRepository;
 import musixise.security.SecurityUtils;
@@ -64,6 +66,9 @@ public class UserService {
 
     @Inject
     MusixiserFollowRepository musixiserFollowRepository;
+
+    @Inject
+    private UserBindRepository userBindRepository;
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -285,5 +290,43 @@ public class UserService {
             u -> {
                 return musixiserFollowRepository.findByUserIdAndFollowUid( u.getId(), userId);
             });
+    }
+
+    /**
+     * 检测社交账号是否已绑定
+     * @param openId
+     * @return
+     */
+    public String isUserBindThis(String openId, String provider) {
+        UserBind userBind = userBindRepository.findByOpenIdAndProvider(openId, provider);
+        if (userBind != null && userBind.getLogin() != null) {
+            return userBind.getLogin();
+        }
+        return null;
+    }
+
+    /**
+     * 建立绑定信息
+     * @param openId
+     * @param login
+     * @param provider
+     */
+    public void bindThird(String openId, String login, String provider) {
+        UserBind userBind = new UserBind();
+        userBind.setOpenId(openId);
+        userBind.setLogin(login);
+        userBind.setProvider(provider);
+        userBindRepository.save(userBind);
+
+    }
+
+    /**
+     * 获取用户所有绑定信息
+     * @param login
+     * @return
+     */
+    public List<UserBind> getUserBind(String login) {
+
+        return userBindRepository.findAllByLogin(login);
     }
 }

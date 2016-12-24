@@ -118,4 +118,9 @@ public class UserServiceIntTest {
         List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
         assertThat(users).isEmpty();
     }
+
+    @Test
+    public void testBindThird() {
+        userService.bindThird("111", "222", "sina");
+    }
 }

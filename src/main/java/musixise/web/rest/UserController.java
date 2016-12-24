@@ -4,12 +4,10 @@ import com.codahale.metrics.annotation.Timed;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import io.swagger.annotations.*;
+import musixise.config.Constants;
 import musixise.config.JHipsterProperties;
 import musixise.config.social.SocialConfiguration;
-import musixise.domain.Musixiser;
-import musixise.domain.MusixiserFollow;
-import musixise.domain.User;
-import musixise.domain.WorkList;
+import musixise.domain.*;
 import musixise.repository.MusixiserRepository;
 import musixise.repository.StagesRepository;
 import musixise.repository.UserRepository;
@@ -22,7 +20,10 @@ import musixise.security.jwt.TokenProvider;
 import musixise.service.MusixiserService;
 import musixise.service.SocialService;
 import musixise.service.UserService;
-import musixise.web.rest.dto.*;
+import musixise.web.rest.dto.AccessGrantDTO;
+import musixise.web.rest.dto.ManagedUserDTO;
+import musixise.web.rest.dto.MusixiserDTO;
+import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.user.LoginDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.util.HeaderUtil;
@@ -49,6 +50,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -133,10 +135,10 @@ public class UserController {
         managedUserDTO.setEmail(registerDTO.getEmail());
 
         if (userRepository.findOneByLogin(managedUserDTO.getLogin()).isPresent()) {
-            return ResponseEntity.ok(new OutputDTO<>(20000, "用户名已存在"));
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_USERNAME_ALREADY_USED, "用户名已存在"));
 
         } else if (userRepository.findOneByEmail(registerDTO.getEmail()).isPresent()) {
-            return ResponseEntity.ok(new OutputDTO<>(20000, "邮箱已存在"));
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_EMAIL_ALREADY_USED, "邮箱已存在"));
         } else {
 
             //  User newUser = userService.createUser(managedUserDTO);
@@ -187,7 +189,7 @@ public class UserController {
 
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", musixiserDTO));
             })
-            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
     }
 
     @RequestMapping(value = "/updateInfo",
@@ -228,7 +230,7 @@ public class UserController {
     @RequestMapping(value = "/authByAccessToken/{platform}",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "社交登录", notes = "使用社交平台access_token登录, 平台标识 platform=weibo, wechat, qq", response = WorkList.class, position = 5)
+    @ApiOperation(value = "社交登录", notes = "使用社交平台access_token登录, 平台标识 platform=weibo, wechat, qq", response = OutputDTO.class, position = 5)
     @Timed
     public ResponseEntity<?> authenticateBySocialToken(@ApiParam(value = "platform", required = true, defaultValue = "weibo") @PathVariable String platform, @RequestBody AccessGrantDTO accessGrantDTO) {
 
@@ -244,20 +246,21 @@ public class UserController {
                 Connection<?> connection  = oAuth2ConnectionFactoryMap.get(platform).createConnection(accessGrant);
                 userProfile = connection.fetchUserProfile();
 
+                //初始化社交账号
+                socialService.createSocialConnection(userProfile.getUsername(), connection);
+
                 UserDetails user = null;
-                try {
-                    user = userDetailsService.loadUserByUsername(userProfile.getUsername());
-                } catch (AuthenticationException au) {
-                    log.debug("{}", au);
-                    user = null;
+
+                //check user bind info
+                String login = userService.isUserBindThis(userProfile.getUsername(), platform);
+                if (login == null) {
+                    //未绑定任何账号
+                    return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_USER_NOT_BIND, "未绑定任何账号", platform));
+                } else {
+                    user = userDetailsService.loadUserByUsername(login);
                 }
 
                 //get jwt
-                if (user == null) {
-                    //init user account
-                    socialService.createSocialUser(connection, "zh-cn", userProfile);
-                    user = userDetailsService.loadUserByUsername(userProfile.getUsername());
-                }
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     user,
                     null,
@@ -269,15 +272,61 @@ public class UserController {
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
             } catch (Exception e) {
                 log.error("Exception creating social user: ", e);
-                return ResponseEntity.ok(new OutputDTO<>(20000, String.format("创建用户信息失败 %s", e.getMessage()), userProfile));
+                return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_CREATE_USER_ACCOUNT_FAIL, String.format("创建用户信息失败 %s", e.getMessage()), userProfile));
             }
         } else {
 
-            return ResponseEntity.ok(new OutputDTO<>(20000, "不存在的平台标识", platform));
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_SOCIAL_PLATFORM_NOT_EXIST, "不存在的平台标识", platform));
         }
 
     }
 
+    @RequestMapping(value = "/bindThird/{openId}/{platform}",
+    method = RequestMethod.POST,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "绑定第三方账号信息", notes = "传入第三方账号账号信息", response = OutputDTO.class, position = 5)
+    public ResponseEntity<?> bindUser(@PathVariable String openId,
+                                      @PathVariable String platform,
+                                      @Valid @RequestBody LoginDTO loginDTO) {
+
+        Map<String, OAuth2ConnectionFactory> oAuth2ConnectionFactoryMap = socialConfiguration.getoAuth2ConnectionFactoryMap();
+
+        if (!oAuth2ConnectionFactoryMap.containsKey(platform)) {
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, String.format("参数错误 (%s)", platform)));
+        }
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+            new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
+
+        try {
+
+            String jwt = userService.auth(authenticationToken);
+
+            //验证成功开始进行绑定
+            List<UserBind> userBindList = userService.getUserBind(loginDTO.getUsername());
+
+            for (UserBind userBind : userBindList) {
+
+                if (userBind.getOpenId().equals(openId) && userBind.getProvider().equals(platform)) {
+                    return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_THIRD_ALREADY_BIND, "账号已绑定 "));
+                }
+
+                //是否绑定过另一个同平台账号
+                if (userBind.getProvider().equals(platform)) {
+                    return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_THIRD_BIND_CONFLICT, "同一个平台只能绑定一个账号"));
+                }
+
+            }
+
+            userService.bindThird(openId, loginDTO.getUsername(), platform);
+
+            return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
+
+        } catch (AuthenticationException exception) {
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_USER_AUTH_FAIL, "账号或密码不对"));
+        }
+
+    }
 
     @RequestMapping(value = "/detail/{id}",
         method = RequestMethod.POST,
@@ -299,7 +348,7 @@ public class UserController {
             }
         }
 
-        return ResponseEntity.ok(new OutputDTO<>(20000, "用户不存在"));
+        return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_USER_NOT_FOUND, "用户不存在"));
 
     }
 }

@@ -135,7 +135,7 @@ public class SocialService {
         }
     }
 
-    private void createSocialConnection(String login, Connection<?> connection) {
+    public void createSocialConnection(String login, Connection<?> connection) {
         List<String> userConnectionRes = usersConnectionRepository.findUserIdsWithConnection(connection);
 
         if (userConnectionRes.size() == 0) {

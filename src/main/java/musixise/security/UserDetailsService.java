@@ -1,6 +1,5 @@
 package musixise.security;
 
-import musixise.domain.Authority;
 import musixise.domain.User;
 import musixise.repository.UserRepository;
 import org.slf4j.Logger;
@@ -13,7 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +26,8 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Inject
     private UserRepository userRepository;
+
+
 
     @Override
     @Transactional
@@ -48,4 +50,6 @@ public class UserDetailsService implements org.springframework.security.core.use
         }).orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the " +
         "database"));
     }
+
+
 }
