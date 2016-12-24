@@ -7,7 +7,6 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -15,7 +14,7 @@ import java.util.Objects;
  * A Musixiser.
  */
 @Entity
-@Table(name = "musixiser")
+@Table(name = "mu_musixiser")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "musixiser")
 @DynamicUpdate

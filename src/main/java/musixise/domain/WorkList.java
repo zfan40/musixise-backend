@@ -5,17 +5,15 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
  * A WorkList.
  */
 @Entity
-@Table(name = "work_list")
+@Table(name = "mu_work_list")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "worklist")
 public class WorkList extends AbstractAuditingEntity implements Serializable {

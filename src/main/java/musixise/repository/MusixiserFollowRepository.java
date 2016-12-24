@@ -25,7 +25,7 @@ public interface MusixiserFollowRepository extends JpaRepository<MusixiserFollow
     @Query("delete MusixiserFollow where user_id=?1 and follow_uid  = ?2")
     int deleteByUserIdAndFollowUid(Long userId,  Long followUid);
 
-    @Query(value="SELECT * FROM `musixiser_follow` m LEFT JOIN jhi_user u on u.id=m.follow_uid WHERE m.user_id=?1 and m.follow_uid=?2", nativeQuery = true)
+    @Query(value="SELECT * FROM `mu_musixiser_follow` m LEFT JOIN mu_user u on u.id=m.follow_uid WHERE m.user_id=?1 and m.follow_uid=?2", nativeQuery = true)
     MusixiserFollow findByUserIdAndFollowUid(@Param("userId") Long userId, @Param("followId") Long followId);
 
 }

@@ -14,7 +14,7 @@ import java.util.Objects;
  * A Stages.
  */
 @Entity
-@Table(name = "stages")
+@Table(name = "mu_stages")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "stages")
 public class Stages implements Serializable {

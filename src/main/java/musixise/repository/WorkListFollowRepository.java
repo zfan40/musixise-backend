@@ -19,7 +19,7 @@ public interface WorkListFollowRepository extends JpaRepository<WorkListFollow,L
 
     List<WorkListFollow> findAllByUserIdOrderByIdDesc(Long userId);
 
-    @Query(value="select * from work_list_follow w where w.user_id = :userId and w.work_id= :workId", nativeQuery = true)
+    @Query(value="select * from mu_work_list_follow w where w.user_id = :userId and w.work_id= :workId", nativeQuery = true)
     Optional<WorkListFollow> findOneByUserIdAndWorkId(@Param("userId") Long userId, @Param("workId") Long workId);
 
     @Modifying

@@ -13,7 +13,7 @@ import java.util.Objects;
  * A StagesFollow.
  */
 @Entity
-@Table(name = "stages_follow")
+@Table(name = "mu_stages_follow")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "stagesfollow")
 public class StagesFollow implements Serializable {

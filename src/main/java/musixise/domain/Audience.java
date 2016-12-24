@@ -12,7 +12,7 @@ import java.util.Objects;
  * A Audience.
  */
 @Entity
-@Table(name = "audience")
+@Table(name = "mu_audience")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "audience")
 public class Audience implements Serializable {

@@ -1,8 +1,8 @@
 package musixise.domain;
 
-import java.time.LocalDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import java.util.Map;
  * @see org.springframework.boot.actuate.audit.AuditEvent
  */
 @Entity
-@Table(name = "jhi_persistent_audit_event")
+@Table(name = "mu_persistent_audit_event")
 public class PersistentAuditEvent {
 
     @Id

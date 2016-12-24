@@ -13,7 +13,7 @@ import java.util.Objects;
  * A MusixiserFollow.
  */
 @Entity
-@Table(name = "musixiser_follow")
+@Table(name = "mu_musixiser_follow")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "musixiserfollow")
 public class MusixiserFollow extends AbstractAuditingEntity implements Serializable {

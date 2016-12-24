@@ -5,16 +5,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
 
 /**
  * A WorkListFollow.
  */
 @Entity
-@Table(name = "work_list_follow")
+@Table(name = "mu_work_list_follow")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "worklistfollow")
 public class WorkListFollow extends AbstractAuditingEntity implements Serializable {

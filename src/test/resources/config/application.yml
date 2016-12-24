@@ -46,9 +46,6 @@ spring:
     thymeleaf:
         mode: XHTML
 
-liquibase:
-    contexts: dev
-
 security:
     basic:
         enabled: false

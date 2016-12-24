@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by zhaowei on 16/12/20.
  */
 @Entity
-@Table(name = "jhi_user_bind")
+@Table(name = "mu_user_bind")
 
 public class UserBind extends AbstractAuditingEntity implements Serializable {
 
