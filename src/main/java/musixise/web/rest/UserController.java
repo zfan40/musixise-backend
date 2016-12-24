@@ -295,6 +295,13 @@ public class UserController {
             return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, String.format("参数错误 (%s)", platform)));
         }
 
+        String checkOpenId = userService.isUserBindThis(openId, platform);
+
+        if (checkOpenId != null) {
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_THIRD_ALREADY_BIND, "账号已绑定 "));
+        }
+
+        //检测账号是否被绑定
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
 
@@ -327,6 +334,55 @@ public class UserController {
         }
 
     }
+
+    @RequestMapping(value = "/autoBindThird/{platform}",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "自动绑定第三方账号信息", notes = "帮助用户自动创建一个账号并和当前第三方账号进行绑定。", response = OutputDTO.class, position = 5)
+    public ResponseEntity<?> autoBindUser(@PathVariable String platform, @RequestBody AccessGrantDTO accessGrantDTO) {
+
+        log.debug("REST request to auto bind third : {}", platform);
+
+        AccessGrant accessGrant = new AccessGrant(accessGrantDTO.getAccessToken());
+
+            Map<String, OAuth2ConnectionFactory> oAuth2ConnectionFactoryMap = socialConfiguration.getoAuth2ConnectionFactoryMap();
+
+        if (oAuth2ConnectionFactoryMap.containsKey(platform)) {
+            UserProfile userProfile = null;
+            try {
+                Connection<?> connection  = oAuth2ConnectionFactoryMap.get(platform).createConnection(accessGrant);
+                userProfile = connection.fetchUserProfile();
+
+                UserDetails user = null;
+
+                socialService.createSocialUser(connection, "zh-cn", userProfile);
+
+                user = userDetailsService.loadUserByUsername(userProfile.getUsername());
+
+                //建立绑定信息
+                userService.bindThird(userProfile.getUsername(), userProfile.getUsername(), platform);
+
+                //get jwt
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    user,
+                    null,
+                    user.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                String jwt = tokenProvider.createToken(authenticationToken, false);
+
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
+            } catch (Exception e) {
+                log.error("Exception creating social user: ", e);
+                return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_CREATE_USER_ACCOUNT_FAIL, String.format("创建用户信息失败 %s", e.getMessage()), userProfile));
+            }
+        } else {
+
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_SOCIAL_PLATFORM_NOT_EXIST, "不存在的平台标识", platform));
+        }
+
+    }
+
 
     @RequestMapping(value = "/detail/{id}",
         method = RequestMethod.POST,
