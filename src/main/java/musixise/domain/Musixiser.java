@@ -1,5 +1,7 @@
 package musixise.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicUpdate;
@@ -19,6 +21,7 @@ import java.util.Objects;
 @Document(indexName = "musixiser")
 @DynamicUpdate
 @SelectBeforeUpdate
+@ApiModel(value = "用户个人信息")
 public class Musixiser implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,6 +30,7 @@ public class Musixiser implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @ApiModelProperty(value = "真实姓名", required = true)
     @Column(name = "realname")
     private String realname;
 

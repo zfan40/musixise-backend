@@ -1,12 +1,10 @@
 package musixise.config.apidoc;
 
-import musixise.config.Constants;
 import musixise.config.JHipsterProperties;
 
 import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
