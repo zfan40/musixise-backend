@@ -25,8 +25,6 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final Integer ERROR_CODE_FAVORITE_WORK_NOT_EXIST = 500001;
-    public static final Integer ERROR_CODE_FAVORITE_ALREADY_ADD = 5000002;
 
     //系统错误
     public static final Integer ERROR_CODE_APPLICATION = 20000;//传入参数错误
@@ -48,5 +46,10 @@ public final class Constants {
     public static final Integer ERROR_CODE_USER_NOT_FOUND = 30009;//用户不存在
 
     //作品相关
-    public static final Integer ERROR_CODE_WORK_NOT_EXIST = 400001;//作品不存在
+    public static final Integer ERROR_CODE_WORK_NOT_EXIST = 40001;//作品不存在
+
+    //收藏
+    public static final Integer ERROR_CODE_FAVORITE_WORK_NOT_EXIST = 50001;//该作品不存在或已删除
+    public static final Integer ERROR_CODE_FAVORITE_ALREADY_ADD = 50002;//已收藏过
+
 }
