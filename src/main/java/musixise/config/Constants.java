@@ -27,9 +27,10 @@ public final class Constants {
 
 
     //系统错误
-    public static final Integer ERROR_CODE_APPLICATION = 20000;//传入参数错误
+    public static final Integer ERROR_CODE_SYSTEM = 10001;//应用程序错误
 
     //通用错误
+    public static final Integer ERROR_CODE_APPLICATION = 20000;//应用程序错误
     public static final Integer ERROR_CODE_PARAMS = 20001;//传入参数错误
     public static final Integer ERROR_CODE_NO_LOGIN = 20002;//用户未登陆
     public static final Integer ERROR_CODE_LOGIN_FAIL = 20003;//用户登陆失败

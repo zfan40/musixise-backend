@@ -25,6 +25,13 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @Column(name = "cover")
+    private String cover;
+
+    @NotNull
     @Lob
     @Column(name = "content", nullable = false)
     private String content;
@@ -37,6 +44,22 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "status")
     private Integer status;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     public Long getId() {
         return id;
@@ -85,6 +108,7 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
         return Objects.equals(id, workList.id);
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
@@ -106,6 +130,8 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
     public String toString() {
         return "WorkList{" +
             "id=" + id +
+            ", title='" + title + '\'' +
+            ", cover='" + cover + '\'' +
             ", content='" + content + '\'' +
             ", url='" + url + '\'' +
             ", userId=" + userId +

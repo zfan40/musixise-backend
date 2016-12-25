@@ -15,7 +15,6 @@ import musixise.service.impl.WorkListFollowServiceImpl;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.WorkListDTO;
 import musixise.web.rest.dto.favorite.UpdateMyWorkStatusDTO;
-import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -69,9 +68,9 @@ public class WorkController {
     @ApiOperation(value = "保存作品信息", notes = "储存音乐人表演的作品信息", response = WorkList.class, position = 2)
     @Timed
     public ResponseEntity<?> create(@Valid @RequestBody WorkList workList) throws URISyntaxException {
-        log.debug("REST request to save WorkList  : {}", workList);
+        log.debug("REST request to add WorkList  : {}", workList);
         if (workList.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("workList", "idexists", "A new workList cannot already have an ID")).body(null);
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_APPLICATION, "应用程序错误"));
         }
 
         //获取当前用户信息
@@ -154,6 +153,7 @@ public class WorkController {
 
         WorkListDTO workListDTO = workListService.findOne(id);
 
+        //TODO: 私有作品只有自己查看
         if (workListDTO.getId() > 0) {
 
             Optional<WorkListFollow> workListFollow = workListFollowService.getFollowWorkInfo(id);
