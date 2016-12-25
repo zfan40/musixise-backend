@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
  * Created by zhaowei on 16/11/19.
  */
 
-@Api(value = "picture", description = "图片接口", position = 1)
+@Api(value = "picture", description = "上传接口", position = 1)
 @RestController
 @RequestMapping("/api")
 public class UploadController {
@@ -46,7 +46,6 @@ public class UploadController {
         String bucketname = "muixise-img";
         //上传文件的路径
         //密钥配置
-
         String fileName = String.format("%s_%s", RandomStringUtils.randomAlphanumeric(8), key);
 
         try {
@@ -55,16 +54,11 @@ public class UploadController {
             Response r = e.response;
             // 请求失败时打印的异常的信息
             System.out.println(r.toString());
-
-            try {
-                //响应的文本信息
-                System.out.println(r.bodyString());
-            } catch (QiniuException e1) {
-                //ignore
-            }
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_APPLICATION, "上传失败 (qn)", r));
 
         } catch (IOException e) {
             e.printStackTrace();
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_APPLICATION, "上传失败 (io)", e));
         }
 
 
@@ -85,31 +79,27 @@ public class UploadController {
 
         //上传到七牛后保存的文件名
         String key = fname;
-        String bucketname = "muixise-img";
+        String bucketname = "muixise-audio";
         //上传文件的路径
         //密钥配置
 
        // Config.zone = new Zone("up-z2.qiniu.com", "http://upload.qiniu.com");
-
         String fileName = String.format("%s_%s", RandomStringUtils.randomAlphanumeric(8), key);
 
+        byte[] bt = null;
         try {
-
-            byte[] bt = null;
-            try {
-                sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-                bt = decoder.decodeBuffer( data );
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//        String value = new String(bt, "UTF-8");
+            sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
+            bt = decoder.decodeBuffer( data );
+            // String value = new String(bt, "UTF-8");
             Response res = uploadManager.put(bt, fileName, auth.uploadToken(bucketname));
-
         } catch (QiniuException e) {
             Response r = e.response;
             // 请求失败时打印的异常的信息
-            System.out.println(r.toString());
-            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_APPLICATION, "上传失败", r));
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_APPLICATION, "上传失败 (qn", r));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_APPLICATION, "上传失败 (io)", e));
+
         }
 
         return ResponseEntity.ok(new OutputDTO<>(0, "success", fileName));
