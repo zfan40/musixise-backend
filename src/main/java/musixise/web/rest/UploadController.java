@@ -110,9 +110,6 @@ public class UploadController {
             // 请求失败时打印的异常的信息
             System.out.println(r.toString());
             return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_APPLICATION, "上传失败", r));
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return ResponseEntity.ok(new OutputDTO<>(0, "success", fileName));

@@ -17,6 +17,7 @@ import musixise.web.rest.dto.favorite.UpdateMyWorkStatusDTO;
 import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -100,8 +101,9 @@ public class WorkController {
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
-                List<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(u.getId());
+                Page<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
 
+                System.out.println(pageable);
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", workLists));
 
             })
