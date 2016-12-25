@@ -3,6 +3,7 @@ package musixise.repository;
 import musixise.domain.WorkList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public interface WorkListRepository extends JpaRepository<WorkList,Long> {
 
+    // PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.DESC, "startTime");
     Page<WorkList> findAllByUserIdOrderByIdDesc(Long userId, Pageable pageable);
 
     List<WorkList> findAllByUserIdOrderByIdDesc(Long userId);

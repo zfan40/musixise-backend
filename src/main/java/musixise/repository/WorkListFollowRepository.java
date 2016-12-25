@@ -2,6 +2,8 @@ package musixise.repository;
 
 
 import musixise.domain.WorkListFollow;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +19,7 @@ import java.util.Optional;
 public interface WorkListFollowRepository extends JpaRepository<WorkListFollow,Long> {
 
 
-    List<WorkListFollow> findAllByUserIdOrderByIdDesc(Long userId);
+    Page<WorkListFollow> findAllByUserIdOrderByIdDesc(Long userId, Pageable pageable);
 
     @Query(value="select * from mu_work_list_follow w where w.user_id = :userId and w.work_id= :workId", nativeQuery = true)
     Optional<WorkListFollow> findOneByUserIdAndWorkId(@Param("userId") Long userId, @Param("workId") Long workId);

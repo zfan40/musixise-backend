@@ -3,6 +3,7 @@ package musixise.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import musixise.config.Constants;
 import musixise.domain.WorkList;
 import musixise.domain.WorkListFollow;
 import musixise.repository.UserRepository;
@@ -29,7 +30,6 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -103,11 +103,10 @@ public class WorkController {
             .map( u -> {
                 Page<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
 
-                System.out.println(pageable);
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", workLists));
 
             })
-            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
 
     }
 
@@ -116,10 +115,10 @@ public class WorkController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = " 获取指定用户作品列表", notes = "获取指定用户作品列表", response = WorkList.class, position = 2)
     @Timed
-    public ResponseEntity<?> getListByUid(@PathVariable Long id) {
+    public ResponseEntity<?> getListByUid(@PathVariable Long id, Pageable pageable) {
         log.debug("REST request to get getListByUid : {}", id);
 
-        List<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(id);
+        Page<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(id, pageable);
 
         return ResponseEntity.ok(new OutputDTO<>(0, "success", workLists));
 
@@ -141,7 +140,7 @@ public class WorkController {
                 return ResponseEntity.ok(new OutputDTO<>(0, "success"));
 
             })
-            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
 
     }
 
@@ -155,7 +154,6 @@ public class WorkController {
 
         WorkListDTO workListDTO = workListService.findOne(id);
 
-        //TODO: 私有作品只有自己查看
         if (workListDTO.getId() > 0) {
 
             Optional<WorkListFollow> workListFollow = workListFollowService.getFollowWorkInfo(id);
@@ -166,7 +164,7 @@ public class WorkController {
             }
             return ResponseEntity.ok(new OutputDTO<>(0, "success", workListDTO));
         } else {
-            return ResponseEntity.ok(new OutputDTO<>(20000, "该作品不存在"));
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_WORK_NOT_EXIST, "该作品不存在"));
         }
 
     }

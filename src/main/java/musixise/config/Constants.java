@@ -47,4 +47,6 @@ public final class Constants {
     public static final Integer ERROR_CODE_THIRD_BIND_CONFLICT = 30008;//同一个平台只能绑定一个账号
     public static final Integer ERROR_CODE_USER_NOT_FOUND = 30009;//用户不存在
 
+    //作品相关
+    public static final Integer ERROR_CODE_WORK_NOT_EXIST = 400001;//作品不存在
 }

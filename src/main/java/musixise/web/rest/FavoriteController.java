@@ -4,7 +4,9 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import musixise.config.Constants;
-import musixise.domain.*;
+import musixise.domain.User;
+import musixise.domain.WorkList;
+import musixise.domain.WorkListFollow;
 import musixise.repository.UserRepository;
 import musixise.repository.WorkListFollowRepository;
 import musixise.repository.search.WorkListFollowSearchRepository;
@@ -15,14 +17,18 @@ import musixise.web.rest.dto.WorkListDTO;
 import musixise.web.rest.dto.favorite.AddToMyfavoriteWorksDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
-import java.util.List;
 
 /**
  * Created by zhaowei on 16/11/12.
@@ -85,13 +91,13 @@ public class FavoriteController {
                     workListFollowRepository.deleteByUserIdAndWorkId(u.getId(), addToMyfavoriteWorksDTO.getWorkId());
 
                 } else {
-                    return ResponseEntity.ok(new OutputDTO<>(20000, "参数错误"));
+                    return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, "参数错误"));
                 }
 
                 return ResponseEntity.ok(new OutputDTO<>(0, "success"));
 
             })
-            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
 
     }
 
@@ -101,18 +107,18 @@ public class FavoriteController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "获取我的作品收藏列表", notes = "", response = WorkListFollow.class, position = 3)
     @Timed
-    public ResponseEntity<?> getWorkList() {
+    public ResponseEntity<?> getWorkList(Pageable pageable) {
         log.debug("REST request to get all getMyFavoriteWorks");
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
 
-                List<WorkListFollow> workListFollows = workListFollowRepository.findAllByUserIdOrderByIdDesc(u.getId());
+                Page<WorkListFollow> workListFollows = workListFollowRepository.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
                 //
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", workListFollows));
 
             })
-            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
     }
 
 

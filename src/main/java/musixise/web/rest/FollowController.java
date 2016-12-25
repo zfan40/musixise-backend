@@ -3,6 +3,7 @@ package musixise.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import musixise.config.Constants;
 import musixise.domain.MusixiserFollow;
 import musixise.domain.User;
 import musixise.repository.MusixiserFollowRepository;
@@ -60,7 +61,7 @@ public class FollowController {
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
 
             })
-            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
     }
 
     @RequestMapping(value = "/add",
@@ -87,13 +88,13 @@ public class FollowController {
                     musixiserFollowRepository.deleteByUserIdAndFollowUid(u.getId(), addMyFollowDTO.getFollowId());
 
                 } else {
-                    return ResponseEntity.ok(new OutputDTO<>(20000, "参数错误"));
+                    return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, "参数错误"));
                 }
 
                 return ResponseEntity.ok(new OutputDTO<>(0, "success"));
 
             })
-            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
 
     }
 }
