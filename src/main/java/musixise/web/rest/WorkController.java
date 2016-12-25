@@ -69,9 +69,8 @@ public class WorkController {
     @Timed
     public ResponseEntity<?> create(@Valid @RequestBody WorkList workList) throws URISyntaxException {
         log.debug("REST request to add WorkList  : {}", workList);
-        if (workList.getId() != null) {
-            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_APPLICATION, "应用程序错误"));
-        }
+
+        workList.setId(null);
 
         //获取当前用户信息
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
@@ -86,7 +85,7 @@ public class WorkController {
                 workListSearchRepository.save(result);
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", result));
             })
-            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(20000, "用户未登陆")));
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
     }
 
 
