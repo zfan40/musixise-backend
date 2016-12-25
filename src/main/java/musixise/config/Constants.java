@@ -29,6 +29,7 @@ public final class Constants {
     public static final Integer ERROR_CODE_FAVORITE_ALREADY_ADD = 5000002;
 
     //系统错误
+    public static final Integer ERROR_CODE_APPLICATION = 20000;//传入参数错误
 
     //通用错误
     public static final Integer ERROR_CODE_PARAMS = 20001;//传入参数错误
