@@ -13,8 +13,10 @@ import musixise.security.SecurityUtils;
 import musixise.service.WorkListService;
 import musixise.service.impl.WorkListFollowServiceImpl;
 import musixise.web.rest.dto.OutputDTO;
+import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.dto.WorkListDTO;
 import musixise.web.rest.dto.favorite.UpdateMyWorkStatusDTO;
+import musixise.web.rest.mapper.WorkListMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -61,6 +63,8 @@ public class WorkController {
     @Inject
     private WorkListService workListService;
 
+    @Inject
+    private WorkListMapper workListMapper;
 
     @RequestMapping(value = "/create",
         method = RequestMethod.POST,
@@ -99,9 +103,9 @@ public class WorkController {
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
-                Page<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
 
-                return ResponseEntity.ok(new OutputDTO<>(0, "success", workLists));
+                PageDTO<WorkListDTO> page = workListService.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
 
             })
             .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));

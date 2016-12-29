@@ -1,25 +1,23 @@
 package musixise.service.impl;
 
-import musixise.service.WorkListService;
 import musixise.domain.WorkList;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.WorkListSearchRepository;
+import musixise.service.WorkListService;
+import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.dto.WorkListDTO;
 import musixise.web.rest.mapper.WorkListMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing WorkList.
@@ -103,4 +101,28 @@ public class WorkListServiceImpl implements WorkListService{
         log.debug("Request to search for a page of WorkLists for query {}", query);
         return workListSearchRepository.search(queryStringQuery(query), pageable);
     }
+
+    public PageDTO<WorkListDTO> findAllByUserIdOrderByIdDesc(Long uid, Pageable pageable) {
+
+        Page<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(uid, pageable);
+
+        List<WorkListDTO> workListDTOList = workListMapper.workListsToWorkListDTOs(workLists.getContent());
+
+        PageDTO pageDTO = new PageDTO();
+        pageDTO.setContent(workListDTOList);
+        pageDTO.setTotalElements(workLists.getTotalElements());
+        pageDTO.setLast(workLists.hasNext());
+        pageDTO.setTotalPages(workLists.getTotalPages());
+        pageDTO.setSize(workLists.getSize());
+        pageDTO.setNumber(workLists.getNumber());
+        pageDTO.setSort(workLists.getSort());
+        pageDTO.setFirst(workLists.isFirst());
+        pageDTO.setNumberOfElements(workLists.getNumberOfElements());
+
+        return pageDTO;
+    }
+
+
+
+
 }

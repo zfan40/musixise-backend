@@ -3,7 +3,6 @@ package musixise.web.rest.dto;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -14,6 +13,10 @@ public class WorkListDTO implements Serializable {
 
     private static final long serialVersionUID = 1870328135512535520L;
     private Long id;
+
+    private String title;
+
+    private String cover;
 
     @NotNull
     @Lob
@@ -26,10 +29,26 @@ public class WorkListDTO implements Serializable {
 
 
     @NotNull
-    private LocalDateTime createtime;
+    private String createdDate;
 
 
     private Long userId;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
     public Integer getFollowStatus() {
         return followStatus;
@@ -74,13 +93,15 @@ public class WorkListDTO implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
-    public LocalDateTime getCreatetime() {
-        return createtime;
+
+    public String getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatetime(LocalDateTime createtime) {
-        this.createtime = createtime;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
+
     public Long getUserId() {
         return userId;
     }
@@ -114,10 +135,14 @@ public class WorkListDTO implements Serializable {
     public String toString() {
         return "WorkListDTO{" +
             "id=" + id +
-            ", content='" + content + "'" +
-            ", url='" + url + "'" +
-            ", createtime='" + createtime + "'" +
-            ", userId='" + userId + "'" +
+            ", title='" + title + '\'' +
+            ", cover='" + cover + '\'' +
+            ", content='" + content + '\'' +
+            ", url='" + url + '\'' +
+            ", followStatus=" + followStatus +
+            ", createdDate=" + createdDate +
+            ", userId=" + userId +
+            ", status=" + status +
             '}';
     }
 }

@@ -38,13 +38,13 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class WorkListResource {
 
     private final Logger log = LoggerFactory.getLogger(WorkListResource.class);
-        
+
     @Inject
     private WorkListService workListService;
-    
+
     @Inject
     private WorkListMapper workListMapper;
-    
+
     /**
      * POST  /work-lists : Create a new workList.
      *
@@ -106,7 +106,7 @@ public class WorkListResource {
     public ResponseEntity<List<WorkListDTO>> getAllWorkLists(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of WorkLists");
-        Page<WorkList> page = workListService.findAll(pageable); 
+        Page<WorkList> page = workListService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/work-lists");
         return new ResponseEntity<>(workListMapper.workListsToWorkListDTOs(page.getContent()), headers, HttpStatus.OK);
     }
