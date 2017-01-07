@@ -19,7 +19,6 @@ import musixise.web.rest.dto.favorite.UpdateMyWorkStatusDTO;
 import musixise.web.rest.mapper.WorkListMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -120,9 +119,9 @@ public class WorkController {
     public ResponseEntity<?> getListByUid(@PathVariable Long id, Pageable pageable) {
         log.debug("REST request to get getListByUid : {}", id);
 
-        Page<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(id, pageable);
+        PageDTO<WorkListDTO> page = workListService.findAllByUserIdOrderByIdDesc(id, pageable);
 
-        return ResponseEntity.ok(new OutputDTO<>(0, "success", workLists));
+        return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
 
     }
 
