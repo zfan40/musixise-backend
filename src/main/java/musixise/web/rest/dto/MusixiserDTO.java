@@ -1,6 +1,6 @@
 package musixise.web.rest.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -42,10 +42,38 @@ public class MusixiserDTO implements Serializable {
 
     private Integer followStatus;
 
+    private Integer followNum;
+
+    private Integer fansNum;
+
+    private Integer songNum;
 
     @NotNull
     private Long userId;
 
+    public Integer getFollowNum() {
+        return followNum;
+    }
+
+    public void setFollowNum(Integer followNum) {
+        this.followNum = followNum;
+    }
+
+    public Integer getFansNum() {
+        return fansNum;
+    }
+
+    public void setFansNum(Integer fansNum) {
+        this.fansNum = fansNum;
+    }
+
+    public Integer getSongNum() {
+        return songNum;
+    }
+
+    public void setSongNum(Integer songNum) {
+        this.songNum = songNum;
+    }
 
     public Long getId() {
         return id;

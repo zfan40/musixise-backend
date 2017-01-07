@@ -61,6 +61,39 @@ public class Musixiser implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "follow_num")
+    private Integer followNum;
+
+    @Column(name = "fans_num")
+    private Integer fansNum;
+
+    @Column(name = "song_num")
+    private Integer songNum;
+
+    public Integer getFollowNum() {
+        return followNum;
+    }
+
+    public void setFollowNum(Integer followNum) {
+        this.followNum = followNum;
+    }
+
+    public Integer getFansNum() {
+        return fansNum;
+    }
+
+    public void setFansNum(Integer fansNum) {
+        this.fansNum = fansNum;
+    }
+
+    public Integer getSongNum() {
+        return songNum;
+    }
+
+    public void setSongNum(Integer songNum) {
+        this.songNum = songNum;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,11 +1,11 @@
 package musixise.service.impl;
 
 import musixise.config.Constants;
-import musixise.security.SecurityUtils;
-import musixise.service.MusixiserService;
 import musixise.domain.Musixiser;
 import musixise.repository.MusixiserRepository;
 import musixise.repository.search.MusixiserSearchRepository;
+import musixise.security.SecurityUtils;
+import musixise.service.MusixiserService;
 import musixise.web.rest.dto.MusixiserDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.mapper.MusixiserMapper;
@@ -13,17 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Musixiser.
@@ -129,11 +126,6 @@ public class MusixiserServiceImpl implements MusixiserService{
         Musixiser musixiser = musixiserRepository.findOneByUserId(id);
 
         if (musixiser == null) return null;
-        MusixiserDTO musixiserDTO = new MusixiserDTO();
-        //musixiserDTO.setId(musixiser.getId());
-        musixiserDTO.setUserId(musixiser.getUserId());
-        musixiserDTO.setUsername(SecurityUtils.getCurrentUserLogin());
-        musixiserDTO.setEmail(musixiser.getEmail());
 
         //拼接图片地址
         if (musixiser.getLargeAvatar() != null && !musixiser.getLargeAvatar().equals("") && musixiser.getLargeAvatar().indexOf("alicdn") == -1) {
@@ -148,14 +140,7 @@ public class MusixiserServiceImpl implements MusixiserService{
             }
         }
 
-        musixiserDTO.setLargeAvatar(musixiser.getLargeAvatar());
-        musixiserDTO.setSmallAvatar(musixiser.getSmallAvatar());
-        musixiserDTO.setNation(musixiser.getNation());
-        musixiserDTO.setBirth(musixiser.getBirth());
-        musixiserDTO.setTel(musixiser.getTel());
-        musixiserDTO.setRealname(musixiser.getRealname());
-        musixiserDTO.setIsMaster(musixiser.getIsMaster());
-
+        MusixiserDTO musixiserDTO = musixiserMapper.musixiserToMusixiserDTO(musixiser, SecurityUtils.getCurrentUserLogin());
         return musixiserDTO;
     }
 
