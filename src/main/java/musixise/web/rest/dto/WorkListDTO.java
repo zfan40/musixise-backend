@@ -34,6 +34,16 @@ public class WorkListDTO implements Serializable {
 
     private Long userId;
 
+    private Integer collectNum;
+
+    public Integer getCollectNum() {
+        return collectNum;
+    }
+
+    public void setCollectNum(Integer collectNum) {
+        this.collectNum = collectNum;
+    }
+
     public String getTitle() {
         return title;
     }

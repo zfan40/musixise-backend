@@ -45,6 +45,17 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "collect_num")
+    private Integer collectNum;
+
+    public Integer getCollectNum() {
+        return collectNum;
+    }
+
+    public void setCollectNum(Integer collectNum) {
+        this.collectNum = collectNum;
+    }
+
     public String getTitle() {
         return title;
     }

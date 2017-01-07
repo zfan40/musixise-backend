@@ -13,11 +13,11 @@ import musixise.repository.search.WorkListFollowSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.WorkListService;
 import musixise.web.rest.dto.OutputDTO;
+import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.dto.WorkListDTO;
 import musixise.web.rest.dto.favorite.AddToMyfavoriteWorksDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -113,9 +113,9 @@ public class FavoriteController {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
 
-                Page<WorkListFollow> workListFollows = workListFollowRepository.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
-                //
-                return ResponseEntity.ok(new OutputDTO<>(0, "success", workListFollows));
+                PageDTO<WorkListDTO> page = workListService.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
+
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
 
             })
             .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
