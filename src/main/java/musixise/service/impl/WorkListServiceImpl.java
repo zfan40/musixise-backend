@@ -104,20 +104,13 @@ public class WorkListServiceImpl implements WorkListService{
 
     public PageDTO<WorkListDTO> findAllByUserIdOrderByIdDesc(Long uid, Pageable pageable) {
 
-        Page<WorkList> workLists = workListRepository.findAllByUserIdOrderByIdDesc(uid, pageable);
+        Page<WorkList> result = workListRepository.findAllByUserIdOrderByIdDesc(uid, pageable);
 
-        List<WorkListDTO> workListDTOList = workListMapper.workListsToWorkListDTOs(workLists.getContent());
+        List<WorkListDTO> workListDTOList = workListMapper.workListsToWorkListDTOs(result.getContent());
 
-        PageDTO pageDTO = new PageDTO();
-        pageDTO.setContent(workListDTOList);
-        pageDTO.setTotalElements(workLists.getTotalElements());
-        pageDTO.setLast(workLists.hasNext());
-        pageDTO.setTotalPages(workLists.getTotalPages());
-        pageDTO.setSize(workLists.getSize());
-        pageDTO.setNumber(workLists.getNumber());
-        pageDTO.setSort(workLists.getSort());
-        pageDTO.setFirst(workLists.isFirst());
-        pageDTO.setNumberOfElements(workLists.getNumberOfElements());
+        PageDTO pageDTO = new PageDTO(workListDTOList, result.getTotalElements(),
+            result.hasNext(), result.getTotalPages(), result.getSize(), result.getNumber(),
+            result.getSort(), result.isFirst(), result.getNumberOfElements());
 
         return pageDTO;
     }

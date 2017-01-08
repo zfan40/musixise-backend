@@ -22,7 +22,7 @@ import java.util.Objects;
 @DynamicUpdate
 @SelectBeforeUpdate
 @ApiModel(value = "用户个人信息")
-public class Musixiser implements Serializable {
+public class Musixiser extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -2,11 +2,9 @@ package musixise.service;
 
 import musixise.domain.MusixiserFollow;
 import musixise.web.rest.dto.MusixiserFollowDTO;
+import musixise.web.rest.dto.PageDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Service Interface for managing MusixiserFollow.
@@ -30,6 +28,8 @@ public interface MusixiserFollowService {
     Page<MusixiserFollow> findAll(Pageable pageable);
 
     Page<MusixiserFollow> findAllByUserId(Pageable pageable, Long userId);
+
+    PageDTO<MusixiserFollowDTO> findFollowsByUserId(Pageable pageable, Long userId);
 
     /**
      *  Get the "id" musixiserFollow.

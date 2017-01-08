@@ -27,7 +27,7 @@ public final class Constants {
 
 
     //系统错误
-    public static final Integer ERROR_CODE_SYSTEM = 10001;//应用程序错误
+    public static final Integer ERROR_CODE_SYSTEM = 10001;//系统错误
 
     //通用错误
     public static final Integer ERROR_CODE_APPLICATION = 20000;//应用程序错误

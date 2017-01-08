@@ -16,27 +16,19 @@ public class MusixiserDTO implements Serializable {
 
     private String realname;
 
-
     private String tel;
-
 
     private String email;
 
-
     private String birth;
-
 
     private String gender;
 
-
     private String smallAvatar;
-
 
     private String largeAvatar;
 
-
     private String nation;
-
 
     private Integer isMaster;
 
@@ -50,6 +42,16 @@ public class MusixiserDTO implements Serializable {
 
     @NotNull
     private Long userId;
+
+    private String createdDate;
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
 
     public Integer getFollowNum() {
         return followNum;

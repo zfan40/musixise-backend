@@ -1,9 +1,9 @@
 package musixise.web.rest.dto;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-
 import musixise.domain.User;
+import musixise.web.rest.util.DateUtil;
+
+import java.time.LocalDateTime;
 
 /**
  * A DTO extending the UserDTO, which is meant to be used in the user management UI.
@@ -12,7 +12,7 @@ public class ManagedUserDTO extends UserDTO {
 
     private Long id;
 
-    private LocalDateTime createdDate;
+    private String createdDate;
 
     private String lastModifiedBy;
 
@@ -24,7 +24,7 @@ public class ManagedUserDTO extends UserDTO {
     public ManagedUserDTO(User user) {
         super(user);
         this.id = user.getId();
-        this.createdDate = user.getCreatedDate();
+        this.createdDate = DateUtil.locatDateTimeToString(user.getCreatedDate());
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
     }
@@ -37,11 +37,11 @@ public class ManagedUserDTO extends UserDTO {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 

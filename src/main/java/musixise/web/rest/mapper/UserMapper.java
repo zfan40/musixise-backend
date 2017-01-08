@@ -3,7 +3,8 @@ package musixise.web.rest.mapper;
 import musixise.domain.Authority;
 import musixise.domain.User;
 import musixise.web.rest.dto.UserDTO;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 import java.util.Set;
@@ -12,15 +13,15 @@ import java.util.stream.Collectors;
 /**
  * Mapper for the entity User and its DTO UserDTO.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = DateMapper.class)
 public interface UserMapper {
 
     UserDTO userToUserDTO(User user);
 
     List<UserDTO> usersToUserDTOs(List<User> users);
-    
+
     @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "createdDate", ignore = true)
+   // @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModifiedDate", ignore = true)
     @Mapping(target = "id", ignore = true)
@@ -52,4 +53,5 @@ public interface UserMapper {
             return auth;
         }).collect(Collectors.toSet());
     }
+
 }

@@ -19,6 +19,18 @@ public class PageDTO<T> {
     private boolean first;
     private int numberOfElements;
 
+    public PageDTO(List<T> content, long totalElements, boolean last, int totalPages, int size, int number, Sort sort, boolean first, int numberOfElements) {
+        this.content = content;
+        this.totalElements = totalElements;
+        this.last = last;
+        this.totalPages = totalPages;
+        this.size = size;
+        this.number = number;
+        this.sort = sort;
+        this.first = first;
+        this.numberOfElements = numberOfElements;
+    }
+
     public List<T> getContent() {
         return content;
     }

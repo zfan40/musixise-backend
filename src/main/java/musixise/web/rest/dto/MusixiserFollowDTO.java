@@ -1,8 +1,6 @@
 package musixise.web.rest.dto;
 
-import musixise.domain.User;
-
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -17,14 +15,67 @@ public class MusixiserFollowDTO implements Serializable {
     @NotNull
     private Long userId;
 
-    private User user;
+    private Long followId;
 
-    public User getUser() {
-        return user;
+    private String realname;
+
+    private String smallAvatar;
+
+    private String largeAvatar;
+
+    private String createdDate;
+
+    @Override
+    public String toString() {
+        return "MusixiserFollowDTO{" +
+            "id=" + id +
+            ", userId=" + userId +
+            ", followId=" + followId +
+            ", realname='" + realname + '\'' +
+            ", smallAvatar='" + smallAvatar + '\'' +
+            ", largeAvatar='" + largeAvatar + '\'' +
+            ", createdDate='" + createdDate + '\'' +
+            '}';
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    public String getSmallAvatar() {
+        return smallAvatar;
+    }
+
+    public void setSmallAvatar(String smallAvatar) {
+        this.smallAvatar = smallAvatar;
+    }
+
+    public String getLargeAvatar() {
+        return largeAvatar;
+    }
+
+    public void setLargeAvatar(String largeAvatar) {
+        this.largeAvatar = largeAvatar;
+    }
+
+    public Long getFollowId() {
+        return followId;
+    }
+
+    public void setFollowId(Long followId) {
+        this.followId = followId;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Long getId() {
@@ -63,12 +114,4 @@ public class MusixiserFollowDTO implements Serializable {
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "MusixiserFollowDTO{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", user=" + user +
-            '}';
-    }
 }

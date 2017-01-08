@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -32,4 +33,14 @@ public class DateMapper {
 
         return dateStr;
     }
+
+    public LocalDateTime asLocalDateTime(String date) {
+        if (date != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return LocalDateTime.parse(date, formatter);
+        } else {
+            return null;
+        }
+    }
+
 }

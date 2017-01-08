@@ -3,6 +3,7 @@ package musixise.web.rest.mapper;
 import musixise.domain.WorkList;
 import musixise.web.rest.dto.WorkListDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -16,6 +17,9 @@ public interface WorkListMapper {
 
     List<WorkListDTO> workListsToWorkListDTOs(List<WorkList> workLists);
 
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "lastModifiedBy", ignore = true)
+    @Mapping(target = "lastModifiedDate", ignore = true)
     WorkList workListDTOToWorkList(WorkListDTO workListDTO);
 
     List<WorkList> workListDTOsToWorkLists(List<WorkListDTO> workListDTOs);

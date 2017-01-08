@@ -28,20 +28,32 @@ public class MusixiserFollow extends AbstractAuditingEntity implements Serializa
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @NotNull
+    @Column(name = "follow_uid", nullable = false)
+    private Long followId;
+
     @OneToOne
-    @JoinColumn(name = "follow_uid", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "follow_uid", referencedColumnName = "user_id", insertable=false, updatable=false)
+    private Musixiser musixiser;
+
+    public Long getFollowId() {
+        return followId;
+    }
+
+    public void setFollowId(Long followId) {
+        this.followId = followId;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public User getUser() {
-        return user;
+    public Musixiser getMusixiser() {
+        return musixiser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setMusixiser(Musixiser musixiser) {
+        this.musixiser = musixiser;
     }
 
     public Long getId() {
@@ -85,7 +97,7 @@ public class MusixiserFollow extends AbstractAuditingEntity implements Serializa
         return "MusixiserFollow{" +
             "id=" + id +
             ", userId=" + userId +
-            ", user=" + user +
+            ", musixiser=" + musixiser +
             '}';
     }
 }

@@ -1,5 +1,6 @@
 package musixise.web.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import musixise.domain.Authority;
 import musixise.domain.User;
 
@@ -23,6 +24,7 @@ public class UserDTO {
 
     @NotNull
     @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
+    @JsonIgnore
     private String password;
 
     @Size(max = 50)
@@ -33,11 +35,14 @@ public class UserDTO {
 
     @Email
     @Size(min = 5, max = 100)
+    @JsonIgnore
     private String email;
 
+    @JsonIgnore
     private boolean activated = false;
 
     @Size(min = 2, max = 5)
+    @JsonIgnore
     private String langKey;
 
     private Set<String> authorities;

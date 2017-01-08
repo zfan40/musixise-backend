@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Mapper for the entity StagesFollow and its DTO StagesFollowDTO.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = DateMapper.class)
 public interface StagesFollowMapper {
 
     StagesFollowDTO stagesFollowToStagesFollowDTO(StagesFollow stagesFollow);
