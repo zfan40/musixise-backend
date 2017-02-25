@@ -14,6 +14,7 @@ import musixise.service.WorkListService;
 import musixise.service.impl.WorkListFollowServiceImpl;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.PageDTO;
+import musixise.web.rest.dto.UpdateMyWorkDTO;
 import musixise.web.rest.dto.WorkListDTO;
 import musixise.web.rest.dto.favorite.UpdateMyWorkStatusDTO;
 import musixise.web.rest.mapper.WorkListMapper;
@@ -168,6 +169,45 @@ public class WorkController {
         } else {
             return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_WORK_NOT_EXIST, "该作品不存在"));
         }
+
+    }
+
+    @RequestMapping(value = "/updateWork/{id}",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "更新作品信息", notes = "更新作品信息", response = WorkList.class, position = 2)
+    @Timed
+    public ResponseEntity<?> updateWork(@PathVariable Long id, @Valid @RequestBody UpdateMyWorkDTO updateMyWorkDTO) {
+
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
+            .map( u -> {
+
+                WorkListDTO oldWorkList = workListService.findOne(id);
+
+                if (oldWorkList != null && oldWorkList.getUserId().equals(u.getId())) {
+
+                    if (updateMyWorkDTO.getTitle() != null) {
+                        oldWorkList.setTitle(updateMyWorkDTO.getTitle());
+                    }
+
+                    if (updateMyWorkDTO.getCover() != null) {
+
+                        oldWorkList.setCover(updateMyWorkDTO.getCover());
+                    }
+
+                    if (updateMyWorkDTO.getContent() != null) {
+                        oldWorkList.setContent(updateMyWorkDTO.getContent());
+
+                    }
+                    workListService.save(oldWorkList);
+                    return ResponseEntity.ok(new OutputDTO<>(0, "success"));
+
+                } else {
+                    return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_WORK_NOT_EXIST, "该作品不存在"));
+                }
+
+            })
+            .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
 
     }
 
