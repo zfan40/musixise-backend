@@ -16,6 +16,14 @@
             });
         };
 
+        vm.workMap = {
+            status : [
+                {id: 0, name: '正常'},
+                {id: 1, name: '私有'},
+                {id: 2, name: '删除'}
+            ]
+        };
+
         var onSaveSuccess = function (result) {
             $scope.$emit('musixiseApp:workListUpdate', result);
             $uibModalInstance.close(result);

@@ -36,8 +36,11 @@
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="title"><span >title</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="cover"><span >cover</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="content"><span translate="musixiseApp.workList.content">Content</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="url"><span translate="musixiseApp.workList.url">Url</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="status"><span >status</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="createtime"><span translate="musixiseApp.workList.createtime">Createtime</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="userId"><span translate="musixiseApp.workList.userId">UserId</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
@@ -46,9 +49,18 @@
             <tbody>
                 <tr ng-repeat="workList in vm.workLists track by workList.id">
                     <td><a ui-sref="work-list-detail({id:workList.id})">{{workList.id}}</a></td>
+                    <td>{{workList.title}}</td>
+                    <td>{{workList.cover}}</td>
                     <td>{{workList.content}}</td>
                     <td>{{workList.url}}</td>
-                        <td>{{workList.createtime | date:'mediumDate'}}</td>
+                    <td>
+
+                        <span ng-show="workList.status == 0">正常</span>
+                        <span ng-show="workList.status == 1">私有</span>
+                        <span ng-show="workList.status == 2">删除</span>
+
+                    </td>
+                        <td>{{workList.createdDate | date:'mediumDate'}}</td>
                     <td>{{workList.userId}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
