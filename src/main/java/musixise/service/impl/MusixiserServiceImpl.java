@@ -166,6 +166,9 @@ public class MusixiserServiceImpl implements MusixiserService{
         musixiser.setSmallAvatar(registerDTO.getSmallAvatar());
         musixiser.setLargeAvatar(registerDTO.getLargeAvatar());
         musixiser.setNation(registerDTO.getNation());
+        musixiser.setFansNum(0);
+        musixiser.setFollowNum(0);
+        musixiser.setSongNum(0);
 
         return musixiserRepository.save(musixiser);
     }

@@ -150,7 +150,7 @@ public class UserService {
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
-        newUser.setEmail(email);
+        newUser.setEmail(String.format("%s@musixise.com", login));
         newUser.setLangKey("zh-cn");
         newUser.setActivated(true);
         // new user gets registration key
