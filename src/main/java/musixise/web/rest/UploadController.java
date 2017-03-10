@@ -89,8 +89,10 @@ public class UploadController {
         byte[] bt = null;
         try {
             sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-            bt = decoder.decodeBuffer( data );
-            // String value = new String(bt, "UTF-8");
+            //data:;base64,aSBhbSBhIGJsb2I=
+            data = data.replaceAll("data:;base64,", "");
+            bt = decoder.decodeBuffer( data);
+            //value = new String(bt, "UTF-8");
             Response res = uploadManager.put(bt, fileName, auth.uploadToken(bucketname));
         } catch (QiniuException e) {
             Response r = e.response;
