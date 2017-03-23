@@ -1,9 +1,11 @@
 package musixise.web.rest.mapper;
 
+import musixise.config.Constants;
 import musixise.domain.WorkList;
 import musixise.utils.StringUtil;
 import musixise.utils.DateUtil;
 import musixise.web.rest.dto.WorkListDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -36,7 +38,16 @@ public interface WorkListMapper {
         workListDTO.setStatus( workList.getStatus() );
         workListDTO.setId( workList.getId() );
         workListDTO.setContent( workList.getContent() );
-        workListDTO.setUrl( workList.getUrl() );
+        String url = "";
+        if (StringUtils.isNoneBlank(workList.getUrl())) {
+            if (workList.getUrl().indexOf("clouddn") > 0) {
+                url = workList.getUrl();
+            } else {
+                //拼装地址
+                url = String.format(Constants.QINIU_AUDIO_DOMAIN, workList.getUrl());
+            }
+        }
+        workListDTO.setUrl(url);
         workListDTO.setUserId( workList.getUserId() );
         workListDTO.setFileHash(StringUtil.getMD5(workList.getUrl()));
         workListDTO.setCreatedDate(DateUtil.asDate(workList.getCreatedDate()));
