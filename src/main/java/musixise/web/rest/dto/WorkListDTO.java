@@ -36,6 +36,26 @@ public class WorkListDTO implements Serializable {
 
     private Integer collectNum;
 
+    private String lastModifiedDate;
+
+    private String fileHash;
+
+    public String getFileHash() {
+        return fileHash;
+    }
+
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
+    }
+
+    public String getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public Integer getCollectNum() {
         return collectNum;
     }
