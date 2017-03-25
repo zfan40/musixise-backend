@@ -3,6 +3,7 @@ package musixise.service.impl;
 import musixise.domain.WorkListFollow;
 import musixise.repository.UserRepository;
 import musixise.repository.WorkListFollowRepository;
+import musixise.repository.WorkListRepository;
 import musixise.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,8 @@ public class WorkListFollowServiceImpl {
     @Inject
     private UserRepository userRepository;
 
+    @Inject WorkListRepository workListRepository;
+
 
     public Optional<WorkListFollow> getFollowWorkInfo(Long workId) {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).map(
@@ -34,5 +37,14 @@ public class WorkListFollowServiceImpl {
                     return null;
                 }
             });
+    }
+
+    /**
+     * 更新指定作品收藏数
+     * @param id 作品ID
+     */
+    public void updateFavoriteCount(Long id) {
+        int count =  workListFollowRepository.countByWorkId(id);
+        int u = workListRepository.updateCollectNumById(id, count);
     }
 }

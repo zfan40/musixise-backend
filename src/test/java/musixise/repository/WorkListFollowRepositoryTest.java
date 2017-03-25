@@ -41,4 +41,11 @@ public class WorkListFollowRepositoryTest {
         Long workId = 2l;
         int s = workListFollowRepository.deleteByUserIdAndWorkId(userId, workId);
     }
+
+    @Test
+    public void testCountByWorkId() {
+        Long workId = 2l;
+        int count = workListFollowRepository.countByWorkId(workId);
+        System.out.println(count);
+    }
 }

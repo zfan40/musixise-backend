@@ -12,6 +12,7 @@ import musixise.repository.WorkListFollowRepository;
 import musixise.repository.search.WorkListFollowSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.WorkListService;
+import musixise.service.impl.WorkListFollowServiceImpl;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.dto.WorkListDTO;
@@ -49,6 +50,8 @@ public class FavoriteController {
 
     @Inject private WorkListService workListService;
 
+    @Inject  WorkListFollowServiceImpl workListFollowService;
+
     @RequestMapping(value = "/addWork",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,11 +60,12 @@ public class FavoriteController {
     public ResponseEntity<?> addWork(@Valid @RequestBody AddToMyfavoriteWorksDTO addToMyfavoriteWorksDTO) throws URISyntaxException {
         log.debug("REST request to save addToMyFavoriteWorks : {}", addToMyfavoriteWorksDTO);
 
+        Long id = addToMyfavoriteWorksDTO.getWorkId();
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
                 //检查收藏的作品是否存在
 
-                WorkListDTO workListDTO = workListService.findOne(addToMyfavoriteWorksDTO.getWorkId());
+                WorkListDTO workListDTO = workListService.findOne(id);
 
                 if (workListDTO == null || workListDTO.getId() == null) {
 
@@ -80,7 +84,7 @@ public class FavoriteController {
                     user.setId(u.getId());
                     workListFollow.setUser(user);
                     WorkList workList = new WorkList();
-                    workList.setId(addToMyfavoriteWorksDTO.getWorkId());
+                    workList.setId(id);
                     workListFollow.setWork(workList);
                     workListFollow.setId(0l);
 
@@ -93,6 +97,9 @@ public class FavoriteController {
                 } else {
                     return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, "参数错误"));
                 }
+
+                //更新收藏数
+                workListFollowService.updateFavoriteCount(id);
 
                 return ResponseEntity.ok(new OutputDTO<>(0, "success"));
 

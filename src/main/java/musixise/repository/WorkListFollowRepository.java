@@ -29,4 +29,6 @@ public interface WorkListFollowRepository extends JpaRepository<WorkListFollow,L
     @Query("delete WorkListFollow where user_id=?1 and work_id  = ?2")
     int deleteByUserIdAndWorkId(Long userId,  Long workId);
 
+    int countByWorkId(Long workId);
+
 }

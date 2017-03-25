@@ -26,4 +26,8 @@ public interface WorkListRepository extends JpaRepository<WorkList,Long> {
     @Query("update WorkList w set w.status = ?1 where w.id = ?2 and w.userId=?3")
     int updateStatusByUserIdAndWorkId(Integer status, Long workId, Long userId);
 
+    @Transactional
+    @Modifying
+    @Query("update WorkList w set w.collectNum = ?2 where w.id = ?1 ")
+    int updateCollectNumById(Long id, Integer collectNum);
 }
