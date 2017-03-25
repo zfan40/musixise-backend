@@ -30,4 +30,6 @@ public interface WorkListRepository extends JpaRepository<WorkList,Long> {
     @Modifying
     @Query("update WorkList w set w.collectNum = ?2 where w.id = ?1 ")
     int updateCollectNumById(Long id, Integer collectNum);
+
+    int countByUserId(Long userId);
 }

@@ -9,6 +9,7 @@ import musixise.repository.MusixiserFollowRepository;
 import musixise.repository.UserRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.MusixiserFollowService;
+import musixise.service.MusixiserService;
 import musixise.web.rest.dto.MusixiserFollowDTO;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.PageDTO;
@@ -47,6 +48,8 @@ public class FollowController {
 
     @Inject private MusixiserMapper musixiserMapper;
 
+    @Inject MusixiserService musixiserService;
+
     @RequestMapping(value = "/getList",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,6 +83,11 @@ public class FollowController {
                 try {
 
                     if (addMyFollowDTO.getStatus() == 0) {
+                        //检查是否存在
+                        if (musixiserFollowRepository.findOneByUserIdAndFollowId(u.getId(), addMyFollowDTO.getFollowId()).isPresent()) {
+                            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_USER_ALREADY_FOLLOW, "已关注过"));
+                        }
+
                         MusixiserFollowDTO musixiserFollowDTO = new MusixiserFollowDTO();
                         musixiserFollowDTO.setUserId(u.getId());
                         musixiserFollowDTO.setFollowId(addMyFollowDTO.getFollowId());
@@ -92,6 +100,8 @@ public class FollowController {
                     } else {
                         return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, "参数错误"));
                     }
+                    //update follow num
+                    musixiserService.updateFollowCount(u.getId(), addMyFollowDTO.getFollowId());
                     return ResponseEntity.ok(new OutputDTO<>(0, "success"));
                 } catch (Exception e) {
 

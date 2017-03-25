@@ -28,4 +28,9 @@ public interface MusixiserFollowRepository extends JpaRepository<MusixiserFollow
     @Query(value="SELECT * FROM `mu_musixiser_follow` m LEFT JOIN mu_user u on u.id=m.follow_uid WHERE m.user_id=?1 and m.follow_uid=?2", nativeQuery = true)
     MusixiserFollow findByUserIdAndFollowUid(@Param("userId") Long userId, @Param("followId") Long followId);
 
+    int countByUserId(Long userId);
+
+    Optional<MusixiserFollow> findOneByUserIdAndFollowId(@Param("userId") Long userId, @Param("followId") Long followId);
+
+
 }

@@ -10,6 +10,7 @@ import musixise.repository.UserRepository;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.WorkListSearchRepository;
 import musixise.security.SecurityUtils;
+import musixise.service.MusixiserService;
 import musixise.service.WorkListService;
 import musixise.service.impl.WorkListFollowServiceImpl;
 import musixise.web.rest.dto.OutputDTO;
@@ -47,24 +48,19 @@ public class WorkController {
 
     private static final LocalDateTime DEFAULT_CREATETIME = LocalDateTime.now();
 
+    @Inject WorkListFollowServiceImpl workListFollowService;
 
-    @Inject
-    WorkListFollowServiceImpl workListFollowService;
+    @Inject private UserRepository userRepository;
 
-    @Inject
-    private UserRepository userRepository;
+    @Inject private WorkListRepository workListRepository;
 
-    @Inject
-    private WorkListRepository workListRepository;
+    @Inject private WorkListSearchRepository workListSearchRepository;
 
-    @Inject
-    private WorkListSearchRepository workListSearchRepository;
+    @Inject private WorkListService workListService;
 
-    @Inject
-    private WorkListService workListService;
+    @Inject private WorkListMapper workListMapper;
 
-    @Inject
-    private WorkListMapper workListMapper;
+    @Inject MusixiserService musixiserService;
 
     @RequestMapping(value = "/create",
         method = RequestMethod.POST,
@@ -87,6 +83,9 @@ public class WorkController {
                 }
                 WorkList result = workListRepository.save(workList);
                 workListSearchRepository.save(result);
+                //更新作品数量
+                musixiserService.updateWorkCount(u.getId());
+
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", result));
             })
             .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));

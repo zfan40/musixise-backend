@@ -52,6 +52,7 @@ public class FavoriteController {
 
     @Inject  WorkListFollowServiceImpl workListFollowService;
 
+
     @RequestMapping(value = "/addWork",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)

@@ -54,4 +54,8 @@ public final class Constants {
     public static final Integer ERROR_CODE_FAVORITE_WORK_NOT_EXIST = 50001;//该作品不存在或已删除
     public static final Integer ERROR_CODE_FAVORITE_ALREADY_ADD = 50002;//已收藏过
 
+    //关注
+    public static final Integer ERROR_CODE_USER_ALREADY_FOLLOW = 60000;//已关注
+
+
 }

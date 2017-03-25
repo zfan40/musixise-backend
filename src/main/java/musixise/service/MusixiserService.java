@@ -6,9 +6,6 @@ import musixise.web.rest.dto.user.RegisterDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Service Interface for managing Musixiser.
  */
@@ -58,4 +55,8 @@ public interface MusixiserService {
     MusixiserDTO getInfoByUid(Long id);
 
     Musixiser registerMusixiser(Long id, RegisterDTO registerDTO);
+
+    void updateFollowCount(Long id, Long followId);
+
+    void updateWorkCount(Long id);
 }

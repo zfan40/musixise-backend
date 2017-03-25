@@ -2,7 +2,9 @@ package musixise.service.impl;
 
 import musixise.config.Constants;
 import musixise.domain.Musixiser;
+import musixise.repository.MusixiserFollowRepository;
 import musixise.repository.MusixiserRepository;
+import musixise.repository.WorkListRepository;
 import musixise.repository.search.MusixiserSearchRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.MusixiserService;
@@ -31,14 +33,15 @@ public class MusixiserServiceImpl implements MusixiserService{
 
     private final Logger log = LoggerFactory.getLogger(MusixiserServiceImpl.class);
 
-    @Inject
-    private MusixiserRepository musixiserRepository;
+    @Inject private MusixiserRepository musixiserRepository;
 
-    @Inject
-    private MusixiserMapper musixiserMapper;
+    @Inject private MusixiserMapper musixiserMapper;
 
-    @Inject
-    private MusixiserSearchRepository musixiserSearchRepository;
+    @Inject private MusixiserSearchRepository musixiserSearchRepository;
+
+    @Inject private MusixiserFollowRepository musixiserFollowRepository;
+
+    @Inject WorkListRepository workListRepository;
 
     /**
      * Save a musixiser.
@@ -171,5 +174,27 @@ public class MusixiserServiceImpl implements MusixiserService{
         musixiser.setSongNum(0);
 
         return musixiserRepository.save(musixiser);
+    }
+
+
+    /**
+     * 更新用户关注数
+     * @param id
+     */
+    @Override
+    public void updateFollowCount(Long id, Long followId) {
+        Integer followNum = musixiserFollowRepository.countByUserId(id);
+        //更新关注数
+        musixiserRepository.updateFollowNumById(id, followNum);
+        //更新粉丝数
+        Integer fansNum = musixiserFollowRepository.countByUserId(followId);
+        musixiserRepository.updateFanswNumById(followId, fansNum);
+    }
+    @Override
+    public void updateWorkCount(Long uid) {
+
+        int workCount = workListRepository.countByUserId(uid);
+        musixiserRepository.updateWorkNumById(uid, workCount);
+
     }
 }
