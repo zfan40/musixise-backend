@@ -52,6 +52,7 @@ public interface WorkListMapper {
         workListDTO.setFileHash(StringUtil.getMD5(workList.getUrl()));
         workListDTO.setCreatedDate(DateUtil.asDate(workList.getCreatedDate()));
         workListDTO.setLastModifiedDate(DateUtil.asDate(workList.getLastModifiedDate()));
+        workListDTO.setCollectNum(workList.getCollectNum());
 
         return workListDTO;
     }
