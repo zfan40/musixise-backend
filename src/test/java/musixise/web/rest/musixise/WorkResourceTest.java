@@ -2,11 +2,11 @@ package musixise.web.rest.musixise;
 
 import com.alibaba.fastjson.JSON;
 import musixise.MusixiseApp;
-import musixise.domain.MusixiserFollow;
 import musixise.domain.WorkList;
 import musixise.repository.UserRepository;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.WorkListSearchRepository;
+import musixise.service.WorkListService;
 import musixise.web.rest.TestUtil;
 import musixise.web.rest.WorkController;
 import org.junit.Before;
@@ -15,6 +15,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,10 +28,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.inject.Inject;
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,15 +56,18 @@ public class WorkResourceTest {
 
     @Inject WorkListSearchRepository workListSearchRepository;
 
+    @Inject WorkListService workListService;
+
     @Before
     public void setup() {
 
         WorkController workController = new WorkController();
-        this.restWorkMockMvc = MockMvcBuilders.standaloneSetup(workController).build();
+        this.restWorkMockMvc = MockMvcBuilders.standaloneSetup(workController).setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
 
         ReflectionTestUtils.setField(workController, "workListRepository", workListRepository);
         ReflectionTestUtils.setField(workController, "userRepository", userRepository);
         ReflectionTestUtils.setField(workController, "workListSearchRepository", workListSearchRepository);
+        ReflectionTestUtils.setField(workController, "workListService", workListService);
 
         Authentication authentication = Mockito.mock(Authentication.class);
 // Mockito.whens() for your authorization object
@@ -105,5 +108,17 @@ public class WorkResourceTest {
         WorkList workList = workListRepositoryAll.get(workListRepositoryAll.size() - 1);
         assertThat(workList.getUserId()).isEqualTo(DEFAULT_USER_ID);
 
+    }
+
+    @Test
+    public void testWorkList() throws Exception {
+
+        PageRequest pageable = new PageRequest(1, 10);
+
+        ResultActions perform = restWorkMockMvc.perform(
+            post("/api/work/getList?page=1&size=10")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+        )
+            .andExpect(status().isOk());
     }
 }
