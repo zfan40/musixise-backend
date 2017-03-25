@@ -40,6 +40,16 @@ public class WorkListDTO implements Serializable {
 
     private String fileHash;
 
+    private OwnerDTO owner;
+
+    public OwnerDTO getOwner() {
+        return owner;
+    }
+
+    public void setOwner(OwnerDTO owner) {
+        this.owner = owner;
+    }
+
     public String getFileHash() {
         return fileHash;
     }

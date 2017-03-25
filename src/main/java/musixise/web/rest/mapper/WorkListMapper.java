@@ -4,6 +4,7 @@ import musixise.config.Constants;
 import musixise.domain.WorkList;
 import musixise.utils.StringUtil;
 import musixise.utils.DateUtil;
+import musixise.web.rest.dto.OwnerDTO;
 import musixise.web.rest.dto.WorkListDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
@@ -53,6 +54,15 @@ public interface WorkListMapper {
         workListDTO.setCreatedDate(DateUtil.asDate(workList.getCreatedDate()));
         workListDTO.setLastModifiedDate(DateUtil.asDate(workList.getLastModifiedDate()));
         workListDTO.setCollectNum(workList.getCollectNum());
+
+        OwnerDTO ownerDTO = new OwnerDTO();
+        if (workList.getMusixiser()!= null) {
+            ownerDTO.setUid(workList.getMusixiser().getUserId());
+            ownerDTO.setNickName(workList.getMusixiser().getRealname());
+            ownerDTO.setLargeAvatar(workList.getMusixiser().getLargeAvatar());
+            ownerDTO.setSmallAvatar(workList.getMusixiser().getSmallAvatar());
+        }
+        workListDTO.setOwner(ownerDTO);
 
         return workListDTO;
     }

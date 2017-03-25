@@ -48,6 +48,18 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
     @Column(name = "collect_num")
     private Integer collectNum;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable=false, updatable=false)
+    private Musixiser musixiser;
+
+    public Musixiser getMusixiser() {
+        return musixiser;
+    }
+
+    public void setMusixiser(Musixiser musixiser) {
+        this.musixiser = musixiser;
+    }
+
     public Integer getCollectNum() {
         return collectNum;
     }
