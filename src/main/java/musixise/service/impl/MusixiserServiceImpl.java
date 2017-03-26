@@ -182,6 +182,7 @@ public class MusixiserServiceImpl implements MusixiserService{
      * @param id
      */
     @Override
+    @Transactional
     public void updateFollowCount(Long id, Long followId) {
         Integer followNum = musixiserFollowRepository.countByUserId(id);
         //更新关注数
