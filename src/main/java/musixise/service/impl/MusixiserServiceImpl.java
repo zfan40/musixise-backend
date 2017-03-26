@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -183,6 +184,7 @@ public class MusixiserServiceImpl implements MusixiserService{
      */
     @Override
     @Transactional
+    @Async
     public void updateFollowCount(Long id, Long followId) {
         Integer followNum = musixiserFollowRepository.countByUserId(id);
         //更新关注数
@@ -192,6 +194,7 @@ public class MusixiserServiceImpl implements MusixiserService{
         musixiserRepository.updateFanswNumById(followId, fansNum);
     }
     @Override
+    @Async
     public void updateWorkCount(Long uid) {
 
         int workCount = workListRepository.countByUserId(uid);

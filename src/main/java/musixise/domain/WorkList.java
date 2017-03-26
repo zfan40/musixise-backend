@@ -2,6 +2,7 @@ package musixise.domain;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
     private Long id;
 
     @NotNull
+    @NotEmpty(message="标题不能为空")
     @Column(name = "title", nullable = false)
     private String title;
 

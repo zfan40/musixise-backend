@@ -1,7 +1,6 @@
 package musixise.repository;
 
 import musixise.MusixiseApp;
-import musixise.domain.User;
 import musixise.domain.UserBind;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +29,7 @@ public class UserBindRepositoryTest {
         UserBind userBind = new UserBind();
         userBind.setOpenId("2");
         userBind.setLogin("33");
+        userBind.setProvider("sina");
         UserBind userBind1 = userBindRepository.save(userBind);
     }
 

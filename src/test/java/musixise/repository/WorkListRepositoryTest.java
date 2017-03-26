@@ -11,12 +11,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by zhaowei on 16/11/12.
@@ -47,6 +44,7 @@ public class WorkListRepositoryTest {
     public void testSave() {
 
         WorkList workList = new WorkList();
+        workList.setTitle("demo");
         workList.setUserId(3l);
         workList.setContent("aaa");
         workList.setStatus(1);
