@@ -199,7 +199,7 @@ public class MusixiserServiceImpl implements MusixiserService{
         //更新关注数
         musixiserRepository.updateFollowNumById(id, followNum);
         //更新粉丝数
-        Integer fansNum = musixiserFollowRepository.countByUserId(followId);
+        Integer fansNum = musixiserFollowRepository.countByFollowUid(followId);
         musixiserRepository.updateFanswNumById(followId, fansNum);
     }
     @Override
