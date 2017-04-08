@@ -22,10 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -115,7 +112,7 @@ public class FavoriteController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "获取我的作品收藏列表", notes = "", response = WorkListFollow.class, position = 3)
     @Timed
-    public ResponseEntity<?> getWorkList(Pageable pageable) {
+    public ResponseEntity<?> getMyWorkList(Pageable pageable) {
         log.debug("REST request to get all getMyFavoriteWorks");
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
@@ -129,6 +126,23 @@ public class FavoriteController {
             .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
     }
 
+    @RequestMapping(value = "/getWorkList/{uid}",
+            method = RequestMethod.POST,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "获取收藏列表", notes = "", response = WorkListFollow.class, position = 1)
+    public ResponseEntity<?> getWorkListByUid(Pageable pageable, @PathVariable Long uid) {
+
+        log.debug("REST request get all my favorite works by give uid");
+
+        if (uid > 0) {
+            PageDTO<WorkListDTO> page = workListService.findAllByUserIdOrderByIdDesc(uid, pageable);
+
+            return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
+
+        } else {
+           return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, "参数错误"));
+        }
+    }
 
 
 }
