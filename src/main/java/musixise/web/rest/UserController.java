@@ -43,6 +43,7 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -126,6 +127,7 @@ public class UserController {
         @ApiResponse(code = 500, message = "内部报错")}
     )
     @Timed
+    @Transactional
     public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO, HttpServletRequest request) throws URISyntaxException {
 
         //注册账号
