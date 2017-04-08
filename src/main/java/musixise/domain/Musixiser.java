@@ -58,6 +58,9 @@ public class Musixiser extends AbstractAuditingEntity implements Serializable {
     @Column(name = "is_master")
     private Integer isMaster;
 
+    @Column(name = "brief")
+    private String brief;
+
     @Column(name = "user_id")
     private Long userId;
 
@@ -198,24 +201,37 @@ public class Musixiser extends AbstractAuditingEntity implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "Musixiser{" +
+            "id=" + id +
+            ", realname='" + realname + '\'' +
+            ", tel='" + tel + '\'' +
+            ", email='" + email + '\'' +
+            ", birth='" + birth + '\'' +
+            ", gender='" + gender + '\'' +
+            ", smallAvatar='" + smallAvatar + '\'' +
+            ", largeAvatar='" + largeAvatar + '\'' +
+            ", nation='" + nation + '\'' +
+            ", isMaster=" + isMaster +
+            ", brief='" + brief + '\'' +
+            ", userId=" + userId +
+            ", followNum=" + followNum +
+            ", fansNum=" + fansNum +
+            ", songNum=" + songNum +
+            '}';
+    }
+
+    public String getBrief() {
+        return brief;
+    }
+
+    public void setBrief(String brief) {
+        this.brief = brief;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "Musixiser{" +
-            "id=" + id +
-            ", realname='" + realname + "'" +
-            ", tel='" + tel + "'" +
-            ", email='" + email + "'" +
-            ", birth='" + birth + "'" +
-            ", gender='" + gender + "'" +
-            ", smallAvatar='" + smallAvatar + "'" +
-            ", largeAvatar='" + largeAvatar + "'" +
-            ", nation='" + nation + "'" +
-            ", isMaster='" + isMaster + "'" +
-            ", userId='" + userId + "'" +
-            '}';
-    }
 }

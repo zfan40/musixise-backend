@@ -32,6 +32,8 @@ public class MusixiserDTO implements Serializable {
 
     private Integer isMaster;
 
+    private String brief;
+
     private Integer followStatus;
 
     private Integer followNum;
@@ -163,6 +165,14 @@ public class MusixiserDTO implements Serializable {
         this.username = username;
     }
 
+    public Integer getFollowStatus() {
+        return followStatus;
+    }
+
+    public void setFollowStatus(Integer followStatus) {
+        this.followStatus = followStatus;
+    }
+
     @Override
     public String toString() {
         return "MusixiserDTO{" +
@@ -177,16 +187,22 @@ public class MusixiserDTO implements Serializable {
             ", largeAvatar='" + largeAvatar + '\'' +
             ", nation='" + nation + '\'' +
             ", isMaster=" + isMaster +
+            ", brief='" + brief + '\'' +
+            ", followStatus=" + followStatus +
+            ", followNum=" + followNum +
+            ", fansNum=" + fansNum +
+            ", songNum=" + songNum +
             ", userId=" + userId +
+            ", createdDate='" + createdDate + '\'' +
             '}';
     }
 
-    public Integer getFollowStatus() {
-        return followStatus;
+    public String getBrief() {
+        return brief;
     }
 
-    public void setFollowStatus(Integer followStatus) {
-        this.followStatus = followStatus;
+    public void setBrief(String brief) {
+        this.brief = brief;
     }
 
     @Override
