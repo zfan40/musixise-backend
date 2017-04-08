@@ -2,11 +2,12 @@ package musixise.service.impl;
 
 import musixise.config.Constants;
 import musixise.domain.Musixiser;
+import musixise.domain.User;
 import musixise.repository.MusixiserFollowRepository;
 import musixise.repository.MusixiserRepository;
+import musixise.repository.UserRepository;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.MusixiserSearchRepository;
-import musixise.security.SecurityUtils;
 import musixise.service.MusixiserService;
 import musixise.web.rest.dto.MusixiserDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
@@ -43,6 +44,8 @@ public class MusixiserServiceImpl implements MusixiserService{
     @Inject private MusixiserFollowRepository musixiserFollowRepository;
 
     @Inject WorkListRepository workListRepository;
+
+    @Inject private UserRepository userRepository;
 
     /**
      * Save a musixiser.
@@ -144,7 +147,13 @@ public class MusixiserServiceImpl implements MusixiserService{
             }
         }
 
-        MusixiserDTO musixiserDTO = musixiserMapper.musixiserToMusixiserDTO(musixiser, SecurityUtils.getCurrentUserLogin());
+        User user = userRepository.findOne(id);
+        String login = "";
+        if (user != null) {
+            login = user.getLogin();
+        }
+
+        MusixiserDTO musixiserDTO = musixiserMapper.musixiserToMusixiserDTO(musixiser, login);
         return musixiserDTO;
     }
 

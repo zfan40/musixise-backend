@@ -13,22 +13,6 @@
             <input type="text" class="form-control" id="id" name="id"
                     ng-model="vm.workListFollow.id" readonly />
         </div>
-        <div class="form-group">
-            <label class="control-label" translate="musixiseApp.workListFollow.createtime" for="field_createtime">Createtime</label>
-                <div class="input-group">
-                    <input id="field_createtime" type="text" class="form-control" name="createtime" uib-datepicker-popup="{{dateformat}}" ng-model="vm.workListFollow.createtime" is-open="vm.datePickerOpenStatus.createtime"
-                    required/>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('createtime')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </div>
-            <div ng-show="editForm.createtime.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.createtime.$error.required" translate="entity.validation.required">
-                    This field is required.
-                </p>
-            </div>
-        </div>
 
         <div class="form-group">
             <label translate="musixiseApp.workListFollow.work" for="field_work">work</label>

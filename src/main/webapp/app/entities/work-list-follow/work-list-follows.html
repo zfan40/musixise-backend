@@ -36,7 +36,7 @@
             <thead>
                 <tr>
                     <th><span translate="global.field.id">ID</span></th>
-                    <th><span translate="musixiseApp.workListFollow.createtime">Createtime</span></th>
+                    <th><span translate="musixiseApp.workListFollow.createdDate">createdDate</span></th>
                     <th><span translate="musixiseApp.workListFollow.work">work</span></th>
                     <th><span translate="musixiseApp.workListFollow.user">user</span></th>
                     <th></th>
@@ -45,7 +45,7 @@
             <tbody>
                 <tr ng-repeat="workListFollow in vm.workListFollows track by workListFollow.id">
                     <td><a ui-sref="work-list-follow-detail({id:workListFollow.id})">{{workListFollow.id}}</a></td>
-                        <td>{{workListFollow.createtime | date:'mediumDate'}}</td>
+                        <td>{{workListFollow.createdDate}}</td>
                     <td>
                         <a ui-sref="work-list-detail({id:workListFollow.work.id})">{{workListFollow.work.id}}</a>
                     </td>
