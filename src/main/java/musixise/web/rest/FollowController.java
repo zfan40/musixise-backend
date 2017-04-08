@@ -10,10 +10,7 @@ import musixise.repository.UserRepository;
 import musixise.security.SecurityUtils;
 import musixise.service.MusixiserFollowService;
 import musixise.service.MusixiserService;
-import musixise.web.rest.dto.MusixiserFollowDTO;
-import musixise.web.rest.dto.MusixiserFollowerDTO;
-import musixise.web.rest.dto.OutputDTO;
-import musixise.web.rest.dto.PageDTO;
+import musixise.web.rest.dto.*;
 import musixise.web.rest.dto.follow.AddMyFollowDTO;
 import musixise.web.rest.mapper.MusixiserMapper;
 import org.slf4j.Logger;
@@ -60,7 +57,7 @@ public class FollowController {
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
-                PageDTO<MusixiserFollowDTO> page = musixiserFollowService.findFollowingByUserId(pageable, u.getId());
+                PageDTO<MusixiserFollowingDTO> page = musixiserFollowService.findFollowingByUserId(pageable, u.getId());
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
 
             })
@@ -123,7 +120,7 @@ public class FollowController {
         log.debug("REST request to get followings with give uid");
 
         if (uid > 0) {
-            PageDTO<MusixiserFollowDTO> page = musixiserFollowService.findFollowingByUserId(pageable, uid);
+            PageDTO<MusixiserFollowingDTO> page = musixiserFollowService.findFollowingByUserId(pageable, uid);
             return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
         } else {
             return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, "参数错误"));

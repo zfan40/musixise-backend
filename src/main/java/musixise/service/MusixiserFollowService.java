@@ -3,6 +3,7 @@ package musixise.service;
 import musixise.domain.MusixiserFollow;
 import musixise.web.rest.dto.MusixiserFollowDTO;
 import musixise.web.rest.dto.MusixiserFollowerDTO;
+import musixise.web.rest.dto.MusixiserFollowingDTO;
 import musixise.web.rest.dto.PageDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public interface MusixiserFollowService {
 
     Page<MusixiserFollow> findAllByUserId(Pageable pageable, Long userId);
 
-    PageDTO<MusixiserFollowDTO> findFollowingByUserId(Pageable pageable, Long userId);
+    PageDTO<MusixiserFollowingDTO> findFollowingByUserId(Pageable pageable, Long userId);
 
     PageDTO<MusixiserFollowerDTO> findFollowerByUserId(Pageable pageable, Long userId);
 

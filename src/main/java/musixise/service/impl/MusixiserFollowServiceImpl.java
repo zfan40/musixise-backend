@@ -6,6 +6,7 @@ import musixise.repository.search.MusixiserFollowSearchRepository;
 import musixise.service.MusixiserFollowService;
 import musixise.web.rest.dto.MusixiserFollowDTO;
 import musixise.web.rest.dto.MusixiserFollowerDTO;
+import musixise.web.rest.dto.MusixiserFollowingDTO;
 import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.mapper.MusixiserFollowMapper;
 import org.slf4j.Logger;
@@ -79,11 +80,11 @@ public class MusixiserFollowServiceImpl implements MusixiserFollowService{
      * @param userId
      * @return
      */
-    public PageDTO<MusixiserFollowDTO> findFollowingByUserId(Pageable pageable, Long userId) {
+    public PageDTO<MusixiserFollowingDTO> findFollowingByUserId(Pageable pageable, Long userId) {
         log.debug("Request to get findFollowsByUserId");
         Page<MusixiserFollow> result = musixiserFollowRepository.findAllByUserId(pageable, userId);
         if (result.getTotalElements() >0) {
-            List<MusixiserFollowDTO> musixiserFollowDTOList = musixiserFollowMapper.musixiserFollowsToMusixiserFollowDTOs(result.getContent());
+            List<MusixiserFollowingDTO> musixiserFollowDTOList = musixiserFollowMapper.musixiserFollowsToMusixiserFollowingDTOs(result.getContent());
 
             PageDTO pageDTO = new PageDTO(musixiserFollowDTOList, result.getTotalElements(),
                 result.hasNext(), result.getTotalPages(), result.getSize(), result.getNumber(),

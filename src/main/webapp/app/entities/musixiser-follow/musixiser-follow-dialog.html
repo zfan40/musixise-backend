@@ -30,17 +30,17 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" translate="musixiseApp.musixiserFollow.followUid" for="field_followUid">FollowUid</label>
-            <input type="number" class="form-control" name="followUid" id="field_followUid"
-                    ng-model="vm.musixiserFollow.followUid"
+            <label class="control-label" translate="musixiseApp.musixiserFollow.followId" for="field_followId">FollowId</label>
+            <input type="number" class="form-control" name="followId" id="field_followId"
+                    ng-model="vm.musixiserFollow.followId"
                     required />
-            <div ng-show="editForm.followUid.$invalid">
+            <div ng-show="editForm.followId.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.followUid.$error.required" translate="entity.validation.required">
+                    ng-show="editForm.followId.$error.required" translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.followUid.$error.number" translate="entity.validation.number">
+                    ng-show="editForm.followId.$error.number" translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>

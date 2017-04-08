@@ -28,10 +28,15 @@ public class DateMapper {
     }
 
     public String asDate(LocalDateTime localDateTime) {
-        Date dd = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dd);
+        if (localDateTime != null) {
 
-        return dateStr;
+            Date dd = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dd);
+
+            return dateStr;
+        }
+
+        return null;
     }
 
     public LocalDateTime asLocalDateTime(String date) {

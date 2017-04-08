@@ -96,15 +96,5 @@ public class UserControllerTest {
             Musixiser oneByUserId = musixiserRepository.findOneByUserId(uid);
             musixiserService.delete(oneByUserId.getId());
         }
-
-
-//        List<WorkList> workListRepositoryAll = workListRepository.findAll
-//
-//        //数据是否写入
-//        assertThat(workListRepositoryAll).hasSize(datasizeBeforeCreate + 1);
-//
-//        //检测用户ID
-//        WorkList workList = workListRepositoryAll.get(workListRepositoryAll.size() - 1);
-//        assertThat(workList.getUserId()).isEqualTo(DEFAULT_USER_ID);
     }
 }

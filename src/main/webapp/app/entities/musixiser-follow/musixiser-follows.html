@@ -37,7 +37,7 @@
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="userId"><span translate="musixiseApp.musixiserFollow.userId">UserId</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="followUid"><span translate="musixiseApp.musixiserFollow.followUid">FollowUid</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="followId"><span translate="musixiseApp.musixiserFollow.followId">followId</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -45,7 +45,7 @@
                 <tr ng-repeat="musixiserFollow in vm.musixiserFollows track by musixiserFollow.id">
                     <td><a ui-sref="musixiser-follow-detail({id:musixiserFollow.id})">{{musixiserFollow.id}}</a></td>
                     <td>{{musixiserFollow.userId}}</td>
-                    <td>{{musixiserFollow.followUid}}</td>
+                    <td>{{musixiserFollow.followId}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
