@@ -15,16 +15,27 @@ public class MusixiserFollowDTO implements Serializable {
     @NotNull
     private Long userId;
 
+    private Long followId;
+
     @Override
     public String toString() {
         return "MusixiserFollowDTO{" +
             "id=" + id +
             ", userId=" + userId +
+            ", followId=" + followId +
             ", realname='" + realname + '\'' +
             ", smallAvatar='" + smallAvatar + '\'' +
             ", largeAvatar='" + largeAvatar + '\'' +
             ", createdDate='" + createdDate + '\'' +
             '}';
+    }
+
+    public Long getFollowId() {
+        return followId;
+    }
+
+    public void setFollowId(Long followId) {
+        this.followId = followId;
     }
 
     private String realname;

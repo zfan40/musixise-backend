@@ -87,7 +87,8 @@ public class FollowController {
                         }
 
                         MusixiserFollowDTO musixiserFollowDTO = new MusixiserFollowDTO();
-                        musixiserFollowDTO.setUserId(addMyFollowDTO.getFollowId());
+                        musixiserFollowDTO.setUserId(u.getId());
+                        musixiserFollowDTO.setFollowId(addMyFollowDTO.getFollowId());
 
                         MusixiserFollowDTO result = musixiserFollowService.save(musixiserFollowDTO);
                     } else if (addMyFollowDTO.getStatus() == 1) {

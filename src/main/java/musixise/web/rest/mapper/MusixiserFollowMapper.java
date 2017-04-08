@@ -17,6 +17,7 @@ public interface MusixiserFollowMapper {
 
     @Mappings({
         @Mapping(target = "id", ignore = true),
+        @Mapping(target = "followId", ignore = true),
         @Mapping(target = "userId", source = "musixiserFollow.musixiser.userId"),
         @Mapping(target = "realname", source = "musixiserFollow.musixiser.realname"),
         @Mapping(target = "smallAvatar", source = "musixiserFollow.musixiser.smallAvatar"),
