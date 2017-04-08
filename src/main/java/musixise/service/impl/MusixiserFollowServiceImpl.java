@@ -5,6 +5,7 @@ import musixise.repository.MusixiserFollowRepository;
 import musixise.repository.search.MusixiserFollowSearchRepository;
 import musixise.service.MusixiserFollowService;
 import musixise.web.rest.dto.MusixiserFollowDTO;
+import musixise.web.rest.dto.MusixiserFollowerDTO;
 import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.mapper.MusixiserFollowMapper;
 import org.slf4j.Logger;
@@ -72,11 +73,40 @@ public class MusixiserFollowServiceImpl implements MusixiserFollowService{
         return result;
     }
 
-    public PageDTO<MusixiserFollowDTO> findFollowsByUserId(Pageable pageable, Long userId) {
+    /**
+     * 获取用户关注列表
+     * @param pageable
+     * @param userId
+     * @return
+     */
+    public PageDTO<MusixiserFollowDTO> findFollowingByUserId(Pageable pageable, Long userId) {
         log.debug("Request to get findFollowsByUserId");
         Page<MusixiserFollow> result = musixiserFollowRepository.findAllByUserId(pageable, userId);
         if (result.getTotalElements() >0) {
             List<MusixiserFollowDTO> musixiserFollowDTOList = musixiserFollowMapper.musixiserFollowsToMusixiserFollowDTOs(result.getContent());
+
+            PageDTO pageDTO = new PageDTO(musixiserFollowDTOList, result.getTotalElements(),
+                result.hasNext(), result.getTotalPages(), result.getSize(), result.getNumber(),
+                result.getSort(), result.isFirst(), result.getNumberOfElements());
+
+            return pageDTO;
+
+        } else {
+            return null;
+        }
+
+    }
+
+    /**
+     * 获取用户粉丝列表
+     * @param pageable
+     * @param userId
+     * @return
+     */
+    public PageDTO<MusixiserFollowerDTO> findFollowerByUserId(Pageable pageable, Long userId) {
+        Page<MusixiserFollow> result = musixiserFollowRepository.findAllByFollowId(pageable, userId);
+        if (result.getTotalElements() >0) {
+            List<MusixiserFollowerDTO> musixiserFollowDTOList = musixiserFollowMapper.musixiserFollowsToMusixiserFollowerDTOs(result.getContent());
 
             PageDTO pageDTO = new PageDTO(musixiserFollowDTOList, result.getTotalElements(),
                 result.hasNext(), result.getTotalPages(), result.getSize(), result.getNumber(),

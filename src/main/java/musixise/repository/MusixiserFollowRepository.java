@@ -20,6 +20,8 @@ public interface MusixiserFollowRepository extends JpaRepository<MusixiserFollow
 
     Page<MusixiserFollow> findAllByUserId(Pageable pageable, Long userId);
 
+    Page<MusixiserFollow> findAllByFollowId(Pageable pageable, Long userId);
+
     @Modifying
     @Transactional
     @Query("delete MusixiserFollow where user_id=?1 and follow_uid  = ?2")

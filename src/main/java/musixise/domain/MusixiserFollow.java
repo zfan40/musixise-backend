@@ -36,6 +36,11 @@ public class MusixiserFollow extends AbstractAuditingEntity implements Serializa
     @JoinColumn(name = "follow_uid", referencedColumnName = "user_id", insertable=false, updatable=false)
     private Musixiser musixiser;
 
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable=false, updatable=false)
+    private Musixiser follower;
+
     public Long getFollowId() {
         return followId;
     }
@@ -46,6 +51,14 @@ public class MusixiserFollow extends AbstractAuditingEntity implements Serializa
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
+    }
+
+    public Musixiser getFollower() {
+        return follower;
+    }
+
+    public void setFollower(Musixiser follower) {
+        this.follower = follower;
     }
 
     public Musixiser getMusixiser() {

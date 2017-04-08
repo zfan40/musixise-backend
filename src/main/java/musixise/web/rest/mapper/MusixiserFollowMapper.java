@@ -2,6 +2,7 @@ package musixise.web.rest.mapper;
 
 import musixise.domain.MusixiserFollow;
 import musixise.web.rest.dto.MusixiserFollowDTO;
+import musixise.web.rest.dto.MusixiserFollowerDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -15,7 +16,8 @@ import java.util.List;
 public interface MusixiserFollowMapper {
 
     @Mappings({
-        @Mapping(target = "followId", source = "musixiserFollow.musixiser.userId"),
+        @Mapping(target = "id", ignore = true),
+        @Mapping(target = "userId", source = "musixiserFollow.musixiser.userId"),
         @Mapping(target = "realname", source = "musixiserFollow.musixiser.realname"),
         @Mapping(target = "smallAvatar", source = "musixiserFollow.musixiser.smallAvatar"),
         @Mapping(target = "largeAvatar", source = "musixiserFollow.musixiser.largeAvatar"),
@@ -29,5 +31,13 @@ public interface MusixiserFollowMapper {
 
     List<MusixiserFollow> musixiserFollowDTOsToMusixiserFollows(List<MusixiserFollowDTO> musixiserFollowDTOs);
 
+    @Mappings({
+        @Mapping(target = "userId", source = "musixiserFollow.follower.userId"),
+        @Mapping(target = "realname", source = "musixiserFollow.follower.realname"),
+        @Mapping(target = "smallAvatar", source = "musixiserFollow.follower.smallAvatar"),
+        @Mapping(target = "largeAvatar", source = "musixiserFollow.follower.largeAvatar"),
+    })
+    MusixiserFollowerDTO musixiserFollowToMusixiserFollowerDTO(MusixiserFollow musixiserFollow);
+    List<MusixiserFollowerDTO> musixiserFollowsToMusixiserFollowerDTOs(List<MusixiserFollow> musixiserFollows);
 
 }

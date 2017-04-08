@@ -11,6 +11,7 @@ import musixise.security.SecurityUtils;
 import musixise.service.MusixiserFollowService;
 import musixise.service.MusixiserService;
 import musixise.web.rest.dto.MusixiserFollowDTO;
+import musixise.web.rest.dto.MusixiserFollowerDTO;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.dto.follow.AddMyFollowDTO;
@@ -21,10 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -62,7 +60,7 @@ public class FollowController {
 
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
-                PageDTO<MusixiserFollowDTO> page = musixiserFollowService.findFollowsByUserId(pageable, u.getId());
+                PageDTO<MusixiserFollowDTO> page = musixiserFollowService.findFollowingByUserId(pageable, u.getId());
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
 
             })
@@ -89,8 +87,7 @@ public class FollowController {
                         }
 
                         MusixiserFollowDTO musixiserFollowDTO = new MusixiserFollowDTO();
-                        musixiserFollowDTO.setUserId(u.getId());
-                        musixiserFollowDTO.setFollowId(addMyFollowDTO.getFollowId());
+                        musixiserFollowDTO.setUserId(addMyFollowDTO.getFollowId());
 
                         MusixiserFollowDTO result = musixiserFollowService.save(musixiserFollowDTO);
                     } else if (addMyFollowDTO.getStatus() == 1) {
@@ -112,5 +109,41 @@ public class FollowController {
             })
             .orElseGet(() -> ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_NO_LOGIN, "用户未登陆")));
 
+    }
+
+    @RequestMapping(value = "/followings/{uid}",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "获取用户的关注列表", notes = "", response = MusixiserFollow.class, position = 3)
+    @Timed
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getFollowings(Pageable pageable, @PathVariable Long uid)
+        throws URISyntaxException {
+        log.debug("REST request to get followings with give uid");
+
+        if (uid > 0) {
+            PageDTO<MusixiserFollowDTO> page = musixiserFollowService.findFollowingByUserId(pageable, uid);
+            return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
+        } else {
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, "参数错误"));
+        }
+    }
+
+    @RequestMapping(value = "/followers/{uid}",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "获取用户的粉丝列表", notes = "", response = MusixiserFollow.class, position = 3)
+    @Timed
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getFollowers(Pageable pageable, @PathVariable Long uid)
+        throws URISyntaxException {
+        log.debug("REST request to get followers with give uid");
+
+        if (uid > 0) {
+            PageDTO<MusixiserFollowerDTO> page = musixiserFollowService.findFollowerByUserId(pageable, uid);
+            return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
+        } else {
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, "参数错误"));
+        }
     }
 }

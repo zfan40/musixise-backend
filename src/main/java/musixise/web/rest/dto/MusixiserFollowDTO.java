@@ -15,7 +15,17 @@ public class MusixiserFollowDTO implements Serializable {
     @NotNull
     private Long userId;
 
-    private Long followId;
+    @Override
+    public String toString() {
+        return "MusixiserFollowDTO{" +
+            "id=" + id +
+            ", userId=" + userId +
+            ", realname='" + realname + '\'' +
+            ", smallAvatar='" + smallAvatar + '\'' +
+            ", largeAvatar='" + largeAvatar + '\'' +
+            ", createdDate='" + createdDate + '\'' +
+            '}';
+    }
 
     private String realname;
 
@@ -24,19 +34,6 @@ public class MusixiserFollowDTO implements Serializable {
     private String largeAvatar;
 
     private String createdDate;
-
-    @Override
-    public String toString() {
-        return "MusixiserFollowDTO{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", followId=" + followId +
-            ", realname='" + realname + '\'' +
-            ", smallAvatar='" + smallAvatar + '\'' +
-            ", largeAvatar='" + largeAvatar + '\'' +
-            ", createdDate='" + createdDate + '\'' +
-            '}';
-    }
 
     public String getRealname() {
         return realname;
@@ -60,14 +57,6 @@ public class MusixiserFollowDTO implements Serializable {
 
     public void setLargeAvatar(String largeAvatar) {
         this.largeAvatar = largeAvatar;
-    }
-
-    public Long getFollowId() {
-        return followId;
-    }
-
-    public void setFollowId(Long followId) {
-        this.followId = followId;
     }
 
     public String getCreatedDate() {
