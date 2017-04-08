@@ -32,7 +32,7 @@ public interface MusixiserFollowRepository extends JpaRepository<MusixiserFollow
 
     int countByUserId(Long userId);
 
-    int countByFollowUid(Long userId);
+    int countByFollowId(Long followId);
 
     Optional<MusixiserFollow> findOneByUserIdAndFollowId(@Param("userId") Long userId, @Param("followId") Long followId);
 
