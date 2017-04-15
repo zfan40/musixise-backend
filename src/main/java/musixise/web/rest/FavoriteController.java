@@ -16,6 +16,7 @@ import musixise.service.impl.WorkListFollowServiceImpl;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.dto.WorkListDTO;
+import musixise.web.rest.dto.WorkListFollowDTO;
 import musixise.web.rest.dto.favorite.AddToMyfavoriteWorksDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +119,7 @@ public class FavoriteController {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map( u -> {
 
-                PageDTO<WorkListDTO> page = workListService.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
+                PageDTO<WorkListFollowDTO> page = workListFollowService.findAllByUserIdOrderByIdDesc(u.getId(), pageable);
 
                 return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
 
@@ -135,7 +136,7 @@ public class FavoriteController {
         log.debug("REST request get all my favorite works by give uid");
 
         if (uid > 0) {
-            PageDTO<WorkListDTO> page = workListService.findAllByUserIdOrderByIdDesc(uid, pageable);
+            PageDTO<WorkListFollowDTO> page = workListFollowService.findAllByUserIdOrderByIdDesc(uid, pageable);
 
             return ResponseEntity.ok(new OutputDTO<>(0, "success", page));
 
