@@ -25,6 +25,14 @@ public class PageDTO<T> {
         this.sort = sort;
     }
 
+    public long getTotal() {
+        return total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
+    }
+
     public List<T> getContent() {
         return content;
     }
