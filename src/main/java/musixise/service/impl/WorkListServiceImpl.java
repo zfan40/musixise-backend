@@ -4,6 +4,7 @@ import musixise.domain.WorkList;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.WorkListSearchRepository;
 import musixise.service.WorkListService;
+import musixise.utils.PageUtil;
 import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.dto.WorkListDTO;
 import musixise.web.rest.mapper.WorkListMapper;
@@ -108,11 +109,7 @@ public class WorkListServiceImpl implements WorkListService{
 
         List<WorkListDTO> workListDTOList = workListMapper.workListsToWorkListDTOs(result.getContent());
 
-        PageDTO pageDTO = new PageDTO(workListDTOList, result.getTotalElements(),
-            result.hasNext(), result.getTotalPages(), result.getSize(), result.getNumber(),
-            result.getSort(), result.isFirst(), result.getNumberOfElements());
-
-        return pageDTO;
+        return PageUtil.getPage(workListDTOList, result);
     }
 
 

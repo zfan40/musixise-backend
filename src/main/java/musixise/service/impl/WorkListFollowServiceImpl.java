@@ -5,6 +5,7 @@ import musixise.repository.UserRepository;
 import musixise.repository.WorkListFollowRepository;
 import musixise.repository.WorkListRepository;
 import musixise.security.SecurityUtils;
+import musixise.utils.PageUtil;
 import musixise.web.rest.dto.PageDTO;
 import musixise.web.rest.dto.WorkListFollowDTO;
 import musixise.web.rest.mapper.WorkListFollowMapper;
@@ -53,11 +54,7 @@ public class WorkListFollowServiceImpl {
 
         List<WorkListFollowDTO> workListDTOList = workListFollowMapper.workListFollowsToWorkListFollowDTOs(result.getContent());
 
-        PageDTO pageDTO = new PageDTO(workListDTOList, result.getTotalElements(),
-            result.hasNext(), result.getTotalPages(), result.getSize(), result.getNumber(),
-            result.getSort(), result.isFirst(), result.getNumberOfElements());
-
-        return pageDTO;
+        return PageUtil.getPage(workListDTOList, result);
     }
 
 

@@ -4,6 +4,7 @@ import musixise.domain.MusixiserFollow;
 import musixise.repository.MusixiserFollowRepository;
 import musixise.repository.search.MusixiserFollowSearchRepository;
 import musixise.service.MusixiserFollowService;
+import musixise.utils.PageUtil;
 import musixise.web.rest.dto.MusixiserFollowDTO;
 import musixise.web.rest.dto.MusixiserFollowerDTO;
 import musixise.web.rest.dto.MusixiserFollowingDTO;
@@ -86,11 +87,8 @@ public class MusixiserFollowServiceImpl implements MusixiserFollowService{
         if (result.getTotalElements() >0) {
             List<MusixiserFollowingDTO> musixiserFollowDTOList = musixiserFollowMapper.musixiserFollowsToMusixiserFollowingDTOs(result.getContent());
 
-            PageDTO pageDTO = new PageDTO(musixiserFollowDTOList, result.getTotalElements(),
-                result.hasNext(), result.getTotalPages(), result.getSize(), result.getNumber(),
-                result.getSort(), result.isFirst(), result.getNumberOfElements());
+            return PageUtil.getPage(musixiserFollowDTOList, result);
 
-            return pageDTO;
 
         } else {
             return null;
@@ -109,11 +107,7 @@ public class MusixiserFollowServiceImpl implements MusixiserFollowService{
         if (result.getTotalElements() >0) {
             List<MusixiserFollowerDTO> musixiserFollowDTOList = musixiserFollowMapper.musixiserFollowsToMusixiserFollowerDTOs(result.getContent());
 
-            PageDTO pageDTO = new PageDTO(musixiserFollowDTOList, result.getTotalElements(),
-                result.hasNext(), result.getTotalPages(), result.getSize(), result.getNumber(),
-                result.getSort(), result.isFirst(), result.getNumberOfElements());
-
-            return pageDTO;
+            return PageUtil.getPage(musixiserFollowDTOList, result);
 
         } else {
             return null;
