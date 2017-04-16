@@ -12,9 +12,9 @@ public class PageUtil<S, T> {
 
     public static <S, T> PageDTO  getPage(List<S> l, Page<T> page) {
 
-        return new PageDTO(l, page.getTotalElements(),
-            page.hasNext(), page.getTotalPages(), page.getSize(), page.getNumber()+1,
-            page.getSort(), page.isFirst(), page.getNumberOfElements());
+        return new PageDTO(l, page.getTotalElements(), page.getTotalPages(),
+            page.getSize(), page.getNumber()+1,
+            page.getSort());
 
     }
 }
