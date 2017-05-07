@@ -50,6 +50,10 @@ spring:
     thymeleaf:
         cache: false
 
+    servlet:
+        multipart:
+            location: "/var/lib/jenkins/deploy-app/tmp"
+
 server:
     port: 8082
 

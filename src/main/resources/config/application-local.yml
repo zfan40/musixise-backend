@@ -49,6 +49,9 @@ spring:
         cache-seconds: 1
     thymeleaf:
         cache: false
+    servlet:
+            multipart:
+                location: "/tmp"
 
 server:
     port: 8082

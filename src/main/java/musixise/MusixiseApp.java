@@ -10,7 +10,9 @@ import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfig
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.hazelcast.HazelcastAutoConfiguration;
+import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
@@ -18,6 +20,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.servlet.MultipartConfigElement;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -92,5 +95,15 @@ public class MusixiseApp {
 
             app.setAdditionalProfiles(Constants.SPRING_PROFILE_DEVELOPMENT);
         }
+    }
+
+    /**
+     * 文件上传临时路径
+     */
+    @Bean
+    MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setLocation(env.getProperty("spring.servlet.multipart.location"));
+        return factory.createMultipartConfig();
     }
 }
