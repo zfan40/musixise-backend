@@ -36,4 +36,9 @@ public interface MusixiserRepository extends JpaRepository<Musixiser,Long> {
     List<Musixiser> findTop10ByOrderByPvDesc();
     List<Musixiser> findTop10ByOrderByIdDesc();
 
+    @Transactional
+    @Modifying
+    @Query("update Musixiser w set w.pv = w.pv+1 where w.userId = ?1 ")
+    int updatePvById(Long id);
+
 }

@@ -154,7 +154,13 @@ public class MusixiserServiceImpl implements MusixiserService{
         }
 
         MusixiserDTO musixiserDTO = musixiserMapper.musixiserToMusixiserDTO(musixiser, login);
+        updatePvById(id);
         return musixiserDTO;
+    }
+
+    @Async
+    private void updatePvById(Long id) {
+        musixiserRepository.updatePvById(id);
     }
 
     @Override

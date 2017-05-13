@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,12 +73,18 @@ public class WorkListServiceImpl implements WorkListService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true)
     public WorkListDTO findOne(Long id) {
         log.debug("Request to get WorkList : {}", id);
         WorkList workList = workListRepository.findOne(id);
         WorkListDTO workListDTO = workListMapper.workListToWorkListDTO(workList);
+        //+pv
+        updatePvById(id);
         return workListDTO;
+    }
+
+    @Async
+    private void updatePvById(Long id) {
+        workListRepository.updatePvById(id);
     }
 
     /**

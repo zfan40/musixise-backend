@@ -35,6 +35,11 @@ public interface WorkListRepository extends JpaRepository<WorkList,Long> {
 
     List<WorkList> findTop10ByOrderByPvDesc();
     List<WorkList> findTop10ByOrderByIdDesc();
+
+    @Transactional
+    @Modifying
+    @Query("update WorkList w set w.pv = w.pv+1 where w.id = ?1 ")
+    int updatePvById(Long id);
 }
 
 
