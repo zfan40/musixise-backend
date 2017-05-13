@@ -50,6 +50,9 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
     @Column(name = "collect_num")
     private Integer collectNum;
 
+    @Column(name = "pv")
+    private Integer pv;
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable=false, updatable=false)
     private Musixiser musixiser;
@@ -133,6 +136,13 @@ public class WorkList extends AbstractAuditingEntity implements Serializable {
         return Objects.equals(id, workList.id);
     }
 
+    public Integer getPv() {
+        return pv;
+    }
+
+    public void setPv(Integer pv) {
+        this.pv = pv;
+    }
 
     @Override
     public int hashCode() {

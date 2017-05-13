@@ -6,6 +6,8 @@ import musixise.web.rest.dto.WorkListDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * Service Interface for managing WorkList.
  */
@@ -51,4 +53,8 @@ public interface WorkListService {
     Page<WorkList> search(String query, Pageable pageable);
 
     public PageDTO<WorkListDTO> findAllByUserIdOrderByIdDesc(Long uid, Pageable pageable);
+
+    List<WorkListDTO> getHotSongs();
+
+    List<WorkListDTO> getLatestSongs();
 }

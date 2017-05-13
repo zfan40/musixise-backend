@@ -73,6 +73,9 @@ public class Musixiser extends AbstractAuditingEntity implements Serializable {
     @Column(name = "song_num")
     private Integer songNum;
 
+    @Column(name = "pv")
+    private Integer pv;
+
     public Integer getFollowNum() {
         return followNum;
     }
@@ -186,21 +189,6 @@ public class Musixiser extends AbstractAuditingEntity implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Musixiser musixiser = (Musixiser) o;
-        if(musixiser.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, musixiser.id);
-    }
-
-    @Override
     public String toString() {
         return "Musixiser{" +
             "id=" + id +
@@ -218,7 +206,31 @@ public class Musixiser extends AbstractAuditingEntity implements Serializable {
             ", followNum=" + followNum +
             ", fansNum=" + fansNum +
             ", songNum=" + songNum +
+            ", pv=" + pv +
             '}';
+    }
+
+    public Integer getPv() {
+        return pv;
+    }
+
+    public void setPv(Integer pv) {
+        this.pv = pv;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Musixiser musixiser = (Musixiser) o;
+        if(musixiser.id == null || id == null) {
+            return false;
+        }
+        return Objects.equals(id, musixiser.id);
     }
 
     public String getBrief() {

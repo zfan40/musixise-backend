@@ -210,4 +210,17 @@ public class MusixiserServiceImpl implements MusixiserService{
         musixiserRepository.updateWorkNumById(uid, workCount);
 
     }
+
+    @Override
+    public List<MusixiserDTO> getHotMusixisers() {
+        List<Musixiser> musixiser = musixiserRepository.findTop10ByOrderByPvDesc();
+        return musixiserMapper.musixisersToMusixiserDTOs(musixiser);
+
+    }
+
+    @Override
+    public List<MusixiserDTO> getLatestMusixisers() {
+        List<Musixiser> musixiser = musixiserRepository.findTop10ByOrderByIdDesc();
+        return musixiserMapper.musixisersToMusixiserDTOs(musixiser);
+    }
 }

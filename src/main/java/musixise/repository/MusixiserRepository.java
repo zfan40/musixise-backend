@@ -1,8 +1,10 @@
 package musixise.repository;
 
 import musixise.domain.Musixiser;
-
-import org.springframework.data.jpa.repository.*;
+import musixise.domain.WorkList;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -29,5 +31,9 @@ public interface MusixiserRepository extends JpaRepository<Musixiser,Long> {
     @Modifying
     @Query("update Musixiser w set w.songNum = ?2 where w.userId = ?1 ")
     int updateWorkNumById(Long id, Integer songNum);
+
+
+    List<Musixiser> findTop10ByOrderByPvDesc();
+    List<Musixiser> findTop10ByOrderByIdDesc();
 
 }

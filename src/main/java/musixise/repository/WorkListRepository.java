@@ -32,4 +32,9 @@ public interface WorkListRepository extends JpaRepository<WorkList,Long> {
     int updateCollectNumById(Long id, Integer collectNum);
 
     int countByUserId(Long userId);
+
+    List<WorkList> findTop10ByOrderByPvDesc();
+    List<WorkList> findTop10ByOrderByIdDesc();
 }
+
+

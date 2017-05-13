@@ -112,7 +112,15 @@ public class WorkListServiceImpl implements WorkListService{
         return PageUtil.getPage(workListDTOList, result);
     }
 
+    @Override
+    public List<WorkListDTO> getHotSongs() {
+        List<WorkList> workLists = workListRepository.findTop10ByOrderByPvDesc();
+        return workListMapper.workListsToWorkListDTOs(workLists);
+    }
 
-
-
+    @Override
+    public List<WorkListDTO> getLatestSongs() {
+        List<WorkList> workLists = workListRepository.findTop10ByOrderByIdDesc();
+        return workListMapper.workListsToWorkListDTOs(workLists);
+    }
 }
