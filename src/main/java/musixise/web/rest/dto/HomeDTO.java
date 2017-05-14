@@ -15,6 +15,18 @@ public class HomeDTO {
 
     private List<MusixiserDTO> latestMusixisers;
 
+    private List<BannerDTO> banners;
+
+    private List<AdsDTO> ads;
+
+    public List<AdsDTO> getAds() {
+        return ads;
+    }
+
+    public void setAds(List<AdsDTO> ads) {
+        this.ads = ads;
+    }
+
     public List<WorkListDTO> getHostSongs() {
         return hostSongs;
     }
@@ -45,5 +57,13 @@ public class HomeDTO {
 
     public void setLatestMusixisers(List<MusixiserDTO> latestMusixisers) {
         this.latestMusixisers = latestMusixisers;
+    }
+
+    public List<BannerDTO> getBanners() {
+        return banners;
+    }
+
+    public void setBanners(List<BannerDTO> banners) {
+        this.banners = banners;
     }
 }
