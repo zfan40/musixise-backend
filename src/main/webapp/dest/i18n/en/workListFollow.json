@@ -1,0 +1,24 @@
+{
+    "musixiseApp": {
+        "workListFollow" : {
+            "home": {
+                "title": "WorkListFollows",
+                "createLabel": "Create a new WorkListFollow",
+                "createOrEditLabel": "Create or edit a WorkListFollow",
+                "search": "Search for WorkListFollow"
+            },
+            "created": "A new WorkListFollow is created with identifier {{ param }}",
+            "updated": "A WorkListFollow is updated with identifier {{ param }}",
+            "deleted": "A WorkListFollow is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete WorkListFollow {{ id }}?"
+            },
+            "detail": {
+                "title": "WorkListFollow"
+            },
+            "createtime": "Createtime",
+            "work": "Work",
+            "user": "User"
+        }
+    }
+}

@@ -21,6 +21,7 @@ var gulp = require('gulp'),
     changed = require('gulp-changed'),
     gulpIf = require('gulp-if'),
     inject = require('gulp-inject'),
+    replace = require('gulp-replace'),
     angularFilesort = require('gulp-angular-filesort');
 
 var handleErrors = require('./gulp/handleErrors'),
@@ -37,7 +38,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('copy', function () {
-    return es.merge( 
+    return es.merge(
         gulp.src(config.app + 'i18n/**')
         .pipe(plumber({errorHandler: handleErrors}))
         .pipe(changed(config.dist + 'i18n/'))
@@ -58,6 +59,19 @@ gulp.task('copy', function () {
         .pipe(changed(config.dist))
         .pipe(gulp.dest(config.dist))
     );
+});
+
+gulp.task('copy-dist', function() {
+    return gulp.src("target/www/**/*")
+        .pipe(gulp.dest(config.app + "dest"))
+});
+
+gulp.task('publish-index-page', function() {
+
+    gulp.src([config.app + "dest/index.html"])
+        .pipe(replace(/app\//g, 'dest\/app\/'))
+        .pipe(replace(/"content\/css/g, 'dest\/content\/css\/'))
+        .pipe(gulp.dest(config.app));
 });
 
 gulp.task('images', function () {

@@ -1,0 +1,25 @@
+{
+    "musixiseApp": {
+        "stages" : {
+            "home": {
+                "title": "Stages",
+                "createLabel": "Create a new Stages",
+                "createOrEditLabel": "Create or edit a Stages",
+                "search": "Search for Stages"
+            },
+            "created": "A new Stages is created with identifier {{ param }}",
+            "updated": "A Stages is updated with identifier {{ param }}",
+            "deleted": "A Stages is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Stages {{ id }}?"
+            },
+            "detail": {
+                "title": "Stages"
+            },
+            "status": "Status",
+            "createtime": "Createtime",
+            "userId": "UserId",
+            "audienceNum": "AudienceNum"
+        }
+    }
+}

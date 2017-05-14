@@ -1,0 +1,23 @@
+{
+    "musixiseApp": {
+        "musixiserFollow" : {
+            "home": {
+                "title": "MusixiserFollows",
+                "createLabel": "Create a new MusixiserFollow",
+                "createOrEditLabel": "Create or edit a MusixiserFollow",
+                "search": "Search for MusixiserFollow"
+            },
+            "created": "A new MusixiserFollow is created with identifier {{ param }}",
+            "updated": "A MusixiserFollow is updated with identifier {{ param }}",
+            "deleted": "A MusixiserFollow is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete MusixiserFollow {{ id }}?"
+            },
+            "detail": {
+                "title": "MusixiserFollow"
+            },
+            "userId": "UserId",
+            "followUid": "FollowUid"
+        }
+    }
+}

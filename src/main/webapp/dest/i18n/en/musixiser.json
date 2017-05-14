@@ -1,0 +1,31 @@
+{
+    "musixiseApp": {
+        "musixiser" : {
+            "home": {
+                "title": "Musixisers",
+                "createLabel": "Create a new Musixiser",
+                "createOrEditLabel": "Create or edit a Musixiser",
+                "search": "Search for Musixiser"
+            },
+            "created": "A new Musixiser is created with identifier {{ param }}",
+            "updated": "A Musixiser is updated with identifier {{ param }}",
+            "deleted": "A Musixiser is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Musixiser {{ id }}?"
+            },
+            "detail": {
+                "title": "Musixiser"
+            },
+            "realname": "Realname",
+            "tel": "Tel",
+            "email": "Email",
+            "birth": "Birth",
+            "gender": "Gender",
+            "smallAvatar": "SmallAvatar",
+            "largeAvatar": "LargeAvatar",
+            "nation": "Nation",
+            "isMaster": "IsMaster",
+            "userId": "UserId"
+        }
+    }
+}

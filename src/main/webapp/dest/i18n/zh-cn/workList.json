@@ -1,0 +1,25 @@
+{
+    "musixiseApp": {
+        "workList" : {
+            "home": {
+                "title": "WorkLists",
+                "createLabel": "Create a new WorkList",
+                "createOrEditLabel": "Create or edit a WorkList",
+                "search": "Search for WorkList"
+            },
+            "created": "A new WorkList is created with identifier {{ param }}",
+            "updated": "A WorkList is updated with identifier {{ param }}",
+            "deleted": "A WorkList is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete WorkList {{ id }}?"
+            },
+            "detail": {
+                "title": "WorkList"
+            },
+            "content": "Content",
+            "url": "Url",
+            "createtime": "Createtime",
+            "userId": "UserId"
+        }
+    }
+}
