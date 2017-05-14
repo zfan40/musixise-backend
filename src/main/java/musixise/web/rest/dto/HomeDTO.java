@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class HomeDTO {
 
-    private List<WorkListDTO> hostSongs;
+    private List<WorkListDTO> hosSongs;
 
     private List<MusixiserDTO> hotMusixisers;
 
@@ -27,12 +27,12 @@ public class HomeDTO {
         this.ads = ads;
     }
 
-    public List<WorkListDTO> getHostSongs() {
-        return hostSongs;
+    public List<WorkListDTO> getHosSongs() {
+        return hosSongs;
     }
 
-    public void setHostSongs(List<WorkListDTO> hostSongs) {
-        this.hostSongs = hostSongs;
+    public void setHosSongs(List<WorkListDTO> hosSongs) {
+        this.hosSongs = hosSongs;
     }
 
     public List<MusixiserDTO> getHotMusixisers() {

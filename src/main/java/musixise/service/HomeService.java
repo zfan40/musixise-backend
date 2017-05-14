@@ -31,7 +31,7 @@ public class HomeService {
         List<MusixiserDTO> hotMusixisers = musixiserService.getHotMusixisers();
         List<MusixiserDTO> latestMusixisers = musixiserService.getLatestMusixisers();
 
-        homeDTO.setHostSongs(hotSongs);
+        homeDTO.setHosSongs(hotSongs);
         homeDTO.setLatestSongs(latestSongs);
         homeDTO.setHotMusixisers(hotMusixisers);
         homeDTO.setLatestMusixisers(latestMusixisers);
