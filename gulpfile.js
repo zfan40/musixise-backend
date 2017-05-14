@@ -70,7 +70,7 @@ gulp.task('publish-index-page', function() {
 
     gulp.src([config.app + "dest/index.html"])
         .pipe(replace(/app\//g, 'dest\/app\/'))
-        .pipe(replace(/"content\/css/g, 'dest\/content\/css\/'))
+        .pipe(replace(/content\/css/g, 'dest\/content\/css\/'))
         .pipe(gulp.dest(config.app));
 });
 
