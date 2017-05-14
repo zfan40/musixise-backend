@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by zhaowei on 17/5/14.
@@ -58,7 +59,6 @@ public class ConfigResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Config> update(@Valid @RequestBody Config config) throws URISyntaxException {
-
         Config result = configRepository.save(config);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert("config", result.getId().toString()))
@@ -72,5 +72,20 @@ public class ConfigResource {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         configRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("config", id.toString())).build();
+    }
+
+    @RequestMapping(value = "/config-lists/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Config> getOne(@PathVariable Long id) {
+
+        Config one = configRepository.findOne(id);
+        one.setCreatedDate(null);
+        return Optional.ofNullable(one)
+            .map(result -> new ResponseEntity<>(
+                result,
+                HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
