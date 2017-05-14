@@ -66,7 +66,7 @@ gulp.task('copy-dist', function() {
         .pipe(gulp.dest(config.app + "dest"))
 });
 
-gulp.task('publish-index-page', function() {
+gulp.task('publish-index-page',['copy-dist'], function() {
 
     gulp.src([config.app + "dest/index.html"])
         .pipe(replace(/app\//g, 'dest\/app\/'))
