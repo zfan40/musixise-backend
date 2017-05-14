@@ -50,7 +50,7 @@
                 <tr ng-repeat="workList in vm.workLists track by workList.id">
                     <td><a ui-sref="work-list-detail({id:workList.id})">{{workList.id}}</a></td>
                     <td>{{workList.title}}</td>
-                    <td>{{workList.cover}}</td>
+                    <td><img style="width: 50px;" class="img-thumbnail" src="{{workList.cover}}"></td>
                     <td>{{workList.content}}</td>
                     <td>{{workList.url}}</td>
                     <td>

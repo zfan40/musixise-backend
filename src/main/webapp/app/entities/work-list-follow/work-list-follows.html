@@ -6,7 +6,7 @@
             <div class="col-xs-4 no-padding-left">
                 <button class="btn btn-primary" ui-sref="work-list-follow.new" >
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span class="hidden-xs"  translate="musixiseApp.workListFollow.home.createLabel">
+                    <span class="hidden-xs">
                         Create new WorkListFollow
                     </span>
                 </button>
@@ -36,22 +36,22 @@
             <thead>
                 <tr>
                     <th><span translate="global.field.id">ID</span></th>
-                    <th><span translate="musixiseApp.workListFollow.createdDate">createdDate</span></th>
-                    <th><span translate="musixiseApp.workListFollow.work">work</span></th>
-                    <th><span translate="musixiseApp.workListFollow.user">user</span></th>
+                    <th><span>work</span></th>
+                    <th><span>user</span></th>
+                    <th><span>createdDate</span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="workListFollow in vm.workListFollows track by workListFollow.id">
                     <td><a ui-sref="work-list-follow-detail({id:workListFollow.id})">{{workListFollow.id}}</a></td>
-                        <td>{{workListFollow.createdDate}}</td>
                     <td>
                         <a ui-sref="work-list-detail({id:workListFollow.work.id})">{{workListFollow.work.id}}</a>
                     </td>
                     <td>
                         {{workListFollow.user.id}}
                     </td>
+                    <td>{{workListFollow.createdDate}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
