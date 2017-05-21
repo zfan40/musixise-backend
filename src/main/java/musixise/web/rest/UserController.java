@@ -7,7 +7,10 @@ import io.swagger.annotations.*;
 import musixise.config.Constants;
 import musixise.config.JHipsterProperties;
 import musixise.config.social.SocialConfiguration;
-import musixise.domain.*;
+import musixise.domain.Musixiser;
+import musixise.domain.MusixiserFollow;
+import musixise.domain.User;
+import musixise.domain.UserBind;
 import musixise.repository.MusixiserRepository;
 import musixise.repository.StagesRepository;
 import musixise.repository.UserRepository;
@@ -26,7 +29,6 @@ import musixise.web.rest.dto.MusixiserDTO;
 import musixise.web.rest.dto.OutputDTO;
 import musixise.web.rest.dto.user.LoginDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
-import musixise.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,31 +201,17 @@ public class UserController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "修改当前用户信息", notes = "修改当前用户信息", response = Musixiser.class, position = 4)
     @Timed
-    public ResponseEntity<Musixiser> updateInfo(@Valid @RequestBody Musixiser musixiser) {
+    public ResponseEntity<?> updateInfo(@Valid @RequestBody Musixiser musixiser) {
         log.debug("REST request to update MusixiserEx : {}", musixiser);
 
         //获取当前用户信息
         return userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin())
             .map(u -> {
-                Musixiser musixiserCmp = musixiserRepository.findOneByUserId(u.getId());
-                musixiser.setId(0l);
-                if (musixiser.getLargeAvatar() != null) {
-                    musixiserCmp.setLargeAvatar(musixiser.getLargeAvatar());
-                }
-                if (musixiser.getSmallAvatar() != null) {
-                    musixiserCmp.setSmallAvatar(musixiser.getSmallAvatar());
-                }
 
-                if (musixiser.getRealname() != null) {
-                    musixiserCmp.setRealname(musixiser.getRealname());
-                }
+                Musixiser result = musixiserService.updateInfo(u.getId(), musixiser);
 
-                Musixiser result = musixiserRepository.save(musixiserCmp);
-                musixiserSearchRepository.save(result);
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", result));
 
-                return ResponseEntity.ok()
-                    .headers(HeaderUtil.createEntityUpdateAlert("musixiser", musixiser.getId().toString()))
-                    .body(result);
             })
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 

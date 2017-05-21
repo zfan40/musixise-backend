@@ -9,6 +9,7 @@ import musixise.repository.UserRepository;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.MusixiserSearchRepository;
 import musixise.service.MusixiserService;
+import musixise.utils.CommonUtil;
 import musixise.web.rest.dto.MusixiserDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.mapper.MusixiserMapper;
@@ -229,4 +230,20 @@ public class MusixiserServiceImpl implements MusixiserService{
         List<Musixiser> musixiser = musixiserRepository.findTop10ByOrderByIdDesc();
         return musixiserMapper.musixisersToMusixiserDTOs(musixiser);
     }
+
+    @Override
+    public Musixiser updateInfo(Long userId, Musixiser musixiser) {
+
+        Musixiser musixiserCmp = musixiserRepository.findOneByUserId(userId);
+
+        musixiser.setId(null);
+
+        CommonUtil.copyPropertiesIgnoreNull(musixiser, musixiserCmp);
+
+
+        Musixiser result = musixiserRepository.save(musixiserCmp);
+        musixiserSearchRepository.save(result);
+        return result;
+    }
+
 }
