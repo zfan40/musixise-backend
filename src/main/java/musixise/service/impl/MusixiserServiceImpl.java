@@ -11,6 +11,7 @@ import musixise.repository.search.MusixiserSearchRepository;
 import musixise.service.MusixiserService;
 import musixise.utils.CommonUtil;
 import musixise.web.rest.dto.MusixiserDTO;
+import musixise.web.rest.dto.UpdateMusixiserDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import musixise.web.rest.mapper.MusixiserMapper;
 import org.slf4j.Logger;
@@ -232,14 +233,11 @@ public class MusixiserServiceImpl implements MusixiserService{
     }
 
     @Override
-    public Musixiser updateInfo(Long userId, Musixiser musixiser) {
+    public Musixiser updateInfo(Long userId, UpdateMusixiserDTO musixiser) {
 
         Musixiser musixiserCmp = musixiserRepository.findOneByUserId(userId);
 
-        musixiser.setId(null);
-
         CommonUtil.copyPropertiesIgnoreNull(musixiser, musixiserCmp);
-
 
         Musixiser result = musixiserRepository.save(musixiserCmp);
         musixiserSearchRepository.save(result);

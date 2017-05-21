@@ -10,6 +10,7 @@ import java.util.Objects;
  */
 public class MusixiserDTO implements Serializable {
 
+    private static final long serialVersionUID = -3399810298701329130L;
     private Long id;
 
     private String username;

@@ -2,6 +2,7 @@ package musixise.service;
 
 import musixise.domain.Musixiser;
 import musixise.web.rest.dto.MusixiserDTO;
+import musixise.web.rest.dto.UpdateMusixiserDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,5 +67,5 @@ public interface MusixiserService {
 
     List<MusixiserDTO> getLatestMusixisers();
 
-    Musixiser updateInfo(Long userId, Musixiser musixiser);
+    Musixiser updateInfo(Long userId, UpdateMusixiserDTO musixiser);
 }

@@ -23,10 +23,7 @@ import musixise.security.jwt.TokenProvider;
 import musixise.service.MusixiserService;
 import musixise.service.SocialService;
 import musixise.service.UserService;
-import musixise.web.rest.dto.AccessGrantDTO;
-import musixise.web.rest.dto.ManagedUserDTO;
-import musixise.web.rest.dto.MusixiserDTO;
-import musixise.web.rest.dto.OutputDTO;
+import musixise.web.rest.dto.*;
 import musixise.web.rest.dto.user.LoginDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
 import org.slf4j.Logger;
@@ -201,7 +198,7 @@ public class UserController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "修改当前用户信息", notes = "修改当前用户信息", response = Musixiser.class, position = 4)
     @Timed
-    public ResponseEntity<?> updateInfo(@Valid @RequestBody Musixiser musixiser) {
+    public ResponseEntity<?> updateInfo(@Valid @RequestBody UpdateMusixiserDTO musixiser) {
         log.debug("REST request to update MusixiserEx : {}", musixiser);
 
         //获取当前用户信息
