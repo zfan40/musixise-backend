@@ -26,7 +26,7 @@ public class HomeServiceTest {
     @Resource HomeService homeService;
     @Test
     public void getHome() throws Exception {
-        HomeDTO home = homeService.getHome();
+        HomeDTO home = homeService.getHome(3l);
         System.out.println(JSON.toJSONString(home));
     }
 

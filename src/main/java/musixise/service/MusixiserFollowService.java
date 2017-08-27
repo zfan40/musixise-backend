@@ -58,4 +58,6 @@ public interface MusixiserFollowService {
      */
     Page<MusixiserFollow> search(String query, Pageable pageable);
 
+
+    Boolean isFollowed(Long userId, Long followId);
 }

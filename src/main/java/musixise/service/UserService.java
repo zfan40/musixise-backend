@@ -56,9 +56,6 @@ public class UserService {
     private AuthorityRepository authorityRepository;
 
     @Inject
-    private MusixiserService musixiserService;
-
-    @Inject
     private TokenProvider tokenProvider;
 
     @Inject
@@ -328,5 +325,22 @@ public class UserService {
     public List<UserBind> getUserBind(String login) {
 
         return userBindRepository.findAllByLogin(login);
+    }
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    public User get() {
+//        String currentUserLogin = SecurityUtils.getCurrentUserLogin();
+//        if (currentUserLogin != null) {
+//            Optional<User> userOptional = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
+//            if (userOptional.isPresent()) {
+//                return userOptional.get();
+//            }
+//        }
+
+        return null;
+
     }
 }

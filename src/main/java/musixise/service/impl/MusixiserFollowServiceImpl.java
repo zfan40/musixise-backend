@@ -152,4 +152,13 @@ public class MusixiserFollowServiceImpl implements MusixiserFollowService{
         log.debug("Request to search for a page of MusixiserFollows for query {}", query);
         return musixiserFollowSearchRepository.search(queryStringQuery(query), pageable);
     }
+
+    @Override
+    public Boolean isFollowed(Long userId, Long followId) {
+        if (musixiserFollowRepository.findOneByUserIdAndFollowId(userId, followId).isPresent()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

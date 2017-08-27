@@ -22,14 +22,14 @@ public class HomeService {
 
     @Resource ConfigRepository configRepository;
 
-    public HomeDTO getHome() {
+    public HomeDTO getHome(Long userId) {
 
         HomeDTO homeDTO = new HomeDTO();
         List<WorkListDTO> hotSongs = workListService.getHotSongs();
         List<WorkListDTO> latestSongs = workListService.getLatestSongs();
 
-        List<MusixiserDTO> hotMusixisers = musixiserService.getHotMusixisers();
-        List<MusixiserDTO> latestMusixisers = musixiserService.getLatestMusixisers();
+        List<MusixiserDTO> hotMusixisers = musixiserService.getHotMusixisers(userId);
+        List<MusixiserDTO> latestMusixisers = musixiserService.getLatestMusixisers(userId);
 
         homeDTO.setHosSongs(hotSongs);
         homeDTO.setLatestSongs(latestSongs);

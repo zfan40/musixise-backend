@@ -3,8 +3,10 @@ package musixise.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import musixise.domain.User;
 import musixise.domain.WorkList;
 import musixise.service.HomeService;
+import musixise.service.UserService;
 import musixise.web.rest.dto.HomeDTO;
 import musixise.web.rest.dto.OutputDTO;
 import org.slf4j.Logger;
@@ -29,6 +31,8 @@ public class HomeController {
 
     @Resource HomeService homeService;
 
+    @Resource UserService userService;
+
     @RequestMapping(value = "",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,7 +41,12 @@ public class HomeController {
     public ResponseEntity<?> index() {
         log.debug("REST request to get home");
 
-        HomeDTO homeDTO = homeService.getHome();
+        Long userId = 0l;
+        User user = userService.get();
+        if (user != null) {
+            userId = user.getId();
+        }
+        HomeDTO homeDTO = homeService.getHome(userId);
         return ResponseEntity.ok(new OutputDTO<>(0, "success", homeDTO));
     }
 }

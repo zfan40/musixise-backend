@@ -8,6 +8,7 @@ import musixise.repository.MusixiserRepository;
 import musixise.repository.UserRepository;
 import musixise.repository.WorkListRepository;
 import musixise.repository.search.MusixiserSearchRepository;
+import musixise.service.MusixiserFollowService;
 import musixise.service.MusixiserService;
 import musixise.utils.CommonUtil;
 import musixise.web.rest.dto.MusixiserDTO;
@@ -48,6 +49,10 @@ public class MusixiserServiceImpl implements MusixiserService{
     @Inject WorkListRepository workListRepository;
 
     @Inject private UserRepository userRepository;
+
+    @Inject private MusixiserFollowService musixiserFollowService;
+
+
 
     /**
      * Save a musixiser.
@@ -220,16 +225,31 @@ public class MusixiserServiceImpl implements MusixiserService{
     }
 
     @Override
-    public List<MusixiserDTO> getHotMusixisers() {
+    public List<MusixiserDTO> getHotMusixisers(Long userId) {
         List<Musixiser> musixiser = musixiserRepository.findTop10ByOrderByPvDesc();
-        return musixiserMapper.musixisersToMusixiserDTOs(musixiser);
-
+        List<MusixiserDTO> musixiserDTOS = musixiserMapper.musixisersToMusixiserDTOs(musixiser);
+        return getMusixiserDTOS(userId, musixiserDTOS);
     }
 
     @Override
-    public List<MusixiserDTO> getLatestMusixisers() {
+    public List<MusixiserDTO> getLatestMusixisers(Long userId) {
         List<Musixiser> musixiser = musixiserRepository.findTop10ByOrderByIdDesc();
-        return musixiserMapper.musixisersToMusixiserDTOs(musixiser);
+        List<MusixiserDTO> musixiserDTOS = musixiserMapper.musixisersToMusixiserDTOs(musixiser);
+        return getMusixiserDTOS(userId, musixiserDTOS);
+    }
+
+    private List<MusixiserDTO> getMusixiserDTOS(Long userId, List<MusixiserDTO> musixiserDTOS) {
+
+        if (userId > 0) {
+            for (MusixiserDTO musixiserDTO : musixiserDTOS) {
+                if (musixiserFollowService.isFollowed(userId, musixiserDTO.getUserId())) {
+                    musixiserDTO.setFollowStatus(1);
+                } else {
+                    musixiserDTO.setFollowStatus(0);
+                }
+            }
+        }
+        return musixiserDTOS;
     }
 
     @Override

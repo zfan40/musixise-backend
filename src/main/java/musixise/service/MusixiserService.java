@@ -63,9 +63,9 @@ public interface MusixiserService {
 
     void updateWorkCount(Long id);
 
-    List<MusixiserDTO> getHotMusixisers();
+    List<MusixiserDTO> getHotMusixisers(Long userId);
 
-    List<MusixiserDTO> getLatestMusixisers();
+    List<MusixiserDTO> getLatestMusixisers(Long userId);
 
     Musixiser updateInfo(Long userId, UpdateMusixiserDTO musixiser);
 }
