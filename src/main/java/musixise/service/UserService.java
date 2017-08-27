@@ -332,13 +332,13 @@ public class UserService {
      * @return
      */
     public User get() {
-//        String currentUserLogin = SecurityUtils.getCurrentUserLogin();
-//        if (currentUserLogin != null) {
-//            Optional<User> userOptional = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
-//            if (userOptional.isPresent()) {
-//                return userOptional.get();
-//            }
-//        }
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        if (currentUserLogin != null) {
+            Optional<User> userOptional = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
+            if (userOptional.isPresent()) {
+                return userOptional.get();
+            }
+        }
 
         return null;
 
