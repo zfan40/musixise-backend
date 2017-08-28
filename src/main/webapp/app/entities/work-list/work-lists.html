@@ -1,5 +1,5 @@
 <div>
-    <h2 translate="musixiseApp.workList.home.title">WorkLists</h2>
+    <h2>作品列表</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
@@ -36,22 +36,22 @@
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="userId"><span translate="musixiseApp.workList.userId">UserId</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="title"><span >title</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="cover"><span >cover</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="content"><span translate="musixiseApp.workList.content">Content</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="url"><span translate="musixiseApp.workList.url">Url</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="status"><span >status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="collectNum"><span >collectNum</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="createtime"><span translate="musixiseApp.workList.createtime">Createtime</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="userId"><span translate="musixiseApp.workList.userId">UserId</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="workList in vm.workLists track by workList.id">
                     <td><a ui-sref="work-list-detail({id:workList.id})">{{workList.id}}</a></td>
+                    <td>{{workList.userId}}</td>
                     <td>{{workList.title}}</td>
                     <td><img style="width: 50px;" class="img-thumbnail" src="{{workList.cover}}"></td>
-                    <td>{{workList.content}}</td>
                     <td>{{workList.url}}</td>
                     <td>
 
@@ -60,8 +60,8 @@
                         <span ng-show="workList.status == 2">删除</span>
 
                     </td>
-                        <td>{{workList.createdDate | date:'mediumDate'}}</td>
-                    <td>{{workList.userId}}</td>
+                    <td>{{workList.collectNum}}</td>
+                     <td>{{workList.createdDate}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

@@ -3,6 +3,11 @@
     <h2><span translate="musixiseApp.workList.detail.title">WorkList</span> {{vm.workList.id}}</h2>
     <hr>
     <dl class="dl-horizontal">
+        <hr>
+        <dt><span translate="musixiseApp.workList.userId">userId</dt></dt>
+        <dd>
+            <span>{{vm.workList.userId}}<span>
+        </dd>
         <dt><span>title</dt></dt>
         <dd>
             <span>{{vm.workList.title}}<span>
@@ -21,14 +26,19 @@
             <span>{{vm.workList.url}}<span>
         </dd>
         <hr>
-        <dt><span translate="musixiseApp.workList.createtime">Createtime</dt></dt>
+        <dt><span>collectNum</dt></dt>
         <dd>
-            <span>{{vm.workList.createtime | date:'mediumDate'}}</span>
+            <span>{{vm.workList.collectNum}}</span>
         </dd>
         <hr>
-        <dt><span translate="musixiseApp.workList.userId">UserId</dt></dt>
+        <dt><span>createdDate</dt></dt>
         <dd>
-            <span>{{vm.workList.userId}}<span>
+            <span>{{vm.workList.createdDate}}</span>
+        </dd>
+        <hr>
+        <dt><span>lastModifiedDate</dt></dt>
+        <dd>
+            <span>{{vm.workList.lastModifiedDate}}</span>
         </dd>
         <hr>
     </dl>
