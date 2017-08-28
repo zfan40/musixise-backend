@@ -34,34 +34,28 @@
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
-                    <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="realname"><span translate="musixiseApp.musixiser.realname">Realname</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="tel"><span translate="musixiseApp.musixiser.tel">Tel</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="email"><span translate="musixiseApp.musixiser.email">Email</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="birth"><span translate="musixiseApp.musixiser.birth">Birth</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="gender"><span translate="musixiseApp.musixiser.gender">Gender</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="smallAvatar"><span translate="musixiseApp.musixiser.smallAvatar">SmallAvatar</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="largeAvatar"><span translate="musixiseApp.musixiser.largeAvatar">LargeAvatar</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="nation"><span translate="musixiseApp.musixiser.nation">Nation</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="isMaster"><span translate="musixiseApp.musixiser.isMaster">IsMaster</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="userId"><span translate="musixiseApp.musixiser.userId">UserId</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="realname"><span translate="musixiseApp.musixiser.realname">Realname</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="email"><span translate="musixiseApp.musixiser.email">Email</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="smallAvatar"><span translate="musixiseApp.musixiser.smallAvatar">SmallAvatar</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="followNum"><span>followNum</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="fansNum"><span>fansNum</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="songNum"><span>songNum</span> <span class="glyphicon glyphicon-sort"></span></th>
+                        <th jh-sort-by="createdDate"><span>createdDate</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="musixiser in vm.musixisers track by musixiser.id">
-                    <td><a ui-sref="musixiser-detail({id:musixiser.id})">{{musixiser.id}}</a></td>
-                    <td>{{musixiser.realname}}</td>
-                    <td>{{musixiser.tel}}</td>
-                    <td>{{musixiser.email}}</td>
-                    <td>{{musixiser.birth}}</td>
-                    <td>{{musixiser.gender}}</td>
-                    <td><img style="width: 50px;" class="img-circle" src="{{musixiser.smallAvatar}}"></td>
-                    <td><img style="width: 50px;" class="img-circle" src="{{musixiser.largeAvatar}}"></td>
-                    <td>{{musixiser.nation}}</td>
-                    <td>{{musixiser.isMaster}}</td>
                     <td>{{musixiser.userId}}</td>
+                    <td>{{musixiser.realname}}</td>
+                    <td>{{musixiser.email}}</td>
+                    <td><img style="width: 50px;" class="img-circle" src="{{musixiser.smallAvatar}}"></td>
+                    <td>{{musixiser.followNum}}</td>
+                    <td>{{musixiser.fansNum}}</td>
+                    <td>{{musixiser.songNum}}</td>
+                    <td>{{musixiser.createdDate}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
