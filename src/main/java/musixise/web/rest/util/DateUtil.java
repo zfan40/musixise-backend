@@ -11,9 +11,12 @@ import java.util.Date;
 public class DateUtil {
 
     public static String locatDateTimeToString(LocalDateTime localDateTime) {
-        Date dd = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dd);
+        if (localDateTime != null) {
+            Date dd = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dd);
+            return dateStr;
+        }
 
-        return dateStr;
+        return "";
     }
 }

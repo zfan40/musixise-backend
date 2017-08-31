@@ -113,4 +113,20 @@ public class UserServiceIntTest {
     public void testBindThird() {
         userService.bindThird("111", "222", "sina");
     }
+
+    @Test
+    public void testUpdateUser() {
+
+        Optional<User> userOptional = userRepository.findOneById(2l);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setFirstName("aa");
+            user.setLastName("aa");
+            user.setEmail("aa@gmail.com");
+            user.setActivated(false);
+
+            userRepository.save(user);
+        }
+    }
 }

@@ -45,6 +45,7 @@ public class HomeController {
         User user = userService.get();
         if (user != null) {
             userId = user.getId();
+            log.debug("home.index.uid="+userId);
         }
         HomeDTO homeDTO = homeService.getHome(userId);
         return ResponseEntity.ok(new OutputDTO<>(0, "success", homeDTO));

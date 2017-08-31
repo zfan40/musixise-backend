@@ -38,7 +38,7 @@ public class UserDTO {
     @JsonIgnore
     private String email;
 
-    @JsonIgnore
+    //@JsonIgnore
     private boolean activated = false;
 
     @Size(min = 2, max = 5)

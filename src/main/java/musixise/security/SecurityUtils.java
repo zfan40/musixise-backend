@@ -34,6 +34,9 @@ public final class SecurityUtils {
                 userName = (String) authentication.getPrincipal();
             }
         }
+        if (userName != null && userName.equals("anonymousUser")) {
+            return null;
+        }
         return userName;
     }
 
