@@ -25,7 +25,7 @@ public class WorkListDTO implements Serializable {
 
     private String url;
 
-    private Integer followStatus;
+    private Integer favStatus;
 
 
     @NotNull
@@ -90,12 +90,12 @@ public class WorkListDTO implements Serializable {
         this.cover = cover;
     }
 
-    public Integer getFollowStatus() {
-        return followStatus;
+    public Integer getFavStatus() {
+        return favStatus;
     }
 
-    public void setFollowStatus(Integer followStatus) {
-        this.followStatus = followStatus;
+    public void setFavStatus(Integer favStatus) {
+        this.favStatus = favStatus;
     }
 
     private Integer status;
@@ -179,9 +179,13 @@ public class WorkListDTO implements Serializable {
             ", cover='" + cover + '\'' +
             ", content='" + content + '\'' +
             ", url='" + url + '\'' +
-            ", followStatus=" + followStatus +
-            ", createdDate=" + createdDate +
+            ", favStatus=" + favStatus +
+            ", createdDate='" + createdDate + '\'' +
             ", userId=" + userId +
+            ", collectNum=" + collectNum +
+            ", lastModifiedDate='" + lastModifiedDate + '\'' +
+            ", fileHash='" + fileHash + '\'' +
+            ", owner=" + owner +
             ", status=" + status +
             '}';
     }

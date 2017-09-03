@@ -30,14 +30,13 @@ public class WorkListServiceImpl implements WorkListService{
 
     private final Logger log = LoggerFactory.getLogger(WorkListServiceImpl.class);
 
-    @Inject
-    private WorkListRepository workListRepository;
+    @Inject private WorkListRepository workListRepository;
 
-    @Inject
-    private WorkListMapper workListMapper;
+    @Inject private WorkListMapper workListMapper;
 
-    @Inject
-    private WorkListSearchRepository workListSearchRepository;
+    @Inject private WorkListSearchRepository workListSearchRepository;
+
+    @Inject WorkListFollowServiceImpl workListFollowService;
 
     /**
      * Save a workList.
@@ -120,14 +119,29 @@ public class WorkListServiceImpl implements WorkListService{
     }
 
     @Override
-    public List<WorkListDTO> getHotSongs() {
+    public List<WorkListDTO> getHotSongs(Long userId) {
         List<WorkList> workLists = workListRepository.findTop10ByOrderByPvDesc();
-        return workListMapper.workListsToWorkListDTOs(workLists);
+        return getWorkListDTO(userId, workLists);
     }
 
     @Override
-    public List<WorkListDTO> getLatestSongs() {
+    public List<WorkListDTO> getLatestSongs(Long userId) {
         List<WorkList> workLists = workListRepository.findTop10ByOrderByIdDesc();
-        return workListMapper.workListsToWorkListDTOs(workLists);
+        return getWorkListDTO(userId, workLists);
+    }
+
+    public List<WorkListDTO> getWorkListDTO(Long userId, List<WorkList> workListList) {
+        List<WorkListDTO> workListDTOList = workListMapper.workListsToWorkListDTOs(workListList);
+
+        if (userId > 0) {
+            for (WorkListDTO workListDTO : workListDTOList) {
+                if (workListFollowService.isFavorite(userId, workListDTO.getId())) {
+                    workListDTO.setFavStatus(1);
+                } else {
+                    workListDTO.setFavStatus(0);
+                }
+            }
+        }
+        return workListDTOList;
     }
 }

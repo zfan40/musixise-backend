@@ -160,9 +160,9 @@ public class WorkController {
 
             Optional<WorkListFollow> workListFollow = workListFollowService.getFollowWorkInfo(id);
             if (workListFollow.isPresent()) {
-                workListDTO.setFollowStatus(1);
+                workListDTO.setFavStatus(1);
             } else {
-                workListDTO.setFollowStatus(0);
+                workListDTO.setFavStatus(0);
             }
             return ResponseEntity.ok(new OutputDTO<>(0, "success", workListDTO));
         } else {

@@ -67,4 +67,13 @@ public class WorkListFollowServiceImpl {
         int count =  workListFollowRepository.countByWorkId(id);
         int u = workListRepository.updateCollectNumById(id, count);
     }
+
+    public Boolean isFavorite(Long userId, Long workId) {
+        Optional<WorkListFollow> workListFollow = workListFollowRepository.findOneByUserIdAndWorkId(userId, workId);
+        if (workListFollow.isPresent()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

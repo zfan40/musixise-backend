@@ -25,8 +25,8 @@ public class HomeService {
     public HomeDTO getHome(Long userId) {
 
         HomeDTO homeDTO = new HomeDTO();
-        List<WorkListDTO> hotSongs = workListService.getHotSongs();
-        List<WorkListDTO> latestSongs = workListService.getLatestSongs();
+        List<WorkListDTO> hotSongs = workListService.getHotSongs(userId);
+        List<WorkListDTO> latestSongs = workListService.getLatestSongs(userId);
 
         List<MusixiserDTO> hotMusixisers = musixiserService.getHotMusixisers(userId);
         List<MusixiserDTO> latestMusixisers = musixiserService.getLatestMusixisers(userId);

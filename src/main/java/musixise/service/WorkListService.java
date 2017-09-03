@@ -54,7 +54,7 @@ public interface WorkListService {
 
     public PageDTO<WorkListDTO> findAllByUserIdOrderByIdDesc(Long uid, Pageable pageable);
 
-    List<WorkListDTO> getHotSongs();
+    List<WorkListDTO> getHotSongs(Long userId);
 
-    List<WorkListDTO> getLatestSongs();
+    List<WorkListDTO> getLatestSongs(Long userId);
 }
