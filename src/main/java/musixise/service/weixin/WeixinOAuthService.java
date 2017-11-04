@@ -47,7 +47,7 @@ public class WeixinOAuthService extends OAuth20ServiceImpl implements CustomOAut
         String responceBody = response.getBody();
         Object result = JSON.parse(responceBody);
         if (((JSONObject) result).get("errcode") != null) {
-            log.error("get accesstoken fail {}", response.toString());
+            log.error("get accesstoken fail {}", responceBody);
             return null;
         } else {
             return new Token(JSONPath.eval(result, "$.access_token").toString(), "", responceBody);
@@ -81,7 +81,7 @@ public class WeixinOAuthService extends OAuth20ServiceImpl implements CustomOAut
         String responceBody = response.getBody();
         Object result = JSON.parse(responceBody);
         if (((JSONObject) result).get("errcode") != null) {
-            log.error("get getuserinfo fail {}", response.toString());
+            log.error("get getuserinfo fail {}", responceBody);
             return null;
         } else {
             SocialInfoDTO socialInfoDTO = new SocialInfoDTO();
