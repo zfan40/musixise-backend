@@ -3,11 +3,13 @@ package musixise.service.impl;
 import musixise.config.Constants;
 import musixise.domain.Musixiser;
 import musixise.domain.User;
-import musixise.repository.*;
+import musixise.repository.MusixiserFollowRepository;
+import musixise.repository.MusixiserRepository;
+import musixise.repository.UserRepository;
+import musixise.repository.WorkListRepository;
 import musixise.repository.search.MusixiserSearchRepository;
 import musixise.service.MusixiserFollowService;
 import musixise.service.MusixiserService;
-import musixise.service.UserService;
 import musixise.utils.CommonUtil;
 import musixise.web.rest.dto.MusixiserDTO;
 import musixise.web.rest.dto.UpdateMusixiserDTO;
@@ -19,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +35,6 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
  */
 @Service
 @Transactional
-@Component("musixiserService")
 public class MusixiserServiceImpl implements MusixiserService{
 
     private final Logger log = LoggerFactory.getLogger(MusixiserServiceImpl.class);
@@ -53,11 +53,7 @@ public class MusixiserServiceImpl implements MusixiserService{
 
     @Inject private MusixiserFollowService musixiserFollowService;
 
-    @Inject private UserService userService;
-
     @Inject PasswordEncoder passwordEncoder;
-
-    @Inject private AuthorityRepository authorityRepository;
 
 
     /**
@@ -269,5 +265,4 @@ public class MusixiserServiceImpl implements MusixiserService{
         musixiserSearchRepository.save(result);
         return result;
     }
-
 }
