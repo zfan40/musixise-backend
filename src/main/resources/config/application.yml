@@ -48,8 +48,8 @@ spring:
             clientSecret: 64e42bd75707b9b6ac719db7961228e0
 
         wechat:
-            clientId: wxef98dc4deaaf4d7b
-            clientSecret: 49aa9efd7ea3d90b4f533eaedc67c49b
+            clientId: wx2cb950ff65a142c5
+            clientSecret: caeec733d717230623fac42044c12552
 
         qq:
             clientId: 1105701694

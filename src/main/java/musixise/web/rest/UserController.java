@@ -6,11 +6,13 @@ import com.qiniu.util.Auth;
 import io.swagger.annotations.*;
 import musixise.config.Constants;
 import musixise.config.JHipsterProperties;
+import musixise.config.OAuthTypesConstants;
 import musixise.config.social.SocialConfiguration;
 import musixise.domain.Musixiser;
 import musixise.domain.MusixiserFollow;
 import musixise.domain.User;
 import musixise.domain.UserBind;
+import musixise.manager.UserManager;
 import musixise.repository.MusixiserRepository;
 import musixise.repository.StagesRepository;
 import musixise.repository.UserRepository;
@@ -23,9 +25,13 @@ import musixise.security.jwt.TokenProvider;
 import musixise.service.MusixiserService;
 import musixise.service.SocialService;
 import musixise.service.UserService;
+import musixise.service.weixin.CustomOAuthService;
+import musixise.service.weixin.OAuthServices;
 import musixise.web.rest.dto.*;
 import musixise.web.rest.dto.user.LoginDTO;
 import musixise.web.rest.dto.user.RegisterDTO;
+import org.scribe.model.Token;
+import org.scribe.model.Verifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +120,11 @@ public class UserController {
 
     @Inject
     private AuthenticationManager authenticationManager;
+
+    @Inject OAuthServices oAuthServices;
+
+    @Inject UserManager userManager;
+
 
     @RequestMapping(value = "/register",
         method = RequestMethod.POST,
@@ -236,27 +247,14 @@ public class UserController {
                 //初始化社交账号
                 socialService.createSocialConnection(userProfile.getUsername(), connection);
 
-                UserDetails user = null;
-
                 //check user bind info
                 String login = userService.isUserBindThis(userProfile.getUsername(), platform);
                 if (login == null) {
                     //未绑定任何账号
                     return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_USER_NOT_BIND, "未绑定任何账号", platform));
-                } else {
-                    user = userDetailsService.loadUserByUsername(login);
                 }
 
-                //get jwt
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    user,
-                    null,
-                    user.getAuthorities());
-
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                String jwt = tokenProvider.createToken(authenticationToken, false);
-
-                return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", userManager.getTokenByLogin(login)));
             } catch (Exception e) {
                 log.error("Exception creating social user: ", e);
                 return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_CREATE_USER_ACCOUNT_FAIL, String.format("创建用户信息失败 %s", e.getMessage()), userProfile));
@@ -312,7 +310,7 @@ public class UserController {
 
             }
 
-            userService.bindThird(openId, loginDTO.getUsername(), platform);
+            userService.bindThird(openId, loginDTO.getUsername(), platform, "", "", 1);
 
             return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
 
@@ -347,7 +345,7 @@ public class UserController {
                 user = userDetailsService.loadUserByUsername(userProfile.getUsername());
 
                 //建立绑定信息
-                userService.bindThird(userProfile.getUsername(), userProfile.getUsername(), platform);
+                userService.bindThird(userProfile.getUsername(), userProfile.getUsername(), platform, "", "",1);
 
                 //get jwt
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -394,4 +392,43 @@ public class UserController {
         return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_USER_NOT_FOUND, "用户不存在"));
 
     }
+
+
+    @RequestMapping(value = "/oauth/{platform}/callback",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "", notes = "发起 OAUTH 授权", response = OutputDTO.class, position = 5)
+    public ResponseEntity<?> sinaOAuthService(@PathVariable String platform,
+                                              @RequestParam(value = "code", required = true) String code) {
+
+        //https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2cb950ff65a142c5&redirect_uri=http://m.musixise.com/wxcallback&response_type=code&scope=snsapi_userinfo&state=type&quan,url=http://m.musixise.com/wxcallback
+        Map<String, OAuth2ConnectionFactory> oAuth2ConnectionFactoryMap = socialConfiguration.getoAuth2ConnectionFactoryMap();
+        if (!oAuth2ConnectionFactoryMap.containsKey(platform)) {
+            return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, String.format("参数错误 (%s)", platform)));
+        }
+        CustomOAuthService oAuthService = oAuthServices.getOAuthService(platform);
+        Token accessToken = oAuthService.getAccessToken(null, new Verifier(code));
+
+        if (accessToken != null) {
+            //todo: 授权失败
+            SocialInfoDTO socialInfoDTO = oAuthService.getOAuthUser(accessToken);
+            //检查是否已初始化
+            if (userService.isUserBindThis(socialInfoDTO.getOpenId(), socialInfoDTO.getProvider()) == null) {
+                //需要初始化
+                try {
+                    Boolean byOauth = userManager.createByOauth(socialInfoDTO);
+                } catch (Exception e) {
+                    return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, String.format("授权异常，请联系客服解决")));
+                }
+            }
+
+            //返回TOKEN
+            JWTToken token = userManager.getTokenByLogin(String.format(OAuthTypesConstants.USERNAME, socialInfoDTO.getProvider(), socialInfoDTO.getOpenId()));
+            return ResponseEntity.ok(new OutputDTO<>(0, "success", token));
+        }
+
+        return ResponseEntity.ok(new OutputDTO<>(Constants.ERROR_CODE_PARAMS, String.format("授权失败")));
+    }
+
+
 }

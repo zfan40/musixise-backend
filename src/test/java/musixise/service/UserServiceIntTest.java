@@ -111,7 +111,7 @@ public class UserServiceIntTest {
 
     @Test
     public void testBindThird() {
-        userService.bindThird("111", "222", "sina");
+        userService.bindThird("111", "222", "sina", "", "", 1);
     }
 
     @Test

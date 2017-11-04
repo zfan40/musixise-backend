@@ -68,4 +68,5 @@ public interface MusixiserService {
     List<MusixiserDTO> getLatestMusixisers(Long userId);
 
     Musixiser updateInfo(Long userId, UpdateMusixiserDTO musixiser);
+
 }

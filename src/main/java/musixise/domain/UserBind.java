@@ -28,6 +28,39 @@ public class UserBind extends AbstractAuditingEntity implements Serializable {
     @Column(name = "provider", length = 100)
     private String provider;
 
+    @Column(name = "access_token", length = 255)
+    private String accessToken;
+
+    @Column(name = "refresh_token", length = 255)
+    private String refreshToken;
+
+    @Column(name = "expires_in", length = 100)
+    private int expiresIn;
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public int getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(int expiresIn) {
+        this.expiresIn = expiresIn;
+    }
+
     public String getProvider() {
         return provider;
     }

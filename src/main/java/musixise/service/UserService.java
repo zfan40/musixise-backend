@@ -308,12 +308,30 @@ public class UserService {
      * @param login
      * @param provider
      */
-    public void bindThird(String openId, String login, String provider) {
+    public Boolean bindThird(String openId, String login, String provider, String accessToken, String refreshToken, Integer expiresIn) {
         UserBind userBind = new UserBind();
         userBind.setOpenId(openId);
         userBind.setLogin(login);
         userBind.setProvider(provider);
-        userBindRepository.save(userBind);
+        if (accessToken != null) {
+            userBind.setAccessToken(accessToken);
+        } else {
+            userBind.setAccessToken("");
+        }
+        if (refreshToken != null) {
+            userBind.setRefreshToken(refreshToken);
+        } else {
+            userBind.setRefreshToken("");
+        }
+        if (expiresIn != null) {
+            userBind.setExpiresIn(expiresIn);
+        }
+        UserBind save = userBindRepository.save(userBind);
+        if (save.getBid() > 0) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
@@ -343,4 +361,5 @@ public class UserService {
         return null;
 
     }
+
 }
