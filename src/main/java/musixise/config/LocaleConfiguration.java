@@ -1,5 +1,6 @@
 package musixise.config;
 
+import musixise.aop.logging.LoggerInterceptor;
 import musixise.config.locale.AngularCookieLocaleResolver;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
@@ -38,6 +39,7 @@ public class LocaleConfiguration extends WebMvcConfigurerAdapter implements Envi
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("language");
         registry.addInterceptor(localeChangeInterceptor);
+        registry.addInterceptor(new LoggerInterceptor()).addPathPatterns("/**");
     }
 
     @Override

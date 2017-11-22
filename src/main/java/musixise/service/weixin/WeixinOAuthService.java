@@ -45,6 +45,7 @@ public class WeixinOAuthService extends OAuth20ServiceImpl implements CustomOAut
         if(config.hasScope()) request.addQuerystringParameter(OAuthConstants.SCOPE, config.getScope());
         Response response = request.send();
         String responceBody = response.getBody();
+        log.trace("get accesstoken fail {}", responceBody);
         Object result = JSON.parse(responceBody);
         if (((JSONObject) result).get("errcode") != null) {
             log.error("get accesstoken fail {}", responceBody);
@@ -79,6 +80,7 @@ public class WeixinOAuthService extends OAuth20ServiceImpl implements CustomOAut
         OAuthRequest request = new OAuthRequest(api.getAccessTokenVerb(), String.format(USER_INFO_URL, accessToken, openId));
         Response response = request.send();
         String responceBody = response.getBody();
+        log.trace("get getuserinfo fail {}", responceBody);
         Object result = JSON.parse(responceBody);
         if (((JSONObject) result).get("errcode") != null) {
             log.error("get getuserinfo fail {}", responceBody);

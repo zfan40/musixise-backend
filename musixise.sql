@@ -561,3 +561,6 @@ ALTER TABLE `work_list_follow`
 
 
 ALTER TABLE `mu_user_bind` ADD `access_token` VARCHAR(255) NOT NULL DEFAULT '''''' AFTER `provider`, ADD `expires_in` INT NOT NULL DEFAULT '0' AFTER `access_token`, ADD `refresh_token` VARCHAR(255) NOT NULL DEFAULT '''''' AFTER `expires_in`;
+
+ALTER TABLE `mu_user_bind` ADD `unionid` VARCHAR(100) NOT NULL DEFAULT '''''' AFTER `refresh_token`;
+

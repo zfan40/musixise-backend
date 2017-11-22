@@ -9,6 +9,7 @@ import musixise.repository.MusixiserFollowRepository;
 import musixise.repository.UserBindRepository;
 import musixise.repository.UserRepository;
 import musixise.repository.search.UserSearchRepository;
+import musixise.security.AuthoritiesConstants;
 import musixise.security.SecurityUtils;
 import musixise.security.jwt.TokenProvider;
 import musixise.service.util.RandomUtil;
@@ -26,10 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Service class for managing users.
@@ -176,6 +174,12 @@ public class UserService {
                 authority -> authorities.add(authorityRepository.findOne(authority))
             );
             user.setAuthorities(authorities);
+        } else {
+            Set<Authority> authorities = new HashSet<>();
+            Authority authority = new Authority();
+            authority.setName(AuthoritiesConstants.USER);
+            authorities.add(authority);
+            user.setAuthorities(authorities);
         }
         //String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         String encryptedPassword = passwordEncoder.encode(managedUserDTO.getPassword());
@@ -300,6 +304,10 @@ public class UserService {
             return userBind.getLogin();
         }
         return null;
+    }
+
+    public Boolean bindThird(String openId, String login, String provider) {
+        return bindThird(openId, login, provider, "", "", 0);
     }
 
     /**

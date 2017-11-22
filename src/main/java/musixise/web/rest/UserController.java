@@ -310,7 +310,7 @@ public class UserController {
 
             }
 
-            userService.bindThird(openId, loginDTO.getUsername(), platform, "", "", 1);
+            userService.bindThird(openId, loginDTO.getUsername(), platform);
 
             return ResponseEntity.ok(new OutputDTO<>(0, "success", new JWTToken(jwt)));
 
@@ -345,7 +345,7 @@ public class UserController {
                 user = userDetailsService.loadUserByUsername(userProfile.getUsername());
 
                 //建立绑定信息
-                userService.bindThird(userProfile.getUsername(), userProfile.getUsername(), platform, "", "",1);
+                userService.bindThird(userProfile.getUsername(), userProfile.getUsername(), platform);
 
                 //get jwt
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
