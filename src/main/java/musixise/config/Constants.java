@@ -57,5 +57,6 @@ public final class Constants {
     //关注
     public static final Integer ERROR_CODE_USER_ALREADY_FOLLOW = 60000;//已关注
 
-
+    //微信
+    public static final Integer ERROR_CODE_WECHAT_GET_TICKET_FAIL = 70001;//获取微信TICKET失败
 }
