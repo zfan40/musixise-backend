@@ -15,6 +15,8 @@ public class JsTicketDTO {
 
     private String signature;
 
+    private String appId;
+
     public JsTicketDTO() {
     }
 
@@ -24,6 +26,23 @@ public class JsTicketDTO {
         this.timestamp = timestamp;
         this.url = url;
         this.signature = signature;
+    }
+
+    public JsTicketDTO(String noncestr, String jsapiTicket, String timestamp, String url, String signature, String appId) {
+        this.noncestr = noncestr;
+        this.jsapiTicket = jsapiTicket;
+        this.timestamp = timestamp;
+        this.url = url;
+        this.signature = signature;
+        this.appId = appId;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 
     public String getNoncestr() {
