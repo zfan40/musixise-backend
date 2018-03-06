@@ -48,7 +48,7 @@ public class WeiXinController {
             if (jsTicket != null) {
                 Map<String, String> ret = sign(jsTicket, url);
 
-                return ResponseEntity.ok(new OutputDTO<>(0, "success", new JsTicketDTO(ret.get("nonceStr"),
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", new JsTicketDTO(ret.get("nonce_str"),
                     ret.get("jsapi_ticket"), ret.get("timestamp"), ret.get("url"),
                     ret.get("signature"), weixinAppId)));
             }
@@ -124,7 +124,7 @@ public class WeiXinController {
 
         ret.put("url", url);
         ret.put("jsapi_ticket", jsapi_ticket);
-        ret.put("nonceStr", nonce_str);
+        ret.put("nonce_str", nonce_str);
         ret.put("timestamp", timestamp);
         ret.put("signature", signature);
 

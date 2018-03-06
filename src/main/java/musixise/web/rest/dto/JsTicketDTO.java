@@ -45,11 +45,11 @@ public class JsTicketDTO {
         this.appId = appId;
     }
 
-    public String getNoncestr() {
+    public String getNonceStr() {
         return nonceStr;
     }
 
-    public void setNoncestr(String nonceStr) {
+    public void setNonceStr(String nonceStr) {
         this.nonceStr = nonceStr;
     }
 
