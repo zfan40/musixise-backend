@@ -101,7 +101,7 @@ public class WeiXinController {
 
         //注意这里参数名必须全部小写，且必须有序
         string1 = "jsapi_ticket=" + jsapi_ticket +
-            "&noncestr=" + nonce_str +
+            "&nonce_str=" + nonce_str +
             "&timestamp=" + timestamp +
             "&url=" + url;
         System.out.println(string1);

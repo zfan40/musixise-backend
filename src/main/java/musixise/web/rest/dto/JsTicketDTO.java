@@ -5,7 +5,7 @@ package musixise.web.rest.dto;
  */
 public class JsTicketDTO {
 
-    private String noncestr;
+    private String nonceStr;
 
     private String jsapiTicket;
 
@@ -20,16 +20,16 @@ public class JsTicketDTO {
     public JsTicketDTO() {
     }
 
-    public JsTicketDTO(String noncestr, String jsapiTicket, String timestamp, String url, String signature) {
-        this.noncestr = noncestr;
+    public JsTicketDTO(String nonceStr, String jsapiTicket, String timestamp, String url, String signature) {
+        this.nonceStr = nonceStr;
         this.jsapiTicket = jsapiTicket;
         this.timestamp = timestamp;
         this.url = url;
         this.signature = signature;
     }
 
-    public JsTicketDTO(String noncestr, String jsapiTicket, String timestamp, String url, String signature, String appId) {
-        this.noncestr = noncestr;
+    public JsTicketDTO(String nonceStr, String jsapiTicket, String timestamp, String url, String signature, String appId) {
+        this.nonceStr = nonceStr;
         this.jsapiTicket = jsapiTicket;
         this.timestamp = timestamp;
         this.url = url;
@@ -46,11 +46,11 @@ public class JsTicketDTO {
     }
 
     public String getNoncestr() {
-        return noncestr;
+        return nonceStr;
     }
 
-    public void setNoncestr(String noncestr) {
-        this.noncestr = noncestr;
+    public void setNoncestr(String nonceStr) {
+        this.nonceStr = nonceStr;
     }
 
     public String getJsapiTicket() {
