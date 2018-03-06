@@ -48,7 +48,7 @@ public class WeiXinController {
             if (jsTicket != null) {
                 Map<String, String> ret = sign(jsTicket, url);
 
-                return ResponseEntity.ok(new OutputDTO<>(0, "success", new JsTicketDTO(ret.get("nonce_str"),
+                return ResponseEntity.ok(new OutputDTO<>(0, "success", new JsTicketDTO(ret.get("nonceStr"),
                     ret.get("jsapi_ticket"), ret.get("timestamp"), ret.get("url"),
                     ret.get("signature"), weixinAppId)));
             }
@@ -101,7 +101,7 @@ public class WeiXinController {
 
         //注意这里参数名必须全部小写，且必须有序
         string1 = "jsapi_ticket=" + jsapi_ticket +
-            "&nonce_str=" + nonce_str +
+            "&noncestr=" + nonce_str +
             "&timestamp=" + timestamp +
             "&url=" + url;
         System.out.println(string1);
@@ -124,7 +124,7 @@ public class WeiXinController {
 
         ret.put("url", url);
         ret.put("jsapi_ticket", jsapi_ticket);
-        ret.put("nonce_str", nonce_str);
+        ret.put("nonceStr", nonce_str);
         ret.put("timestamp", timestamp);
         ret.put("signature", signature);
 
